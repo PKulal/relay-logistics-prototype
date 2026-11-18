@@ -1,7 +1,7 @@
-import { buildSeed } from '@data/seed'
+import { buildBaseSeed, buildSeed } from '@data/seed'
 import type { DemoData, Leg, Shipment, ShipmentEvent } from '@shared/types'
 import { applyEvents, nextLr } from './actions'
-import { STORAGE_KEY, useDemoStore } from './store'
+import { STORAGE_KEY, STORE_VERSION, useDemoStore } from './store'
 
 const NOW = '2026-11-23T10:00:00+05:30'
 
@@ -39,7 +39,7 @@ const ev = (id: string, type: ShipmentEvent['type'], at: string, legId?: string)
 })
 
 describe('applyEvents', () => {
-  const data = withTestShipment(buildSeed())
+  const data = withTestShipment(buildBaseSeed())
 
   it('derives shipment and leg status from events', () => {
     const next = applyEvents(
@@ -72,14 +72,20 @@ describe('nextLr', () => {
   })
 
   it('skips serials already used by seeded shipments', () => {
-    const data = buildSeed()
+    const data = buildBaseSeed()
     data.lrSerials.DEL = 784
     data.shipments['LGS-DEL-000784'] = { id: 'LGS-DEL-000784' } as Shipment
     expect(nextLr(data, 'DEL').lr).toBe('LGS-DEL-000785')
   })
 
-  it('starts new origin codes at 000001', () => {
-    expect(nextLr(buildSeed(), 'BLR').lr).toBe('LGS-BLR-000001')
+  it('keeps serials unique across origin codes (job ids carry only the serial)', () => {
+    const data = buildBaseSeed()
+    data.shipments['LGS-BLR-000900'] = { id: 'LGS-BLR-000900' } as Shipment
+    expect(nextLr(data, 'MYS').lr).toBe('LGS-MYS-000901')
+  })
+
+  it('starts new origin codes at 000900, clear of the Delhi range', () => {
+    expect(nextLr(buildBaseSeed(), 'BLR')).toEqual({ lr: 'LGS-BLR-000900', lrSerials: { DEL: 781, BLR: 901 } })
   })
 })
 
@@ -110,7 +116,7 @@ describe('useDemoStore', () => {
   it('persists to localStorage under logisco-demo-v1', () => {
     useDemoStore.getState().advanceTime(60)
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)!)
-    expect(saved.version).toBe(1)
+    expect(saved.version).toBe(STORE_VERSION)
     expect(saved.state.demoNow).toBe('2026-11-23T11:00:00+05:30')
   })
 

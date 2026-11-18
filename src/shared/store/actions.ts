@@ -2,7 +2,7 @@
  * Pure state transitions used by the store. Kept separate from Zustand so they
  * can be unit-tested and reused by the seed generator.
  */
-import { deriveStatus } from '@shared/engines/status'
+import { deriveStatus, sortEvents } from '@shared/engines/status'
 import type { DemoData, Id, IsoDateTime, ShipmentEvent } from '@shared/types'
 
 /**
@@ -33,23 +33,36 @@ export function applyEvents(data: DemoData, newEvents: ShipmentEvent[], now: Iso
     if (shipment.status !== result.shipmentStatus) {
       shipments[shipmentId] = { ...shipment, status: result.shipmentStatus, updatedAt: now }
     }
+    // Who holds each leg also comes from events: the latest legAssigned wins.
+    const assigned = new Map<Id, ShipmentEvent>()
+    for (const e of sortEvents(shipmentEvents)) if (e.type === 'legAssigned' && e.legId) assigned.set(e.legId, e)
+
     for (const leg of shipmentLegs) {
       const status = result.legStatuses[leg.id]
-      if (leg.status !== status) legs[leg.id] = { ...leg, status, updatedAt: now }
+      const a = assigned.get(leg.id)
+      const staffId = a?.assigneeStaffId ?? leg.staffId
+      const vehicleId = a?.assigneeVehicleId ?? leg.vehicleId
+      if (leg.status !== status || leg.staffId !== staffId || leg.vehicleId !== vehicleId) {
+        legs[leg.id] = { ...leg, status, staffId, vehicleId, updatedAt: now }
+      }
     }
   }
 
   return { ...data, events, shipments, legs }
 }
 
+/** Where a city code's LR serials start when it has no counter yet (Delhi is seeded at 781 for the hero). */
+export const NEW_CODE_START_SERIAL = 900
+
 /**
  * Next free LR for an origin code, e.g. ("DEL") → "LGS-DEL-000781".
- * Skips serials already taken by seeded shipments (000784, 000790 …).
+ * Serials are unique across ALL codes, because job ids carry only the serial
+ * (JOB-000781-L1): a serial already used by any shipment is skipped.
  * Returns the LR and the updated serial counters.
  */
 export function nextLr(data: DemoData, originCode: string): { lr: Id; lrSerials: DemoData['lrSerials'] } {
-  let serial = data.lrSerials[originCode] ?? 1
-  const make = (s: number) => `LGS-${originCode}-${String(s).padStart(6, '0')}`
-  while (data.shipments[make(serial)]) serial += 1
-  return { lr: make(serial), lrSerials: { ...data.lrSerials, [originCode]: serial + 1 } }
+  const used = new Set(Object.keys(data.shipments).map((id) => id.slice(-6)))
+  let serial = data.lrSerials[originCode] ?? NEW_CODE_START_SERIAL
+  while (used.has(String(serial).padStart(6, '0'))) serial += 1
+  return { lr: `LGS-${originCode}-${String(serial).padStart(6, '0')}`, lrSerials: { ...data.lrSerials, [originCode]: serial + 1 } }
 }

@@ -53,6 +53,23 @@ export const pincodes: Pincode[] = [
   pin({ code: '781001', area: 'Pan Bazaar', city: 'Guwahati', state: 'Assam', region: 'North-East', metro: false, special: true, serviceable: false, lat: 26.184, lng: 91.746 }),
 ]
 
+/** LR origin code by pickup city: LGS-<code>-<serial> (seed-data.md §2). Codes other than DEL / MYS are INVENTED. */
+export const LR_CODES: Record<string, string> = {
+  'New Delhi': 'DEL',
+  Gurugram: 'DEL',
+  Noida: 'DEL',
+  Hubballi: 'HBL',
+  Belagavi: 'BGM',
+  Haveri: 'HVR',
+  Chikodi: 'CKD',
+  Bengaluru: 'BLR',
+  Mysuru: 'MYS',
+  Bhiwandi: 'BOM',
+  Mumbai: 'BOM',
+  Pune: 'PNQ',
+  Latur: 'LTR',
+}
+
 // ─── Hubs (Type F partners; Peenya and Bhiwandi are INVENTED) ───
 
 export const hubs: Hub[] = [
