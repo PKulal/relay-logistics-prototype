@@ -57,6 +57,25 @@ export interface BookingInput {
 /** Distance used for e-way bill validity when there is no line-haul lane (assumed). */
 const LOCAL_KM = { intraCity: 25, intraRegion: 120 }
 
+/**
+ * Line-haul legs join the planned trip on their lane that departs when the leg
+ * starts (e.g. the hero's L3 → TRP-2026-0931).
+ */
+export function joinTrips(data: DemoData, legIds: Id[]): DemoData {
+  let trips = data.trips
+  let legs = data.legs
+  for (const id of legIds) {
+    const leg = legs[id]
+    if (!leg || leg.type !== 'lineHaul' || leg.tripId) continue
+    const laneId = data.shipments[leg.shipmentId]?.laneId
+    const trip = Object.values(trips).find((t) => t.laneId === laneId && t.status === 'planned' && new Date(t.departAt).getTime() === new Date(leg.window.from).getTime())
+    if (!trip) continue
+    trips = { ...trips, [trip.id]: { ...trip, legIds: [...trip.legIds, id] } }
+    legs = { ...legs, [id]: { ...leg, tripId: trip.id } }
+  }
+  return trips === data.trips ? data : { ...data, trips, legs }
+}
+
 /** Event ids are per shipment: LGS-DEL-000781-E01, -E02 … */
 export function eventIdFactory(data: DemoData, shipmentId: Id) {
   let n = Object.values(data.events).filter((e) => e.shipmentId === shipmentId).length
@@ -234,6 +253,7 @@ export function bookShipment(data: DemoData, input: BookingInput, at: IsoDateTim
       }
     }
   }
+  next = joinTrips(next, legs.map((l) => l.id))
   return { data: applyEvents(next, events, at), shipmentId: lr }
 }
 

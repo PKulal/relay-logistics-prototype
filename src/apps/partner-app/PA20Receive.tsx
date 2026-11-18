@@ -20,6 +20,7 @@ import { PhotoCapture } from '@shared/ui/PhotoCapture'
 import { Scanner } from '@shared/ui/Scanner'
 import { SimulatedTag } from '@shared/ui/SimulatedTag'
 import { Card, Choice } from './FieldUi'
+import { LIST_PATH } from './nav'
 import { useFieldSession } from './useFieldSession'
 
 export default function PA20Receive({ leg }: { leg: Leg }) {
@@ -65,7 +66,7 @@ export default function PA20Receive({ leg }: { leg: Leg }) {
 
   const accept = () => {
     const photos = [damagePhoto, ...Object.values(broken)].filter(Boolean)
-    navigate('/app/tasks')
+    navigate(LIST_PATH[staff.role])
     useDemoStore.getState().receiveHandover({ legId: leg.id, staffId: staff.id, code, pieceIds: scanned, brokenSeals: Object.keys(broken), damagedPieceIds: damaged ? damagedIds : [], photos })
     if (problems.length) toast.warning(t('pa20.doneException', { partner: prevPartner.shortName }))
     else toast.success(t('pa20.done', { count: scanned.length, name: giverName }))
@@ -73,7 +74,7 @@ export default function PA20Receive({ leg }: { leg: Leg }) {
 
   return (
     <div className="flex flex-col gap-4 p-4 pb-28">
-      <button type="button" onClick={() => navigate('/app/tasks')} className="inline-flex min-h-12 w-fit items-center gap-1.5 font-medium text-muted-foreground">
+      <button type="button" onClick={() => navigate(LIST_PATH[staff.role])} className="inline-flex min-h-12 w-fit items-center gap-1.5 font-medium text-muted-foreground">
         <ArrowLeft className="size-5" aria-hidden /> {t('pa15.back')}
       </button>
       <div>

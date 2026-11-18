@@ -27,6 +27,9 @@ export const TABS: Record<FieldRole, Tab[]> = {
   ],
 }
 
+/** Where each role's own work list lives (riders: Tasks, drivers: Trip, hub staff: Inbound). */
+export const LIST_PATH: Record<FieldRole, string> = { rider: '/app/tasks', driver: '/app/trip', hub: '/app/inbound' }
+
 /** Opened from the SOS button in the top bar */
 export const SOS_SCREEN = { path: 'sos', labelKey: 'nav.pa.sos', screenId: 'PA-12', phase: 4 }
 /** Opened from the sync indicator */

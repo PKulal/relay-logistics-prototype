@@ -25,13 +25,22 @@ interface ScannerProps {
   continuousDefault?: boolean
   /** Short label for the counter, e.g. the piece suffix: "LGS-DEL-000781-04" → "04" */
   shortLabel?: (code: string) => string
+  /** What is being counted: wording says "piece" or "bag" */
+  unit?: 'piece' | 'bag'
 }
 
 /** A label that belongs to nothing in this task, for the "wrong label" demo button. */
 const WRONG = 'LGS-BOM-000999-01'
 
-export function Scanner({ expected, scanned, onScan, continuousDefault = false, shortLabel = (c) => c.slice(-2) }: ScannerProps) {
-  const { t } = useTranslation()
+/** Strings that name the thing being scanned have a bag version. */
+const BAG_WORDING = new Set(['voiceWrong', 'allScanned', 'result.ok', 'manual', 'pieceId', 'add'])
+
+export function Scanner({ expected, scanned, onScan, continuousDefault = false, shortLabel = (c) => c.slice(-2), unit = 'piece' }: ScannerProps) {
+  const { t: translate } = useTranslation()
+  const t = (key: string, opts: Record<string, unknown> = {}) => {
+    const k = key.replace(/^scanner\./, '')
+    return translate(unit === 'bag' && BAG_WORDING.has(k) ? `scanner.bag.${k}` : key, opts as Record<string, string | number>)
+  }
   const language = useSession((s) => s.language)
   const [last, setLast] = useState<Result>(null)
   const [continuous, setContinuous] = useState(continuousDefault)

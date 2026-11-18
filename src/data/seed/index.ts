@@ -6,12 +6,14 @@ import type { DemoData, IsoDateTime } from '@shared/types'
 import { consignees, customers, customerUsers, pickupLocations, skus } from './customers'
 import { extraConsignees, extraCustomers, extraCustomerUsers, extraPickupLocations, extraSkus } from './customers-extra'
 import { generateShipments } from './generator'
+import { hubDayBags, hubDayManifests, hubDayTrips } from './hubDay'
 import { hubs, lanes, partnerRates, pincodes, rateCards, settings } from './master'
 import { applications, namedFieldStaff, namedPartners, namedPartnerUsers, namedVehicles, partnerInvoices, payouts, weeklyScores } from './partners'
 import { extraFieldStaff, extraPartners, extraPartnerUsers, extraVehicles } from './partners-extra'
 import { addKeyShipments } from './shipments-key'
 import { staff } from './staff'
 import { byId } from './util'
+import { joinTrips } from '@shared/store/booking'
 
 /** Monday 23-Nov-2026 10:00 IST — booking day for the hero shipment (seed-data.md §1). */
 export const DEMO_START: IsoDateTime = '2026-11-23T10:00:00+05:30'
@@ -51,9 +53,9 @@ export function buildBaseSeed(): DemoData {
     shipments: {},
     legs: {},
     events: {},
-    trips: {},
-    bags: {},
-    manifests: {},
+    trips: byId(hubDayTrips),
+    bags: byId(hubDayBags),
+    manifests: byId(hubDayManifests),
 
     exceptions: {},
     weightRevisions: {},
@@ -82,5 +84,6 @@ export function buildBaseSeed(): DemoData {
  * (seed-data.md §4) and ~120 generated background shipments.
  */
 export function buildSeed(): DemoData {
-  return generateShipments(addKeyShipments(buildBaseSeed(), DEMO_START), DEMO_START)
+  const data = generateShipments(addKeyShipments(buildBaseSeed(), DEMO_START), DEMO_START)
+  return joinTrips(data, Object.keys(data.legs))
 }

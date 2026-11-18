@@ -5,6 +5,7 @@ import { useSession } from '@shared/store/session'
 import { TooltipProvider } from '@shared/ui/tooltip'
 import PA06Tasks from './PA06Tasks'
 import PA07ScanTab from './PA07ScanTab'
+import PA26InScan from './PA26InScan'
 import TaskScreen from './TaskScreen'
 
 vi.mock('@shared/ui/MapView', () => ({ MapView: () => <div data-testid="map" /> }))
@@ -54,6 +55,7 @@ function phone(staffId: string, path: string) {
         <Routes>
           <Route path="/app/scan" element={<PA07ScanTab />} />
           <Route path="/app/tasks" element={<PA06Tasks />} />
+          <Route path="/app/inbound" element={<PA26InScan />} />
           <Route path="/app/tasks/:legId" element={<TaskScreen />} />
         </Routes>
       </TooltipProvider>
@@ -88,7 +90,7 @@ describe('Partner App — Ravi hands the hero over to Pooja at NCR CrossDock', (
     expect(code).toMatch(/^\d{6}$/)
 
     // Pooja: the task list shows a Receive task; the Scan tab reads the QR
-    phone('FS-POOJA', '/app/tasks')
+    phone('FS-POOJA', '/app/tasks') // (Pooja's list via the shared task list screen)
     expect(document.querySelector('a[href="/app/tasks/JOB-000781-L2"]')!.closest('article')).toHaveTextContent('Receive')
     phone('FS-POOJA', '/app/scan')
     fireEvent.click(screen.getByRole('button', { name: /Scan hand-over QR from Ravi Kumar/ }))
@@ -97,7 +99,8 @@ describe('Partner App — Ravi hands the hero over to Pooja at NCR CrossDock', (
     expect(screen.getByText('Code matches')).toBeInTheDocument()
     scanAll(6)
     fireEvent.click(screen.getByRole('button', { name: 'Accept' }))
-    expect(screen.getByRole('tablist', { name: 'Tasks' })).toBeInTheDocument()
+    // Hub staff go on to in-scan what they received (PA-26)
+    expect(screen.getByRole('heading', { name: 'Inbound' })).toBeInTheDocument()
 
     const { data } = useDemoStore.getState()
     expect(data.legs['JOB-000781-L1'].status).toBe('handedOver')

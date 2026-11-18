@@ -1184,7 +1184,17 @@
     "labelPhoto": "Photo of the damaged label",
     "labelPhotoCaption": "Damaged label",
     "add": "Add piece",
-    "missing": "Not scanned yet"
+    "missing": "Not scanned yet",
+    "bag": {
+      "voiceWrong": "Wrong bag",
+      "allScanned": "All bags scanned",
+      "result": {
+        "ok": "Bag {{n}}/{{total}} ✓ ({{label}})"
+      },
+      "manual": "Type the bag number (damaged label)",
+      "pieceId": "Bag number",
+      "add": "Add bag"
+    }
   },
   "pa05": {
     "hello": "Hello, {{name}}",
@@ -1380,5 +1390,171 @@
     "done_one": "Received {{count}} piece from {{name}}",
     "done_other": "Received {{count}} pieces from {{name}}",
     "doneException": "Accepted with exception. A ticket is raised for {{partner}}."
+  },
+  "pa25": {
+    "shift": "{{hub}} · {{hours}}",
+    "stages": "Stages",
+    "tile": {
+      "toInScan": "To in-scan",
+      "toSort": "To sort",
+      "bagsOpen": "Bags open",
+      "bagsToSeal": "Bags to seal",
+      "toDispatch": "To dispatch",
+      "exceptions": "Exceptions"
+    },
+    "inbound": "Inbound expected",
+    "noInbound": "Nothing more expected today.",
+    "from": {
+      "firstMile": "pickup",
+      "lineHaul": "truck",
+      "originHub": "hub",
+      "destHub": "hub",
+      "lastMile": "rider"
+    },
+    "pcs_one": "{{count}} pc",
+    "pcs_other": "{{count}} pcs",
+    "departures": "Outbound departures",
+    "noDepartures": "No trucks leaving today.",
+    "bags_one": "{{count}} bag",
+    "bags_other": "{{count}} bags",
+    "trip": {
+      "planned": "Planned",
+      "loading": "Loading",
+      "inTransit": "On the way",
+      "arrived": "Arrived"
+    }
+  },
+  "pa26": {
+    "title": "Inbound",
+    "empty": "Nothing to in-scan. Loads you receive from riders and trucks appear here.",
+    "source": "Arrived from",
+    "scan": "Scan everything in",
+    "excessHint": "A label that is not on this load is an excess: keep it aside.",
+    "weightCheck": "Hub weight check",
+    "reweigh": "Re-weigh this load on the hub scale",
+    "hubWeight": "Hub weight (kg)",
+    "pickupWeight": "Pickup weight {{kg}}",
+    "weightDiffers": "Differs from the pickup weight by {{kg}}. It is noted on the in-scan.",
+    "scalePhoto": "Scale photo",
+    "shortTitle_one": "{{count}} piece not scanned",
+    "shortTitle_other": "{{count}} pieces not scanned",
+    "reason": {
+      "notInLoad": "Not in the load",
+      "labelDamaged": "Label damaged, can't scan",
+      "other": "Other"
+    },
+    "finishShort_one": "Finish with {{count}} short",
+    "finishShort_other": "Finish with {{count}} short",
+    "finish": "Finish inbound",
+    "todo": {
+      "reason": "Choose why pieces are short",
+      "weight": "Enter the hub weight and take the scale photo"
+    },
+    "done_one": "{{count}} piece in-scanned",
+    "done_other": "{{count}} pieces in-scanned",
+    "doneShort_one": "{{count}} piece marked short. Exception raised.",
+    "doneShort_other": "{{count}} pieces marked short. Exception raised."
+  },
+  "pa27": {
+    "title": "Sort to bag",
+    "empty": "Nothing to sort.",
+    "toBags": "Close and seal bags",
+    "scanPiece_one": "Scan a piece · {{count}} to sort",
+    "scanPiece_other": "Scan a piece · {{count}} to sort",
+    "local": "{{city}} DELIVERY",
+    "scanBag": "Scan bag label",
+    "wrongBagDemo": "Wrong bag",
+    "wrongBag": "Wrong bag: this is {{scanned}}. Put it in {{bag}}.",
+    "voiceWrongBag": "Wrong bag",
+    "voicePlaced": "{{bag}}, done",
+    "placed": "In {{bag}} ✓",
+    "next": "Next piece"
+  },
+  "pa28": {
+    "title": "Bags",
+    "scanBag": "Scan bag",
+    "open": "Open bags",
+    "noOpen": "No open bags. Sorting a piece opens one.",
+    "sealed": "Sealed, waiting to dispatch",
+    "contentsCount_one": "Contents · {{count}} piece",
+    "contentsCount_other": "Contents · {{count}} pieces",
+    "emptyBag": "This bag is empty.",
+    "remove": "Remove",
+    "removeLabel": "Remove {{piece}} (scan again)",
+    "seal": "Seal number",
+    "scanSeal": "Scan seal",
+    "sealFormat": "Seal numbers look like SL-12345",
+    "weightOptional": "Bag weight (optional)",
+    "weight": "Weight",
+    "photoTitle": "Photo",
+    "photo": "Sealed bag",
+    "manifest": "Manifest",
+    "newManifest": "New manifest",
+    "newOnTrip": "Goes on {{trip}}, leaving {{time}}",
+    "newNoTrip": "No truck planned yet for this destination",
+    "sealAndAdd": "Seal and add",
+    "todo": "Enter the seal and take the photo",
+    "done": "{{bag}} sealed with {{seal}}",
+    "sealedTitle": "{{bag}} sealed",
+    "sealedLine": "Seal {{seal}} · on {{manifest}}",
+    "backToBags": "Back to bags",
+    "print": "Print manifest",
+    "printTitle": "Manifest",
+    "printedAt": "Printed {{at}}",
+    "departs": "leaves {{time}}",
+    "bag": "Bag",
+    "contents": "Pieces",
+    "printTotal": "{{bags}} bags · {{pieces}} pieces"
+  },
+  "pa29": {
+    "title": "Outbound",
+    "empty": "No sealed bags waiting to go.",
+    "manifest": "Manifest",
+    "trip": "Trip",
+    "noVehicle": "No truck planned",
+    "lateCutoff": "Leaving after the {{time}} cut-off: the delivery date is at risk.",
+    "vehicle": "Vehicle number",
+    "scanPlate": "Scan plate",
+    "vehicleMismatch": "Not the truck for this trip ({{reg}})",
+    "vehicleOk": "Matches the trip",
+    "scanBags": "Scan bags onto the truck",
+    "doorSeal": "Door seal",
+    "doorPhoto": "Sealed door",
+    "handOver": "Hand over to driver",
+    "todo": "Confirm the truck, scan every bag, seal the door and take the photo",
+    "done_one": "{{count}} bag loaded on {{vehicle}}",
+    "done_other": "{{count}} bags loaded on {{vehicle}}",
+    "sent": "Sent today",
+    "waitingDriver": "Waiting for the driver",
+    "handOverTitle": "Hand over to driver",
+    "driver": "the driver",
+    "doneLine": "To {{name}} at {{time}}",
+    "backHome": "Back to hub home"
+  },
+  "pa20m": {
+    "waitingHub": "Waiting for {{hub}} to load the truck and show the code.",
+    "notLoaded": "{{hub}} is still sorting and sealing. The hand-over opens here when they load your truck.",
+    "count": "Bags",
+    "countFinished_one": "Count finished: {{count}} bag missing",
+    "countFinished_other": "Count finished: {{count}} bags missing",
+    "doorSeal": "Truck door",
+    "todoCount": "Scan every bag, or mark the count finished",
+    "done_one": "Took {{count}} bag from {{hub}}",
+    "done_other": "Took {{count}} bags from {{hub}}"
+  },
+  "hubx": {
+    "none": "No open exceptions.",
+    "due": "Investigate by {{time}}",
+    "kind": {
+      "short": "Short",
+      "excess": "Excess",
+      "damage": "Damaged",
+      "sealMismatch": "Seal mismatch",
+      "pickupMissed": "Pickup missed",
+      "delay": "Delay",
+      "breakdown": "Breakdown",
+      "ndr": "Delivery failed",
+      "weightMismatch": "Weight mismatch"
+    }
   }
 }

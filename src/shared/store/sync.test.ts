@@ -31,6 +31,12 @@ function makeTab() {
     markNotificationsRead: () => {},
     giveHandover: () => {},
     receiveHandover: () => {},
+    inScan: () => {},
+    sortPiece: () => undefined,
+    removeFromBag: () => {},
+    sealBag: () => {},
+    dispatchManifest: () => {},
+    receiveManifest: () => {},
     setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),
     resetDemo: () => set({ data: buildBaseSeed(), demoNow: DEMO_START }),
   }))

@@ -137,7 +137,17 @@
     "labelPhoto": "खराब लेबल की फ़ोटो",
     "labelPhotoCaption": "खराब लेबल",
     "add": "पीस जोड़ें",
-    "missing": "अभी स्कैन नहीं हुए"
+    "missing": "अभी स्कैन नहीं हुए",
+    "bag": {
+      "voiceWrong": "गलत बैग",
+      "allScanned": "सभी बैग स्कैन हो गए",
+      "result": {
+        "ok": "बैग {{n}}/{{total}} ✓ ({{label}})"
+      },
+      "manual": "बैग नंबर टाइप करें (खराब लेबल)",
+      "pieceId": "बैग नंबर",
+      "add": "बैग जोड़ें"
+    }
   },
   "pa05": {
     "hello": "नमस्ते, {{name}}",
@@ -342,5 +352,171 @@
     "done_one": "{{name}} से {{count}} पीस मिला",
     "done_other": "{{name}} से {{count}} पीस मिले",
     "doneException": "समस्या के साथ स्वीकार किया। {{partner}} के लिए टिकट बना।"
+  },
+  "pa25": {
+    "shift": "{{hub}} · {{hours}}",
+    "stages": "चरण",
+    "tile": {
+      "toInScan": "इन-स्कैन बाकी",
+      "toSort": "छाँटना बाकी",
+      "bagsOpen": "खुले बैग",
+      "bagsToSeal": "सील करने हैं",
+      "toDispatch": "भेजना बाकी",
+      "exceptions": "समस्याएँ"
+    },
+    "inbound": "आने वाला माल",
+    "noInbound": "आज और कुछ आने वाला नहीं है।",
+    "from": {
+      "firstMile": "पिकअप",
+      "lineHaul": "ट्रक",
+      "originHub": "हब",
+      "destHub": "हब",
+      "lastMile": "राइडर"
+    },
+    "pcs_one": "{{count}} पीस",
+    "pcs_other": "{{count}} पीस",
+    "departures": "जाने वाले ट्रक",
+    "noDepartures": "आज कोई ट्रक नहीं जा रहा।",
+    "bags_one": "{{count}} बैग",
+    "bags_other": "{{count}} बैग",
+    "trip": {
+      "planned": "तय",
+      "loading": "लोड हो रहा",
+      "inTransit": "रास्ते में",
+      "arrived": "पहुँच गया"
+    }
+  },
+  "pa26": {
+    "title": "आने वाला माल",
+    "empty": "इन-स्कैन के लिए कुछ नहीं। राइडर और ट्रक से लिया माल यहाँ दिखेगा।",
+    "source": "किससे आया",
+    "scan": "सब स्कैन करके अंदर लें",
+    "excessHint": "जो लेबल इस लोड में नहीं है वह ज़्यादा माल है: उसे अलग रखें।",
+    "weightCheck": "हब पर वज़न जाँच",
+    "reweigh": "हब के काँटे पर दोबारा तौलें",
+    "hubWeight": "हब वज़न (kg)",
+    "pickupWeight": "पिकअप वज़न {{kg}}",
+    "weightDiffers": "पिकअप वज़न से {{kg}} अलग है। इन-स्कैन में दर्ज होगा।",
+    "scalePhoto": "काँटे की फ़ोटो",
+    "shortTitle_one": "{{count}} पीस स्कैन नहीं हुआ",
+    "shortTitle_other": "{{count}} पीस स्कैन नहीं हुए",
+    "reason": {
+      "notInLoad": "लोड में नहीं था",
+      "labelDamaged": "लेबल खराब, स्कैन नहीं होता",
+      "other": "अन्य"
+    },
+    "finishShort_one": "{{count}} कम के साथ पूरा करें",
+    "finishShort_other": "{{count}} कम के साथ पूरा करें",
+    "finish": "इन-स्कैन पूरा करें",
+    "todo": {
+      "reason": "पीस कम होने का कारण चुनें",
+      "weight": "हब वज़न डालें और काँटे की फ़ोटो लें"
+    },
+    "done_one": "{{count}} पीस इन-स्कैन हुआ",
+    "done_other": "{{count}} पीस इन-स्कैन हुए",
+    "doneShort_one": "{{count}} पीस कम दर्ज। समस्या दर्ज की गई।",
+    "doneShort_other": "{{count}} पीस कम दर्ज। समस्या दर्ज की गई।"
+  },
+  "pa27": {
+    "title": "बैग में छाँटें",
+    "empty": "छाँटने के लिए कुछ नहीं।",
+    "toBags": "बैग बंद और सील करें",
+    "scanPiece_one": "पीस स्कैन करें · {{count}} बाकी",
+    "scanPiece_other": "पीस स्कैन करें · {{count}} बाकी",
+    "local": "{{city}} डिलीवरी",
+    "scanBag": "बैग लेबल स्कैन करें",
+    "wrongBagDemo": "गलत बैग",
+    "wrongBag": "गलत बैग: यह {{scanned}} है। इसे {{bag}} में डालें।",
+    "voiceWrongBag": "गलत बैग",
+    "voicePlaced": "{{bag}}, हो गया",
+    "placed": "{{bag}} में ✓",
+    "next": "अगला पीस"
+  },
+  "pa28": {
+    "title": "बैग",
+    "scanBag": "बैग स्कैन करें",
+    "open": "खुले बैग",
+    "noOpen": "कोई खुला बैग नहीं। पीस छाँटने पर नया खुलेगा।",
+    "sealed": "सील हो गए, भेजना बाकी",
+    "contentsCount_one": "अंदर · {{count}} पीस",
+    "contentsCount_other": "अंदर · {{count}} पीस",
+    "emptyBag": "यह बैग खाली है।",
+    "remove": "निकालें",
+    "removeLabel": "{{piece}} निकालें (दोबारा स्कैन)",
+    "seal": "सील नंबर",
+    "scanSeal": "सील स्कैन करें",
+    "sealFormat": "सील नंबर SL-12345 जैसा होता है",
+    "weightOptional": "बैग वज़न (ज़रूरी नहीं)",
+    "weight": "वज़न",
+    "photoTitle": "फ़ोटो",
+    "photo": "सील किया बैग",
+    "manifest": "मैनिफ़ेस्ट",
+    "newManifest": "नया मैनिफ़ेस्ट",
+    "newOnTrip": "{{trip}} पर जाएगा, {{time}} पर",
+    "newNoTrip": "इस जगह के लिए अभी कोई ट्रक तय नहीं",
+    "sealAndAdd": "सील करें और जोड़ें",
+    "todo": "सील नंबर डालें और फ़ोटो लें",
+    "done": "{{bag}} {{seal}} से सील हुआ",
+    "sealedTitle": "{{bag}} सील हुआ",
+    "sealedLine": "सील {{seal}} · {{manifest}} पर",
+    "backToBags": "बैग पर वापस",
+    "print": "मैनिफ़ेस्ट प्रिंट करें",
+    "printTitle": "मैनिफ़ेस्ट",
+    "printedAt": "प्रिंट {{at}}",
+    "departs": "{{time}} पर निकलेगा",
+    "bag": "बैग",
+    "contents": "पीस",
+    "printTotal": "{{bags}} बैग · {{pieces}} पीस"
+  },
+  "pa29": {
+    "title": "भेजना",
+    "empty": "भेजने के लिए कोई सील बैग नहीं।",
+    "manifest": "मैनिफ़ेस्ट",
+    "trip": "ट्रिप",
+    "noVehicle": "कोई ट्रक तय नहीं",
+    "lateCutoff": "{{time}} की कट-ऑफ़ के बाद जा रहा है: डिलीवरी की तारीख खतरे में है।",
+    "vehicle": "गाड़ी नंबर",
+    "scanPlate": "नंबर प्लेट स्कैन करें",
+    "vehicleMismatch": "यह इस ट्रिप का ट्रक नहीं है ({{reg}})",
+    "vehicleOk": "ट्रिप से मेल खाता है",
+    "scanBags": "बैग स्कैन करके ट्रक में चढ़ाएँ",
+    "doorSeal": "दरवाज़े की सील",
+    "doorPhoto": "सील किया दरवाज़ा",
+    "handOver": "ड्राइवर को सौंपें",
+    "todo": "ट्रक जाँचें, हर बैग स्कैन करें, दरवाज़ा सील करें और फ़ोटो लें",
+    "done_one": "{{vehicle}} पर {{count}} बैग चढ़ा",
+    "done_other": "{{vehicle}} पर {{count}} बैग चढ़े",
+    "sent": "आज भेजे गए",
+    "waitingDriver": "ड्राइवर का इंतज़ार",
+    "handOverTitle": "ड्राइवर को सौंपें",
+    "driver": "ड्राइवर",
+    "doneLine": "{{name}} को {{time}} पर",
+    "backHome": "हब होम पर वापस"
+  },
+  "pa20m": {
+    "waitingHub": "{{hub}} के ट्रक लोड करके कोड दिखाने का इंतज़ार।",
+    "notLoaded": "{{hub}} अभी छाँट और सील कर रहा है। आपका ट्रक लोड होने पर यहाँ हैंड-ओवर खुलेगा।",
+    "count": "बैग",
+    "countFinished_one": "गिनती पूरी: {{count}} बैग कम है",
+    "countFinished_other": "गिनती पूरी: {{count}} बैग कम हैं",
+    "doorSeal": "ट्रक का दरवाज़ा",
+    "todoCount": "हर बैग स्कैन करें, या गिनती पूरी चुनें",
+    "done_one": "{{hub}} से {{count}} बैग लिया",
+    "done_other": "{{hub}} से {{count}} बैग लिए"
+  },
+  "hubx": {
+    "none": "कोई खुली समस्या नहीं।",
+    "due": "{{time}} तक जाँच करें",
+    "kind": {
+      "short": "कम माल",
+      "excess": "ज़्यादा माल",
+      "damage": "खराब माल",
+      "sealMismatch": "सील मेल नहीं खाती",
+      "pickupMissed": "पिकअप छूटा",
+      "delay": "देरी",
+      "breakdown": "गाड़ी खराब",
+      "ndr": "डिलीवरी नहीं हुई",
+      "weightMismatch": "वज़न अलग"
+    }
   }
 }

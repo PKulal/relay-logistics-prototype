@@ -12,6 +12,12 @@ import { eventIdFactory } from './booking'
 /** Hours the previous leg's partner has to investigate a short / seal / damage exception (source §10). */
 export const INVESTIGATE_WITHIN_HOURS = 4
 
+/** Exception ids are per shipment: EXC-000781-1, -2 … (`offset` for several raised at once). */
+export function exceptionId(data: DemoData, shipmentId: Id, offset = 0): Id {
+  const already = Object.values(data.exceptions).filter((x) => x.shipmentId === shipmentId).length
+  return `EXC-${shipmentId.slice(-6)}-${already + offset + 1}`
+}
+
 /**
  * Where a hand-over from `fromLegId` stands: the latest code shown, and the
  * receiver's confirmation if it has happened.
@@ -116,8 +122,6 @@ export function receiveHandover(data: DemoData, r: HandoverReceive, at: IsoDateT
     },
   ]
   const problems = receiveExceptions(given.pieceIds ?? [], r)
-  const serial = leg.shipmentId.slice(-6)
-  const already = Object.values(data.exceptions).filter((x) => x.shipmentId === leg.shipmentId).length
   const exceptions: Record<Id, ShipmentException> = {}
   problems.forEach((p, i) => {
     events.push({
@@ -134,7 +138,7 @@ export function receiveHandover(data: DemoData, r: HandoverReceive, at: IsoDateT
       counterpartStaffId: given.by,
       note: p.note,
     })
-    const id = `EXC-${serial}-${already + i + 1}`
+    const id = exceptionId(data, leg.shipmentId, i)
     exceptions[id] = {
       id,
       shipmentId: leg.shipmentId,

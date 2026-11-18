@@ -3,23 +3,22 @@
  * Scan the goods out, take a photo, show the code. The hand-over is complete
  * only when the receiver confirms on their phone (PA-20); this screen waits for it.
  */
-import { ArrowLeft, CheckCircle2, ExternalLink, Loader2, ShieldCheck, TriangleAlert } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, TriangleAlert } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { nextLegOf } from '@shared/engines/fieldTasks'
 import { useData } from '@shared/hooks/useDemo'
 import { formatTime } from '@shared/lib/format'
-import { handoverQrValue, spacedCode } from '@shared/sim/handover'
 import { useDemoStore } from '@shared/store'
 import { handoverState } from '@shared/store/handoverActions'
 import type { Leg } from '@shared/types'
 import { PhotoCapture } from '@shared/ui/PhotoCapture'
-import { QrCode } from '@shared/ui/QrCode'
 import { Scanner } from '@shared/ui/Scanner'
-import { SimulatedTag } from '@shared/ui/SimulatedTag'
 import { Card } from './FieldUi'
+import { HandoverCode } from './HandoverCode'
 import { ProblemList } from './PA20Receive'
+import { LIST_PATH } from './nav'
 import { useFieldSession } from './useFieldSession'
 
 export default function PA19HandOver({ leg }: { leg: Leg }) {
@@ -49,7 +48,7 @@ export default function PA19HandOver({ leg }: { leg: Leg }) {
 
   const header = (
     <>
-      <button type="button" onClick={() => navigate('/app/tasks')} className="inline-flex min-h-12 w-fit items-center gap-1.5 font-medium text-muted-foreground">
+      <button type="button" onClick={() => navigate(LIST_PATH[staff.role])} className="inline-flex min-h-12 w-fit items-center gap-1.5 font-medium text-muted-foreground">
         <ArrowLeft className="size-5" aria-hidden /> {t('pa15.back')}
       </button>
       <div>
@@ -90,7 +89,7 @@ export default function PA19HandOver({ leg }: { leg: Leg }) {
             <p className="mt-1 text-[13px]">{t('pa19.investigate', { partner: data.partners[leg.partnerId].shortName, time: formatTime(exceptions[0].actionDueAt) })}</p>
           </section>
         )}
-        <Link to="/app/tasks" className="flex min-h-14 items-center justify-center rounded-2xl bg-primary text-[18px] font-bold text-primary-foreground">
+        <Link to={LIST_PATH[staff.role]} className="flex min-h-14 items-center justify-center rounded-2xl bg-primary text-[18px] font-bold text-primary-foreground">
           {t('pa19.backToTasks')}
         </Link>
       </div>
@@ -99,34 +98,15 @@ export default function PA19HandOver({ leg }: { leg: Leg }) {
 
   // Waiting: code shown, receiver to confirm
   if (given) {
-    const code = given.handoverCode!
     return (
       <div className="flex flex-col gap-4 p-4">
         {header}
-        <section className="flex flex-col items-center gap-3 rounded-2xl border bg-card p-5 text-center">
-          <h2 className="font-bold">{t('pa19.codeTitle')}</h2>
-          <QrCode value={handoverQrValue(leg.id, code)} label={t('pa19.qrLabel', { code })} className="w-44" />
-          <p className="tabular text-[32px] font-bold tracking-widest" data-testid="handover-code">
-            {spacedCode(code)}
-          </p>
-          <p className="text-muted-foreground">{t('pa19.codeHelp', { name: receiverName })}</p>
-          <SimulatedTag />
-        </section>
-        <p className="flex items-center justify-center gap-2 font-semibold" role="status">
-          <Loader2 className="size-5 animate-spin text-primary" aria-hidden /> {t('pa19.waiting', { name: receiverName })}
-        </p>
-        {receiver && to && (
-          <button
-            type="button"
-            onClick={() => window.open(`/app/as/${receiver.id}?to=${encodeURIComponent(`/app/tasks/${to.id}`)}`, '_blank')}
-            className="flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-dashed border-brand-amber font-semibold"
-          >
-            <ExternalLink className="size-4" aria-hidden /> {t('pa19.openReceiver', { name: receiver.name })} <SimulatedTag />
-          </button>
-        )}
-        <p className="flex items-start gap-2 text-[13px] text-muted-foreground">
-          <ShieldCheck className="mt-0.5 size-4 shrink-0" aria-hidden /> {t('pa19.liability')}
-        </p>
+        <HandoverCode
+          refId={leg.id}
+          code={given.handoverCode!}
+          receiverName={receiverName}
+          receiver={receiver && to ? { id: receiver.id, name: receiver.name, path: `/app/tasks/${to.id}` } : undefined}
+        />
       </div>
     )
   }

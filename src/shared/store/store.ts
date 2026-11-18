@@ -21,10 +21,12 @@ import * as pick from './pickupActions'
 import type { PickupConfirmation } from './pickupActions'
 import * as hand from './handoverActions'
 import type { HandoverGive, HandoverReceive } from './handoverActions'
+import * as hub from './hubActions'
+import type { Dispatch, InScan, ReceiveManifest, SealBag } from './hubActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 8
+export const STORE_VERSION = 9
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -68,6 +70,14 @@ export interface DemoState {
   /** Partner App hand-overs (PA-19 give, PA-20 receive) */
   giveHandover: (g: HandoverGive) => void
   receiveHandover: (r: HandoverReceive) => void
+  /** Partner App hub (PA-26 to PA-29) */
+  inScan: (x: InScan) => void
+  /** Returns the bag the piece went in */
+  sortPiece: (hubId: Id, pieceId: Id) => Id | undefined
+  removeFromBag: (bagId: Id, pieceId: Id) => void
+  sealBag: (x: SealBag) => void
+  dispatchManifest: (x: Dispatch) => void
+  receiveManifest: (x: ReceiveManifest) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
   /** Restore the seed data in every app (other tabs follow via sync). */
   resetDemo: () => void
@@ -125,6 +135,16 @@ export const useDemoStore = create<DemoState>()(
       markNotificationsRead: (ids) => set((s) => ({ data: pick.markRead(s.data, ids) })),
       giveHandover: (g) => set((s) => ({ data: hand.giveHandover(s.data, g, s.demoNow) })),
       receiveHandover: (r) => set((s) => ({ data: hand.receiveHandover(s.data, r, s.demoNow) })),
+      inScan: (x) => set((s) => ({ data: hub.inScan(s.data, x, s.demoNow) })),
+      sortPiece: (hubId, pieceId) => {
+        const r = hub.sortPiece(get().data, hubId, pieceId)
+        set({ data: r.data })
+        return r.bagId
+      },
+      removeFromBag: (bagId, pieceId) => set((s) => ({ data: hub.removeFromBag(s.data, bagId, pieceId) })),
+      sealBag: (x) => set((s) => ({ data: hub.sealBag(s.data, x, s.demoNow) })),
+      dispatchManifest: (x) => set((s) => ({ data: hub.dispatchManifest(s.data, x, s.demoNow) })),
+      receiveManifest: (x) => set((s) => ({ data: hub.receiveManifest(s.data, x, s.demoNow) })),
 
       deleteDraft: (id) =>
         set((s) => {

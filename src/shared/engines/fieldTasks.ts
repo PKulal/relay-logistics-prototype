@@ -56,7 +56,7 @@ export function nextLegOf(data: DemoData, leg: Leg): Leg | undefined {
 
 /** A hub job whose goods are on their way in: the staff member's job is to receive them (PA-20). */
 export function isReceive(data: DemoData, leg: Leg): boolean {
-  return (leg.type === 'originHub' || leg.type === 'destHub') && leg.status === 'assigned' && prevLegOf(data, leg)?.status === 'inProgress'
+  return (leg.type === 'originHub' || leg.type === 'destHub' || leg.type === 'lineHaul') && leg.status === 'assigned' && prevLegOf(data, leg)?.status === 'inProgress'
 }
 
 function kindOf(data: DemoData, leg: Leg): TaskKind {
@@ -65,7 +65,7 @@ function kindOf(data: DemoData, leg: Leg): TaskKind {
       // After pickup the rider's job is to hand the goods to the hub
       return leg.status === 'inProgress' ? 'handover' : 'pickup'
     case 'lineHaul':
-      return 'trip'
+      return isReceive(data, leg) ? 'receive' : 'trip'
     case 'originHub':
     case 'destHub':
       return isReceive(data, leg) ? 'receive' : 'hub'
@@ -87,7 +87,7 @@ function placeOf(data: DemoData, leg: Leg, s: Shipment): string {
       return `${data.hubs[origin.hubId!]?.name ?? origin.city} → ${data.hubs[dest.hubId!]?.name ?? dest.city}`
     case 'receive': {
       const prev = prevLegOf(data, leg)!
-      return `${data.partners[prev.partnerId].shortName} → ${data.hubs[(leg.type === 'originHub' ? origin : dest).hubId!]?.name ?? ''}`
+      return `${data.partners[prev.partnerId].shortName} → ${data.hubs[(leg.type === 'destHub' ? dest : origin).hubId!]?.name ?? ''}`
     }
     case 'hub':
       return s.legIds.indexOf(leg.id) <= 1 ? `${origin.city} → ${dest.city}` : `${dest.city}`

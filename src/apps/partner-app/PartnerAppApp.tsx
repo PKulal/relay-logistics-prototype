@@ -4,7 +4,7 @@
  */
 import { CloudOff, RefreshCw, Siren } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { Link, Navigate, NavLink, Outlet, Route, Routes, useNavigate } from 'react-router-dom'
+import { Link, Navigate, NavLink, Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom'
 import { cn } from '@/shared/lib/utils'
 import { useData, useFlags } from '@shared/hooks/useDemo'
 import { useSessionUser } from '@shared/store/session'
@@ -16,15 +16,24 @@ import { SOS_SCREEN, SYNC_SCREEN, TABS, type Tab } from './nav'
 import PA05Home from './PA05Home'
 import PA06Tasks from './PA06Tasks'
 import PA07ScanTab from './PA07ScanTab'
+import HubExceptions from './HubExceptions'
+import PA20ReceiveManifest from './PA20ReceiveManifest'
+import PA25HubHome from './PA25HubHome'
+import PA26InScan from './PA26InScan'
+import PA27Sort from './PA27Sort'
+import PA28Bags from './PA28Bags'
+import PA29OutScan from './PA29OutScan'
 import TaskScreen from './TaskScreen'
 
-/** Built tab screens by screen id. Trip (PA-21) and Inbound (PA-26) open the task list (PA-06) until their own screens arrive. */
+/** Built tab screens by screen id. Trip (PA-21) opens the task list (PA-06) until its own screen arrives. */
 const BUILT: Record<string, React.ReactNode> = {
   'PA-05': <PA05Home />,
   'PA-06': <PA06Tasks />,
   'PA-07': <PA07ScanTab />,
   'PA-21': <PA06Tasks />,
-  'PA-26': <PA06Tasks />,
+  'PA-25': <PA25HubHome />,
+  'PA-26': <PA26InScan />,
+  'PA-29': <PA29OutScan />,
 }
 
 export default function PartnerAppApp() {
@@ -63,6 +72,15 @@ export default function PartnerAppApp() {
             )}
             <Route path="tasks/:legId" element={<TaskScreen />} />
             <Route path="tasks/:legId/pickup" element={<TaskScreen flow="pickup" />} />
+            {staff.role === 'hub' && (
+              <>
+                <Route path="hub/sort" element={<PA27Sort />} />
+                <Route path="hub/bags" element={<PA28Bags />} />
+                <Route path="hub/exceptions" element={<HubExceptions />} />
+                <Route path="outbound/:manifestId" element={<PA29OutScan />} />
+              </>
+            )}
+            {staff.role === 'driver' && <Route path="receive/:manifestId" element={<ReceiveManifestRoute />} />}
             <Route path={SOS_SCREEN.path} element={screen(SOS_SCREEN)} />
             <Route path={SYNC_SCREEN.path} element={screen(SYNC_SCREEN)} />
             {/* Another role's tab opened by URL */}
@@ -143,4 +161,9 @@ function PhoneShell({ staff, tabs }: { staff: FieldStaff; tabs: Tab[] }) {
       </nav>
     </>
   )
+}
+
+function ReceiveManifestRoute() {
+  const { manifestId = '' } = useParams()
+  return <PA20ReceiveManifest manifestId={manifestId} />
 }

@@ -569,6 +569,11 @@ export interface Bag {
   pieceIds: Id[]
   sealNo?: string
   status: 'open' | 'sealed' | 'dispatched' | 'received'
+  /** PA-28: hub scale weight, sealed-bag photo, when and by whom */
+  weightKg?: number
+  photo?: string
+  sealedAt?: IsoDateTime
+  sealedBy?: Id
 }
 
 export interface Manifest {
@@ -579,6 +584,11 @@ export interface Manifest {
   vehicleId?: Id
   tripId?: Id
   status: 'open' | 'closed' | 'dispatched'
+  /** PA-29: truck door seal, loading photo, dispatch time and the hand-over code for the driver */
+  doorSeal?: string
+  photo?: string
+  dispatchedAt?: IsoDateTime
+  handoverCode?: string
 }
 
 /** Chain-of-custody event types (Partner App spec §7.1, §8). */
