@@ -67,7 +67,9 @@
       "customer": "Search LR, invoice, PO or consignee",
       "partner": "Search job, LR, trip, staff or vehicle",
       "erp": "Search LR, customer, partner, invoice, claim…"
-    }
+    },
+    "many": "{{count}} shipments match. Type more of the LR.",
+    "none": "No shipment matches “{{q}}”."
   },
   "nav": {
     "label": "Main menu",
@@ -666,5 +668,252 @@
     "packagesRow": "Packages",
     "invoiceRow": "Invoice",
     "goodsRow": "Goods"
+  },
+  "slaState": {
+    "onTrack": "On track",
+    "atRisk": "At risk",
+    "breached": "Breached",
+    "done": "Done"
+  },
+  "legType": {
+    "firstMile": "First mile",
+    "originHub": "Origin hub",
+    "lineHaul": "Line-haul",
+    "destHub": "Destination hub",
+    "lastMile": "Last mile"
+  },
+  "appName": {
+    "customer": "Customer Portal",
+    "partnerPortal": "Partner Portal",
+    "partnerApp": "Partner App",
+    "erp": "ERP",
+    "system": "System"
+  },
+  "event": {
+    "booked": "Booked",
+    "legOffered": "Job offered",
+    "legAccepted": "Job accepted",
+    "legFlagged": "Job flagged",
+    "legWithdrawn": "Job withdrawn",
+    "legAssigned": "Assigned to staff",
+    "pickupArrived": "Arrived at pickup",
+    "pickupConfirmed": "Picked up",
+    "pickupFailed": "Pickup failed",
+    "weightRevised": "Weight revised",
+    "handoverGiven": "Handed over",
+    "handoverReceived": "Hand-over received",
+    "hubInScan": "Hub in-scan",
+    "bagSealed": "Bag sealed",
+    "hubOutScan": "Hub out-scan",
+    "tripStarted": "Trip started",
+    "haltReported": "Halt reported",
+    "tripArrived": "Trip arrived",
+    "runStarted": "Out for delivery",
+    "delivered": "Delivered",
+    "deliveryFailed": "Delivery failed",
+    "reattemptScheduled": "Reattempt scheduled",
+    "exceptionReported": "Exception reported",
+    "rtoInitiated": "Return to origin",
+    "cancelled": "Cancelled",
+    "legClosed": "Leg closed for payout"
+  },
+  "exception": {
+    "pickupMissed": "Pickup missed",
+    "sealMismatch": "Seal mismatch",
+    "short": "Short",
+    "excess": "Excess",
+    "damage": "Damage",
+    "delay": "Delay",
+    "breakdown": "Breakdown",
+    "ndr": "NDR",
+    "weightMismatch": "Weight mismatch"
+  },
+  "erp05": {
+    "title": "Live job board",
+    "active_one": "{{count}} active shipment",
+    "active_other": "{{count}} active shipments",
+    "breached_one": "{{count}} breached",
+    "breached_other": "{{count}} breached",
+    "atRisk_one": "{{count}} at risk",
+    "atRisk_other": "{{count}} at risk",
+    "view": "View",
+    "views": {
+      "legs": "Legs",
+      "shipments": "Shipments",
+      "map": "Map"
+    },
+    "filters": "Filters",
+    "all": "all",
+    "f": {
+      "q": "Search LR",
+      "customer": "Customer",
+      "lane": "Lane",
+      "partner": "Partner",
+      "hub": "Hub",
+      "status": "Status",
+      "service": "Service",
+      "sla": "SLA"
+    },
+    "includeDone": "Include finished work",
+    "clear": "Clear filters",
+    "emptyTitle": "No jobs match",
+    "emptyBody": "Try another filter, or include finished work.",
+    "col": {
+      "lrLeg": "LR · leg",
+      "leg": "Leg",
+      "customer": "Customer",
+      "partner": "Partner (tier)",
+      "legStatus": "Leg status",
+      "sla": "SLA",
+      "lastEvent": "Last event",
+      "actions": "Actions",
+      "lr": "LR",
+      "route": "Route",
+      "service": "Service",
+      "status": "Status",
+      "currentLeg": "Leg in charge",
+      "eta": "ETA"
+    },
+    "mapLabel": "Map of active shipments",
+    "mapNote": "{{count}} shipments on the map. Click a dot to open its Shipment 360."
+  },
+  "erp03": {
+    "backToBoard": "Live job board",
+    "customer": "Customer",
+    "route": "Route",
+    "service": "Service",
+    "eta": "ETA",
+    "weight": "Pieces · chargeable",
+    "booked": "Booked",
+    "legs_one": "{{count}} leg",
+    "legs_other": "{{count}} legs",
+    "col": {
+      "leg": "Leg",
+      "partner": "Partner",
+      "status": "Status and SLA",
+      "handoverIn": "Hand-over in",
+      "handoverOut": "Hand-over out",
+      "cost": "Leg cost"
+    },
+    "tabs": {
+      "timeline": "Timeline",
+      "map": "Map",
+      "money": "Money",
+      "documents": "Documents",
+      "claims": "Tickets and claims",
+      "ai": "AI decisions"
+    },
+    "noEvents": "No events yet",
+    "seal": "Seal",
+    "receivedBy": "Received by {{name}}",
+    "mapLabel": "Route map for {{lr}}",
+    "stop": {
+      "origin": "Pickup",
+      "originHub": "Origin hub",
+      "destHub": "Destination hub",
+      "dest": "Delivery"
+    },
+    "nowHere": "Now: {{status}}",
+    "mapNote": "Position estimated from status and leg times until live GPS is connected.",
+    "customerPrice": "Customer price",
+    "marginTitle": "Leg costs and margin",
+    "priceBeforeGst": "Price before GST",
+    "insurancePassThrough": "Insurance premium to insurer",
+    "grossMargin": "Gross margin ({{pct}}%)",
+    "riskBuffer": "Risk buffer ({{pct}}%)",
+    "netMargin": "Margin after buffer ({{pct}}%)",
+    "aboveTarget": "Above the {{pct}}% target",
+    "belowTarget": "Below the {{pct}}% target: flagged in the margin monitor",
+    "print": "Print",
+    "noFile": "no file",
+    "partBDone": "Part B updated",
+    "partBPending": "Part B pending",
+    "doc": {
+      "lr": "LR",
+      "labels": "Labels",
+      "invoice": "Invoice copy",
+      "ewb": "E-way bill",
+      "seals": "Seals",
+      "epod": "e-POD"
+    },
+    "noClaims": "No tickets or claims on this shipment",
+    "claimType": {
+      "shortage": "Shortage",
+      "damage": "Damage",
+      "loss": "Loss"
+    },
+    "claimStatus": {
+      "raised": "Raised",
+      "investigating": "Investigating",
+      "approved": "Approved",
+      "settled": "Settled",
+      "rejected": "Rejected"
+    },
+    "claimLine": "Claimed {{claimed}} · approved {{approved}} · liable {{partner}} ({{leg}})",
+    "noDecisions": "No AI decisions recorded",
+    "ai": {
+      "assigned": "{{leg}} assigned to {{partner}}",
+      "marginCheck": "Margin check",
+      "etaPrediction": "ETA prediction",
+      "legAssignment": "Partner assignment",
+      "confidence": "confidence {{pct}}%",
+      "scoreCost": "score {{score}} · {{cost}}",
+      "chosen": "Chosen",
+      "skip": {
+        "atCapacity": "At capacity",
+        "notActive": "Not active",
+        "serviceNotOffered": "Service not offered",
+        "noRate": "No rate",
+        "noCoverage": "No coverage"
+      },
+      "marginLine": "Gross {{gross}} ({{grossPct}}%) · after buffer {{net}} ({{netPct}}%) · target {{target}}%",
+      "ok": "OK",
+      "flagged": "Flagged"
+    }
+  },
+  "erpActions": {
+    "menu": "Actions for {{lr}}",
+    "reassign": "Reassign leg",
+    "message": "Message customer",
+    "call": "Call partner",
+    "claim": "Open claim",
+    "extendEwb": "Extend e-way bill",
+    "partB": "Update Part B",
+    "extendTitle": "Extend the e-way bill?",
+    "extendBody": "E-way bill {{no}} is valid till {{date}}. Logisco will request an extension from the NIC portal.",
+    "extendConfirm": "Extend",
+    "extendDone": "E-way bill extended till {{date}}",
+    "partBTitle": "Update Part B?",
+    "partBBody": "Send the vehicle details for this movement to the NIC portal.",
+    "partBConfirm": "Update Part B",
+    "partBDone": "Part B updated",
+    "messageTitle": "Message {{company}}",
+    "messageVia": "Sent by WhatsApp and email to the customer’s contacts.",
+    "template": "Template",
+    "messageBody": "Message",
+    "send": "Send",
+    "messageSent": "Message sent to {{company}}",
+    "templates": {
+      "delay": {
+        "name": "Delay notice",
+        "body": "Shipment {{lr}} is running behind schedule. We are working to deliver it by {{eta}} and will update you shortly."
+      },
+      "pickupReschedule": {
+        "name": "Pickup rescheduled",
+        "body": "The pickup for {{lr}} has been rescheduled. Our partner will contact your pickup contact with the new time."
+      },
+      "appointment": {
+        "name": "Appointment reminder",
+        "body": "Shipment {{lr}} is due on {{eta}}. Please ask the consignee to confirm the delivery appointment from the tracking link."
+      },
+      "general": {
+        "name": "General update",
+        "body": "Update on shipment {{lr}}: "
+      }
+    },
+    "callTitle": "Call {{partner}}",
+    "callBody": "The call goes through a masked number, so neither side sees the other’s phone number.",
+    "callNow": "Call now",
+    "callPlaced": "Masked call placed to {{partner}}"
   }
 }

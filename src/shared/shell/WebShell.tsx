@@ -41,10 +41,12 @@ interface WebShellProps<Ctx> {
   /** Help screen path under the app root */
   helpPath?: string
   searchPlaceholderKey: string
+  /** Header search. Without it, search shows a "coming later" message. */
+  onSearch?: (query: string) => void
   dark?: boolean
 }
 
-export function WebShell<Ctx>({ app, nav, orgName, orgBadge, user, headerActions, helpPath = 'help', searchPlaceholderKey, dark }: WebShellProps<Ctx>) {
+export function WebShell<Ctx>({ app, nav, orgName, orgBadge, user, headerActions, helpPath = 'help', searchPlaceholderKey, onSearch, dark }: WebShellProps<Ctx>) {
   const { t } = useTranslation()
   const meta = appByKey(app)
   const navigate = useNavigate()
@@ -85,7 +87,9 @@ export function WebShell<Ctx>({ app, nav, orgName, orgBadge, user, headerActions
           className="mx-4 hidden max-w-md flex-1 md:block"
           onSubmit={(e) => {
             e.preventDefault()
-            toast.info(t('search.comingSoon'))
+            const q = String(new FormData(e.currentTarget).get('q') ?? '').trim()
+            if (onSearch && q) onSearch(q)
+            else if (!onSearch) toast.info(t('search.comingSoon'))
           }}
         >
           <label className="relative block">
@@ -93,6 +97,7 @@ export function WebShell<Ctx>({ app, nav, orgName, orgBadge, user, headerActions
             <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
             <input
               type="search"
+              name="q"
               placeholder={t(searchPlaceholderKey)}
               className="h-9 w-full rounded-md border border-input bg-background pr-3 pl-9 text-body outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
             />

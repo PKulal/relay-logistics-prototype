@@ -196,6 +196,31 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Map markers (MapView): Leaflet SVG paths coloured from our tokens */
+.map-dot {
+  stroke: #ffffff;
+}
+.map-success {
+  fill: var(--color-status-success);
+}
+.map-warning {
+  fill: var(--color-brand-amber);
+  stroke: var(--color-amber-700);
+}
+.map-danger {
+  fill: var(--color-status-danger);
+}
+.map-info {
+  fill: var(--color-status-info);
+}
+.map-neutral {
+  fill: var(--color-gray-600);
+}
+.map-route {
+  stroke: var(--color-gray-600);
+  fill: none;
+}
+
 /* Printing: only <PrintArea> content (a direct child of <body>) reaches the paper */
 @media print {
   body > :not(.print-root) {

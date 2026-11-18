@@ -13,10 +13,12 @@ import { advanceJourneys } from '@shared/sim/journey'
 import type { BookingDraft, Consignee, DemoData, Id, IsoDateTime, ShipmentEvent } from '@shared/types'
 import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
+import * as erp from './erpActions'
+import type { MessageTemplate } from './erpActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 5
+export const STORE_VERSION = 6
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -41,6 +43,11 @@ export interface DemoState {
   /** CP-13 "Save as draft" and its removal once booked */
   saveDraft: (draft: BookingDraft) => void
   deleteDraft: (id: Id) => void
+  /** ERP one-click actions (SIMULATED integrations; each writes an audit entry) */
+  extendEwayBill: (lr: Id, userId: Id) => void
+  updatePartB: (lr: Id, userId: Id) => void
+  messageCustomer: (lr: Id, template: MessageTemplate, body: string, userId: Id) => void
+  logMaskedCall: (lr: Id, partnerId: Id, userId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
   /** Restore the seed data in every app (other tabs follow via sync). */
   resetDemo: () => void
@@ -80,6 +87,11 @@ export const useDemoStore = create<DemoState>()(
       saveConsignee: (consignee) => set((s) => ({ data: { ...s.data, consignees: { ...s.data.consignees, [consignee.id]: consignee } } })),
 
       saveDraft: (draft) => set((s) => ({ data: { ...s.data, drafts: { ...s.data.drafts, [draft.id]: draft } } })),
+
+      extendEwayBill: (lr, userId) => set((s) => ({ data: erp.extendEwayBill(s.data, lr, userId, s.demoNow) })),
+      updatePartB: (lr, userId) => set((s) => ({ data: erp.updatePartB(s.data, lr, userId, s.demoNow) })),
+      messageCustomer: (lr, template, body, userId) => set((s) => ({ data: erp.messageCustomer(s.data, lr, template, body, userId, s.demoNow) })),
+      logMaskedCall: (lr, partnerId, userId) => set((s) => ({ data: erp.logMaskedCall(s.data, lr, partnerId, userId, s.demoNow) })),
 
       deleteDraft: (id) =>
         set((s) => {

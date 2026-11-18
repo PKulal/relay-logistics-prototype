@@ -5,12 +5,14 @@
  */
 import { LR_CODES } from '@data/seed/master'
 import { planAssignment } from '@shared/engines/assignment'
+import { computeMargin } from '@shared/engines/margin'
+import { priceLine } from '@shared/engines/pricing'
 import type { Dims } from '@shared/engines/chargeableWeight'
 import { ewayBillCheck } from '@shared/engines/ewayBill'
 import { quote } from '@shared/engines/quote'
 import { computeEta, legWindows, type Slot } from '@shared/engines/schedule'
 import { simulateEwbNumber } from '@shared/sim/ewayBill'
-import type { DemoData, Id, IsoDate, IsoDateTime, Leg, PaymentMode, Service, ServiceKind, Shipment, ShipmentEvent } from '@shared/types'
+import type { AiDecision, DemoData, Id, IsoDate, IsoDateTime, Leg, PaymentMode, Service, ServiceKind, Shipment, ShipmentEvent } from '@shared/types'
 import { applyEvents, nextLr } from './actions'
 
 export interface BookingInput {
@@ -164,11 +166,45 @@ export function bookShipment(data: DemoData, input: BookingInput, at: IsoDateTim
     updatedAt: at,
   }
 
+  // SIMULATED AI: record why each leg got its partner, and the margin check (ERP-03 "AI decisions")
+  const margin = computeMargin({
+    subtotal: q.price.subtotal,
+    legCosts: legs.map((l) => l.cost),
+    insurance: priceLine(q.price, 'fov'),
+    riskBufferPct: data.settings.riskBufferPct,
+    targetMarginPct: data.settings.targetMarginPct,
+  })
+  const decisions: AiDecision[] = [
+    ...plan.map(
+      (p, i): AiDecision => ({
+        id: `AI-${serial}-L${i + 1}`,
+        model: 'assignment-v1',
+        recordId: lr,
+        kind: 'legAssignment',
+        legId: legs[i].id,
+        at,
+        confidence: p.candidates.filter((c) => c.eligible).length > 1 ? 0.92 : 0.99,
+        candidates: p.candidates,
+        chosenPartnerId: p.partnerId,
+      }),
+    ),
+    {
+      id: `AI-${serial}-M`,
+      model: 'margin-check-v1',
+      recordId: lr,
+      kind: 'marginCheck',
+      at,
+      confidence: 1,
+      margin: { gross: margin.gross, grossPct: margin.grossPct, net: margin.net, netPct: margin.netPct, targetPct: data.settings.targetMarginPct, belowTarget: margin.belowTarget },
+    },
+  ]
+
   let next: DemoData = {
     ...data,
     lrSerials,
     shipments: { ...data.shipments, [lr]: shipment },
     legs: { ...data.legs, ...Object.fromEntries(legs.map((l) => [l.id, l])) },
+    aiDecisions: { ...data.aiDecisions, ...Object.fromEntries(decisions.map((d) => [d.id, d])) },
   }
 
   // Money: prepaid pays from the wallet now; credit (TBB) uses the credit line.

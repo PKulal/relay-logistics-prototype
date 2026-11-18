@@ -25,6 +25,8 @@ export default defineConfig({
       'sonner',
       'input-otp',
       'qrcode',
+      'leaflet',
+      'react-leaflet',
       'zustand',
       'zustand/middleware',
       'clsx',

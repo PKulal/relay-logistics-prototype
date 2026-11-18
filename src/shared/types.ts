@@ -819,14 +819,26 @@ export interface Notification {
   read: boolean
 }
 
+/**
+ * A recorded AI / engine decision with its reasons (ERP-03 "AI decisions", ERP-43).
+ * Structured, not sentences: screens word it through i18n.
+ */
 export interface AiDecision {
   id: Id
+  /** e.g. "assignment-v1", "margin-check-v1", "eta-v1" */
   model: string
+  /** Shipment (LR) the decision belongs to */
   recordId: Id
-  decision: string
-  reason: string
-  confidence: number
+  kind: 'legAssignment' | 'marginCheck' | 'etaPrediction'
+  legId?: Id
   at: IsoDateTime
+  /** 0–1 */
+  confidence: number
+  /** legAssignment: every partner considered, ranked (score ↓, cost ↑, transit ↑) */
+  candidates?: { partnerId: Id; score: number; cost: number; eligible: boolean; reason?: string }[]
+  chosenPartnerId?: Id
+  /** marginCheck */
+  margin?: { gross: number; grossPct: number; net: number; netPct: number; targetPct: number; belowTarget: boolean }
   acceptedByUserId?: Id
 }
 
