@@ -3,6 +3,7 @@ import CustomerApp from '@apps/customer/CustomerApp'
 import ErpApp from '@apps/erp/ErpApp'
 import PartnerAppApp from '@apps/partner-app/PartnerAppApp'
 import PartnerPortalApp from '@apps/partner-portal/PartnerPortalApp'
+import { DemoToolbar } from '@shared/ui/DemoToolbar'
 import { Toaster } from '@shared/ui/sonner'
 import { TooltipProvider } from '@shared/ui/tooltip'
 import Launcher from './launcher/Launcher'
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/erp/*" element={<ErpApp />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <DemoToolbar />
       <Toaster />
     </TooltipProvider>
   )

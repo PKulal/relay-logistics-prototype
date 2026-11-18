@@ -1,10 +1,7 @@
 /// <reference types="vitest/config" />
-import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
-
-const src = (p: string) => fileURLToPath(new URL(`./src/${p}`, import.meta.url))
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -16,11 +13,15 @@ export default defineConfig({
   },
   resolve: {
     dedupe: ['react', 'react-dom'],
+    // Root-relative targets ("/src/…"), not absolute file paths: on Windows an absolute
+    // path built from this file can carry a different drive-letter case than Vite's root,
+    // and Vite then serves the same module under two URLs (/src/… and /@fs/c:/…) — two
+    // stores, two i18n instances, and tab sync attached to the wrong one.
     alias: {
-      '@shared': src('shared'),
-      '@apps': src('apps'),
-      '@data': src('data'),
-      '@': src(''),
+      '@shared': '/src/shared',
+      '@apps': '/src/apps',
+      '@data': '/src/data',
+      '@': '/src',
     },
   },
   test: {
@@ -28,5 +29,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test-setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
+    // Several suites build the full seed (~0.5 s alone, slower with 16 files in parallel)
+    testTimeout: 15000,
   },
 })

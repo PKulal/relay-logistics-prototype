@@ -1,21 +1,23 @@
 /**
  * SIMULATED: moves a booked shipment along its legs by writing the
  * chain-of-custody events the partner apps would have produced, timed from the
- * leg windows. Used by the seed (background shipments) and later by the demo
- * toolbar's "advance time". Live demo actions (PA screens) add real events instead.
+ * leg windows. Used by the seed (background shipments) and by the demo
+ * toolbar's "advance time" (advanceJourneys). Live demo actions (PA screens) add real events instead.
  *
  * Statuses are never set here: events go through applyEvents → status engine.
  */
 import { addHours, addMinutes, isBefore } from '@shared/lib/time'
 import { applyEvents } from '@shared/store/actions'
 import { eventIdFactory } from '@shared/store/booking'
-import type { AppKey, DemoData, FieldRole, Id, IsoDateTime, Leg, LegType, ShipmentEvent } from '@shared/types'
+import type { AppKey, DemoData, FieldRole, Id, IsoDateTime, Leg, LegType, Shipment, ShipmentEvent } from '@shared/types'
 
 export type Outcome = 'normal' | 'ndr' | 'short' | 'cancel' | 'pickupFailed' | 'rto'
 
 export interface JourneyOptions {
   /** Only events at or before this time are written (usually demoNow). */
   until: IsoDateTime
+  /** Only events strictly after this time (used when the demo clock advances). */
+  after?: IsoDateTime
   outcome?: Outcome
   /** Override who gets each leg, by leg seq (e.g. { 1: 'FS-RAVI' }) */
   assignees?: Partial<Record<number, Id>>
@@ -150,9 +152,10 @@ export function journeyEvents(data: DemoData, shipmentId: Id, opts: JourneyOptio
   return finish(steps)
 
   function finish(list: Step[]): ShipmentEvent[] {
+    const due = list.filter((st) => !isBefore(opts.until, st.at) && (!opts.after || isBefore(opts.after, st.at)))
+    if (due.length === 0) return [] // common when the clock advances: skip the id scan
     const newId = eventIdFactory(data, shipmentId)
-    return list
-      .filter((st) => !isBefore(opts.until, st.at))
+    return due
       .sort((a, b) => Date.parse(a.at) - Date.parse(b.at))
       .map((st) => ({ ...st, id: newId(), shipmentId, by: st.by ?? 'system', app: st.app ?? 'partnerApp' }))
   }
@@ -164,7 +167,43 @@ export function sealFor(lr: string): string {
   return `SL-${String(40000 + (Number(lr.slice(-6)) * 7) % 10000).padStart(5, '0')}`
 }
 
-/** Write a shipment's journey up to `opts.until`. */
-export function runJourney(data: DemoData, shipmentId: Id, opts: JourneyOptions): DemoData {
-  return applyEvents(data, journeyEvents(data, shipmentId, opts), opts.until)
+/** The journey settings worth keeping on the shipment so the clock can continue it later. */
+type SimPlan = NonNullable<Shipment['sim']>
+
+/**
+ * Write a shipment's journey up to `opts.until`. By default the plan is stored on
+ * the shipment so advancing the demo clock continues it; pass `continues: false`
+ * for shipments that must wait for live demo actions (e.g. LGS-DEL-000790).
+ */
+export function runJourney(data: DemoData, shipmentId: Id, opts: JourneyOptions & { continues?: boolean }): DemoData {
+  let next = applyEvents(data, journeyEvents(data, shipmentId, opts), opts.until)
+  if (opts.continues !== false) {
+    const sim: SimPlan = {
+      outcome: opts.outcome ?? 'normal',
+      assignees: opts.assignees as Record<number, Id> | undefined,
+      closeAfterDays: opts.closeAfterDays,
+      ndrReason: opts.ndrReason,
+      shortPieceIds: opts.shortPieceIds,
+    }
+    // Drop undefined keys so persisted data stays tidy
+    for (const k of Object.keys(sim) as (keyof SimPlan)[]) if (sim[k] === undefined) delete sim[k]
+    next = { ...next, shipments: { ...next.shipments, [shipmentId]: { ...next.shipments[shipmentId], sim } } }
+  }
+  return next
+}
+
+/**
+ * Demo clock moved from `from` to `to`: write every simulated shipment's events
+ * that fall in (from, to]. Shipments without a plan don't move on their own.
+ * Note for later phases: a live action on a background shipment should remove
+ * its `sim` plan, so the simulator and the reviewer don't both move it.
+ */
+export function advanceJourneys(data: DemoData, from: IsoDateTime, to: IsoDateTime): DemoData {
+  if (!isBefore(from, to)) return data
+  const events: ShipmentEvent[] = []
+  for (const s of Object.values(data.shipments)) {
+    if (!s.sim) continue
+    events.push(...journeyEvents(data, s.id, { ...s.sim, after: from, until: to }))
+  }
+  return applyEvents(data, events, to)
 }

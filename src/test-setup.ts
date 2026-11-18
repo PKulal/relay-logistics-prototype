@@ -3,6 +3,6 @@
 // copy of Vitest and break every suite. React Testing Library registers its own
 // afterEach cleanup when globals are on.
 import * as matchers from '@testing-library/jest-dom/matchers'
-import './shared/i18n'
+import '@shared/i18n'
 
 expect.extend(matchers)

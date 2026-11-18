@@ -194,7 +194,8 @@ export function addKeyShipments(seed: DemoData, until: IsoDateTime): DemoData {
     }),
     '2026-11-23T09:20:00+05:30',
   )
-  data = runJourney(data, 'LGS-DEL-000790', { until, assignees: { 1: 'FS-RAVI' } })
+  // Doesn't move on its own: the demo reassigns this pickup to QuickLink by hand (ERP-08).
+  data = runJourney(data, 'LGS-DEL-000790', { until, assignees: { 1: 'FS-RAVI' }, continues: false })
 
   return data
 }

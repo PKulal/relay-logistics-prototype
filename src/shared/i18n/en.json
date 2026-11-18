@@ -204,9 +204,21 @@
     }
   },
   "roles": {
-    "customer": { "admin": "Admin", "dispatch": "Dispatch", "finance": "Finance" },
-    "partner": { "admin": "Partner Admin", "operations": "Operations Manager", "finance": "Finance" },
-    "field": { "rider": "Rider", "driver": "Driver", "hub": "Hub staff" },
+    "customer": {
+      "admin": "Admin",
+      "dispatch": "Dispatch",
+      "finance": "Finance"
+    },
+    "partner": {
+      "admin": "Partner Admin",
+      "operations": "Operations Manager",
+      "finance": "Finance"
+    },
+    "field": {
+      "rider": "Rider",
+      "driver": "Driver",
+      "hub": "Hub staff"
+    },
     "erp": {
       "leadership": "Leadership",
       "sales": "Sales / KAM",
@@ -295,5 +307,30 @@
     "synced": "Synced",
     "sos": "SOS",
     "offlineBanner": "You are offline. Work is saved and will sync."
+  },
+  "toolbar": {
+    "demo": "Demo",
+    "open": "Open demo controls",
+    "close": "Close demo controls",
+    "title": "Demo controls",
+    "clock": "Demo clock",
+    "plusHour": "+1 hour",
+    "plusDay": "+1 day",
+    "clockMoved": "Clock moved to {{time}}",
+    "shipmentsMoved_one": "{{count}} shipment changed status",
+    "shipmentsMoved_other": "{{count}} shipments changed status",
+    "switchApp": "Switch app",
+    "switchPersona": "Switch persona in this app",
+    "scenarios": "Scenarios",
+    "injectException": "Inject exception",
+    "runScoring": "Run weekly scoring",
+    "comingInPhase": "Arrives in Phase {{phase}}",
+    "offline": "Partner App offline",
+    "simLabels": "Show simulation labels",
+    "reset": "Reset demo data",
+    "resetTitle": "Reset the demo?",
+    "resetBody": "All four apps go back to the seed data and the clock returns to Mon 23-Nov 10:00. Bookings and actions made in the demo are lost. Logins stay.",
+    "resetConfirm": "Reset demo",
+    "resetDone": "Demo data reset"
   }
 }

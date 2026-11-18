@@ -1,16 +1,19 @@
 import { create } from 'zustand'
+import { buildBaseSeed, DEMO_START } from '@data/seed'
 import type { DemoState } from './store'
-import { freshState } from './store'
+import { initialFlags } from './store'
 import { startSync } from './sync'
 
-/** Two independent stores stand in for two browser tabs. */
+/** Two independent stores stand in for two browser tabs. The base seed keeps this fast. */
 function makeTab() {
   return create<DemoState>()((set) => ({
-    ...freshState(),
+    data: buildBaseSeed(),
+    demoNow: DEMO_START,
+    flags: { ...initialFlags },
     advanceTime: (m) => set({ demoNow: `+${m}` }),
     addEvents: () => {},
     setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),
-    resetDemo: () => set(freshState()),
+    resetDemo: () => set({ data: buildBaseSeed(), demoNow: DEMO_START }),
   }))
 }
 

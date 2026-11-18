@@ -9,12 +9,13 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
+import { advanceJourneys } from '@shared/sim/journey'
 import type { DemoData, IsoDateTime, ShipmentEvent } from '@shared/types'
 import { applyEvents } from './actions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 2
+export const STORE_VERSION = 3
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -52,7 +53,11 @@ export const useDemoStore = create<DemoState>()(
 
       advanceTime: (minutes) => {
         if (minutes <= 0) return
-        set((s) => ({ demoNow: addMinutes(s.demoNow, minutes) }))
+        set((s) => {
+          const demoNow = addMinutes(s.demoNow, minutes)
+          // Background shipments move along their simulated journeys (ERP spec §11.1).
+          return { demoNow, data: advanceJourneys(s.data, s.demoNow, demoNow) }
+        })
       },
 
       addEvents: (events) => set((s) => ({ data: applyEvents(s.data, events, s.demoNow) })),

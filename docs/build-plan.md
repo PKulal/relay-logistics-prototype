@@ -18,7 +18,7 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 - [x] Shared UI kit (design-system.md §6)
 - [x] Launcher: four app cards → persona picker → mock login (OTP 123456)
 - [x] Four app shells: Customer Portal, Partner Portal, ERP (sidebar layouts); Partner App (PhoneFrame + bottom tabs per role)
-- [ ] Demo toolbar: switch app / persona, advance time, inject exception, run weekly scoring, offline toggle, simulation labels, reset
+- [x] Demo toolbar: switch app / persona, advance time, inject exception, run weekly scoring, offline toggle, simulation labels, reset
 
 ## Phase 2 — Shipment spine (hero shipment end to end)
 - [ ] CP-11 Dashboard (live counts)

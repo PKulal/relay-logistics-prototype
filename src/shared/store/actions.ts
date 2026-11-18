@@ -24,10 +24,14 @@ export function applyEvents(data: DemoData, newEvents: ShipmentEvent[], now: Iso
   const shipments = { ...data.shipments }
   const legs = { ...data.legs }
 
+  // One pass over all events, grouped by the shipments we need to re-derive.
+  const byShipment = new Map<Id, ShipmentEvent[]>([...touched].map((id) => [id, []]))
+  for (const e of Object.values(events)) byShipment.get(e.shipmentId)?.push(e)
+
   for (const shipmentId of touched) {
     const shipment = shipments[shipmentId]
     const shipmentLegs = shipment.legIds.map((id) => legs[id])
-    const shipmentEvents = Object.values(events).filter((e) => e.shipmentId === shipmentId)
+    const shipmentEvents = byShipment.get(shipmentId)!
     const result = deriveStatus({ legs: shipmentLegs, events: shipmentEvents })
 
     if (shipment.status !== result.shipmentStatus) {

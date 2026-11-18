@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { APPS, type AppId } from '@shared/apps'
-import { useData, useFlags } from '@shared/hooks/useDemo'
+import { useData } from '@shared/hooks/useDemo'
 import { personasFor, type Persona } from '@shared/personas'
 import { DEMO_LOGIN_OTP, sendOtp, verifyLoginOtp } from '@shared/sim/otp'
 import { useSession } from '@shared/store/session'
@@ -17,6 +17,7 @@ import { Button } from '@shared/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@shared/ui/dialog'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@shared/ui/input-otp'
 import { Label } from '@shared/ui/label'
+import { SimulatedTag } from '@shared/ui/SimulatedTag'
 
 export default function PersonaPicker() {
   const { t } = useTranslation()
@@ -109,7 +110,6 @@ function LoginDialog({ persona, appPath, onClose }: { persona: Persona; appPath:
   const { t } = useTranslation()
   const navigate = useNavigate()
   const login = useSession((s) => s.login)
-  const { showSimulationLabels } = useFlags()
   const [step, setStep] = useState<'send' | 'verify'>('send')
   const [busy, setBusy] = useState(false)
   const [code, setCode] = useState('')
@@ -174,7 +174,7 @@ function LoginDialog({ persona, appPath, onClose }: { persona: Persona; appPath:
             ) : (
               <p className="text-caption text-muted-foreground">
                 {t('login.otpHint', { otp: DEMO_LOGIN_OTP })}
-                {showSimulationLabels && <span className="ml-1 rounded bg-brand-amber/30 px-1 font-medium text-ink">{t('common.simulated')}</span>}
+                <SimulatedTag className="ml-1" />
               </p>
             )}
           </div>

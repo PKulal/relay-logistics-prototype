@@ -482,6 +482,12 @@ export interface Shipment {
   eta: IsoDate
   appointment?: { date: IsoDate; from: string; to: string; dock?: string }
   legIds: Id[]
+  /**
+   * SIMULATED background movement: the journey this shipment follows when the
+   * demo clock advances (see sim/journey.ts). Absent for shipments that only
+   * move through live demo actions (the hero, LGS-DEL-000790, new bookings).
+   */
+  sim?: { outcome: 'normal' | 'ndr' | 'short' | 'cancel' | 'pickupFailed' | 'rto'; assignees?: Record<number, Id>; closeAfterDays?: number; ndrReason?: string; shortPieceIds?: Id[] }
   updatedAt: IsoDateTime
 }
 

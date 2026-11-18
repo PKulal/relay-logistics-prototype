@@ -57,6 +57,15 @@ public/brand/           logo
 - `npm run test` — Vitest
 - `npm run build` — production build
 
+## Gotchas (learned in Phases 0–1)
+- **Windows drive letter (`c:` vs `C:`) duplicates modules.** Keep the aliases in `vite.config.ts` root-relative (`/src/...`), never absolute file paths, or Vite serves one module under two URLs (two stores, two i18n instances, broken tab sync). Import shared code via `@shared/...` everywhere, including `main.tsx`. Don't `import … from 'vitest'` in `src/test-setup.ts`; use the globals.
+- **Colours:** the app accent is `primary` (`bg-primary`, `text-primary`, `bg-primary-soft`, `hover:bg-primary-hover`). shadcn's `accent` means the light hover background. Semantic tokens are declared on `[data-app]` as well as `:root`, so each app's `--accent` takes effect.
+- **Custom type sizes** (`text-table`, `text-caption`, …) are registered with tailwind-merge in `src/shared/lib/utils.ts`; add new ones there, or `cn()` will drop text colours.
+- **Shipments are created with `bookShipment()`** (`src/shared/store/booking.ts`), never by hand. LR serials are unique across city codes because job ids carry only the serial. `LGS-DEL-000781` is reserved for the live hero booking.
+- **Background movement:** shipments with a `sim` plan move when the demo clock advances (`src/shared/sim/journey.ts`). A live action on a background shipment should remove its `sim` plan.
+- **Menus are data** (`src/apps/*/nav.ts`): the same `visible` rules hide menu items and block their URLs. Register a built screen in that app's routes by screen id; until then it shows a placeholder.
+- After changing the seed or data shape, bump `STORE_VERSION` in `src/shared/store/store.ts` so browsers drop old saved data.
+
 ## Do not
 - Add a backend, database, auth service or paid API key.
 - Change seed-data.md values to make code easier; change code instead, or ask.
