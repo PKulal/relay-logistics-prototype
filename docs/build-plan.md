@@ -11,8 +11,8 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 - [x] Lint, type-check and test scripts working
 
 ## Phase 1 — Foundation
-- [ ] Types (`src/shared/types.ts`) from data-model.md
-- [ ] Store with persistence, `demoNow`, `resetDemo()`, BroadcastChannel sync between tabs
+- [x] Types (`src/shared/types.ts`) from data-model.md
+- [x] Store with persistence, `demoNow`, `resetDemo()`, BroadcastChannel sync between tabs
 - [ ] Seed data JSON from seed-data.md (hero shipment, customers, partners, staff, rate cards, pincodes, lanes, settings) + seeded generator for ~120 background shipments
 - [ ] Engines with unit tests: chargeableWeight, pricing, ewayBill, assignment, margin, status (event reducer)
 - [ ] Shared UI kit (design-system.md §6)
