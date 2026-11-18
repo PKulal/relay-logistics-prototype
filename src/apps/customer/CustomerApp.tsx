@@ -1,0 +1,51 @@
+import { PackagePlus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
+import { useData } from '@shared/hooks/useDemo'
+import { visibleNav } from '@shared/nav'
+import { navRoutes } from '@shared/shell/routes'
+import { WebShell } from '@shared/shell/WebShell'
+import { useSessionUser } from '@shared/store/session'
+import { Button } from '@shared/ui/button'
+import { NotFound } from '@shared/ui/Page'
+import { customerNav, type CustomerCtx } from './nav'
+
+/** Customer Portal (/customer) — B2B shippers. Spec: docs/01-customer-portal.md */
+export default function CustomerApp() {
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  const userId = useSessionUser('customer')
+  const user = useData((d) => (userId ? d.customerUsers[userId] : undefined))
+  const customer = useData((d) => (user ? d.customers[user.customerId] : undefined))
+
+  if (!user || !customer) return <Navigate to="/launch/customer" replace />
+
+  const ctx: CustomerCtx = { role: user.role, customer }
+  const canBook = user.role === 'admin' || user.role === 'dispatch'
+
+  return (
+    <Routes>
+      <Route
+        element={
+          <WebShell
+            app="customer"
+            nav={visibleNav(customerNav, ctx)}
+            orgName={customer.shortName}
+            user={{ name: user.name, roleLabel: t(`roles.customer.${user.role}`) }}
+            searchPlaceholderKey="search.placeholder.customer"
+            headerActions={
+              canBook && (
+                <Button size="sm" className="mr-1 hidden sm:inline-flex" onClick={() => navigate('/customer/book')}>
+                  <PackagePlus /> {t('header.bookShipment')}
+                </Button>
+              )
+            }
+          />
+        }
+      >
+        {navRoutes(customerNav, ctx)}
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
+  )
+}

@@ -3,12 +3,17 @@
     "brand": "Logisco",
     "tagline": "AI-enabled B2B Parcel & PTL platform",
     "backToLauncher": "Back to launcher",
-    "comingSoon": "This app is not built yet. Its screens arrive in later phases of the build plan."
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "switchLanguage": "Switch language",
+    "simulated": "Simulated"
   },
   "launcher": {
     "title": "Choose an app",
     "subtitle": "Four apps, one shared set of demo data. Open them in separate tabs to watch changes flow between them.",
-    "open": "Open"
+    "open": "Open",
+    "continue": "Continue",
+    "signedInAs": "Signed in as {{name}}"
   },
   "apps": {
     "customer": {
@@ -25,7 +30,270 @@
     },
     "erp": {
       "name": "Logisco ERP + Control Tower",
+      "short": "Logisco ERP",
       "description": "Logisco staff watch the network, handle exceptions and run finance."
     }
+  },
+  "personas": {
+    "title": "Who are you today?",
+    "subtitle": "Pick a demo persona. Each one sees the menus and data their role allows.",
+    "more_one": "{{count}} more person",
+    "more_other": "{{count}} more people"
+  },
+  "login": {
+    "title": "Log in as {{name}}",
+    "email": "Email",
+    "mobile": "Mobile number",
+    "otp": "One-time password",
+    "otpHint": "Demo OTP: {{otp}}",
+    "wrongOtp": "That OTP is not right. Check it and try again.",
+    "sendOtp": "Send OTP",
+    "verify": "Verify and log in",
+    "welcome": "Welcome, {{name}}"
+  },
+  "header": {
+    "bookShipment": "Book shipment",
+    "notifications": "Notifications",
+    "notificationsSoon": "Notifications arrive in a later phase.",
+    "help": "Help",
+    "switchPersona": "Switch persona",
+    "launcher": "Launcher",
+    "logout": "Log out"
+  },
+  "search": {
+    "label": "Search",
+    "comingSoon": "Search arrives with the shipment screens in Phase 2.",
+    "placeholder": {
+      "customer": "Search LR, invoice, PO or consignee",
+      "partner": "Search job, LR, trip, staff or vehicle",
+      "erp": "Search LR, customer, partner, invoice, claim…"
+    }
+  },
+  "nav": {
+    "label": "Main menu",
+    "expand": "Expand menu",
+    "collapse": "Collapse menu",
+    "cp": {
+      "dashboard": "Dashboard",
+      "quote": "Get quote",
+      "book": "Book",
+      "bookSingle": "Single shipment",
+      "bookBulk": "Bulk upload",
+      "shipments": "Shipments",
+      "exceptions": "Exceptions",
+      "claims": "Claims",
+      "billing": "Billing",
+      "wallet": "Wallet",
+      "invoices": "Invoices",
+      "cod": "COD remittance",
+      "documents": "Documents",
+      "analytics": "Analytics",
+      "settings": "Settings",
+      "users": "Users",
+      "locations": "Pickup locations",
+      "addressBook": "Address book",
+      "skus": "SKU master",
+      "integrations": "Integrations",
+      "company": "Company profile",
+      "help": "Help"
+    },
+    "pp": {
+      "onboarding": "Onboarding",
+      "dashboard": "Dashboard",
+      "jobs": "Jobs",
+      "live": "Live board",
+      "trips": "Trips",
+      "hub": "Hub operations",
+      "capacity": "Capacity",
+      "coverage": "Coverage",
+      "escalations": "Escalations",
+      "deliveryExceptions": "Delivery exceptions",
+      "claims": "Claims and deductions",
+      "scorecard": "Scorecard and tier",
+      "finance": "Finance",
+      "daily": "Daily",
+      "invoices": "Invoices",
+      "payouts": "Payouts",
+      "cod": "COD",
+      "resources": "Staff and fleet",
+      "staff": "Field staff",
+      "fleet": "Fleet",
+      "hubs": "Hubs",
+      "compliance": "Compliance",
+      "settings": "Settings",
+      "company": "Company",
+      "users": "Users",
+      "integration": "Integration",
+      "preferences": "Preferences",
+      "help": "Help"
+    },
+    "erp": {
+      "home": "Home",
+      "shipment360": "Shipment 360",
+      "group": {
+        "leadership": "Leadership",
+        "revenue": "Revenue",
+        "network": "Network & Operations",
+        "control": "Control & Support",
+        "enablers": "Enablers"
+      },
+      "leadership": "Command dashboard",
+      "sales": "Sales & Key Accounts",
+      "leads": "Leads and pipeline",
+      "customerOnboarding": "Customer onboarding",
+      "accounts": "Account 360",
+      "rfq": "RFQs and tenders",
+      "marketing": "Marketing & Growth",
+      "pricing": "Pricing & Revenue",
+      "rateCards": "Rate cards",
+      "rateApprovals": "Rate approvals",
+      "marginMonitor": "Margin monitor",
+      "simulator": "Quote simulator",
+      "customerSuccess": "Customer Success",
+      "partners": "Partner Management",
+      "applications": "Applications",
+      "kycDesk": "KYC desk and hub audit",
+      "commercials": "Commercials",
+      "trials": "Trials and go-live",
+      "directory": "Partner directory",
+      "scoring": "Scorecard run",
+      "suspensions": "Suspensions",
+      "network": "Network Planning",
+      "pincodes": "Pincodes and ODA",
+      "lanes": "Lanes and hubs",
+      "legRules": "Leg rules",
+      "coverageGaps": "Coverage gaps",
+      "controlTower": "Control Tower",
+      "jobBoard": "Live job board",
+      "atRisk": "SLA risk list",
+      "exceptions": "Exceptions",
+      "partnerHealth": "Partner health",
+      "dailyReview": "Daily review",
+      "hubOps": "Hub & PTL Operations",
+      "finance": "Finance & Accounts",
+      "credit": "Credit review",
+      "invoicing": "Invoicing and collections",
+      "payables": "Partner payables",
+      "payouts": "Payout batches",
+      "cod": "COD reconciliation",
+      "accounting": "Accounting and P&L",
+      "claims": "Claims & Insurance",
+      "claimsDesk": "Claims desk",
+      "insurerClaims": "Insurer claims",
+      "compliance": "Compliance & Legal",
+      "quality": "Quality & Audit",
+      "hr": "HR & Admin",
+      "technology": "Technology",
+      "users": "Users and roles",
+      "logs": "Audit and AI logs",
+      "settings": "System settings",
+      "procurement": "Procurement",
+      "sustainability": "Sustainability"
+    },
+    "pa": {
+      "home": "Home",
+      "tasks": "Tasks",
+      "trip": "Trip",
+      "scan": "Scan",
+      "myDay": "My day",
+      "more": "More",
+      "inbound": "Inbound",
+      "outbound": "Outbound",
+      "sos": "SOS and report a problem",
+      "sync": "Sync queue"
+    }
+  },
+  "roles": {
+    "customer": { "admin": "Admin", "dispatch": "Dispatch", "finance": "Finance" },
+    "partner": { "admin": "Partner Admin", "operations": "Operations Manager", "finance": "Finance" },
+    "field": { "rider": "Rider", "driver": "Driver", "hub": "Hub staff" },
+    "erp": {
+      "leadership": "Leadership",
+      "sales": "Sales / KAM",
+      "pricing": "Pricing",
+      "customerSuccess": "Customer Success",
+      "partnerManagement": "Partner Management",
+      "networkPlanning": "Network Planning",
+      "controlTower": "Control Tower",
+      "hubOps": "Hub Ops",
+      "finance": "Finance",
+      "claims": "Claims",
+      "compliance": "Compliance",
+      "hubAuditor": "Hub auditor",
+      "superAdmin": "Super Admin"
+    }
+  },
+  "status": {
+    "shipment": {
+      "booked": "Booked",
+      "pickedUp": "Picked Up",
+      "atOriginHub": "At Origin Hub",
+      "inTransit": "In Transit",
+      "atDestinationHub": "At Destination Hub",
+      "outForDelivery": "Out for Delivery",
+      "delivered": "Delivered",
+      "undelivered": "Undelivered (NDR)",
+      "deliveredWithException": "Delivered with Exception",
+      "returnToOrigin": "Return to Origin",
+      "cancelled": "Cancelled"
+    },
+    "leg": {
+      "offered": "Offered",
+      "accepted": "Accepted",
+      "flagged": "Flagged",
+      "withdrawn": "Withdrawn",
+      "assigned": "Assigned",
+      "inProgress": "In progress",
+      "handedOver": "Handed over",
+      "delivered": "Delivered",
+      "failedAttempt": "Failed attempt",
+      "exception": "Exception",
+      "closed": "Closed"
+    }
+  },
+  "tier": {
+    "platinum": "Platinum",
+    "gold": "Gold",
+    "silver": "Silver",
+    "bronze": "Bronze",
+    "probation": "Probation",
+    "trial": "In trial"
+  },
+  "partner": {
+    "typeShort": "Type {{type}}"
+  },
+  "sla": {
+    "left": "{{time}} left",
+    "breachedBy": "Breached by {{time}}",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days"
+  },
+  "table": {
+    "sortedAsc": "Sorted ascending",
+    "sortedDesc": "Sorted descending",
+    "emptyTitle": "Nothing here yet",
+    "range": "{{from}}–{{to}} of {{total}}",
+    "previous": "Previous page",
+    "next": "Next page"
+  },
+  "placeholder": {
+    "title": "This screen is not built yet",
+    "body": "It is part of the build plan.",
+    "bodyPhase": "It arrives in Phase {{phase}} of the build plan."
+  },
+  "access": {
+    "deniedTitle": "You don’t have access to this page",
+    "deniedBody": "This screen isn’t available for your role or account type. Ask your admin if you need it.",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "Check the address, or use the menu to find your way."
+  },
+  "pa": {
+    "onDuty": "On duty",
+    "offDuty": "Off duty",
+    "syncQueue": "Sync queue",
+    "offline": "Offline",
+    "synced": "Synced",
+    "sos": "SOS",
+    "offlineBanner": "You are offline. Work is saved and will sync."
   }
 }

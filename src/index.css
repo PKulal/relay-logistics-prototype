@@ -4,7 +4,7 @@
 /*
  * Logisco design tokens — source: docs/design-system.md
  * Screens never hard-code colours: use these utilities (bg-red-500, text-ink,
- * bg-accent …) or var(--accent).
+ * bg-primary for the app accent …) or var(--accent).
  */
 
 @theme {
@@ -115,10 +115,17 @@
 
 /*
  * shadcn/ui semantic tokens, mapped to ours so generated components follow
- * the app accent automatically. (Tailwind's own `accent` utility therefore
- * means "the current app's accent".)
+ * the app accent automatically.
+ *   primary       = the app accent (var(--accent)): bg-primary, text-primary, border-primary
+ *   primary-soft  = light tint of the accent; primary-hover = darker shade
+ *   accent        = shadcn's meaning: the subtle hover background for menus / ghost buttons
+ *
+ * Declared on [data-app] too, not just :root: a custom property that uses var()
+ * is resolved where it is declared, so `--primary: var(--accent)` on :root alone
+ * would freeze at the root's red and ignore each app's --accent.
  */
-:root {
+:root,
+[data-app] {
   --background: #ffffff;
   --foreground: var(--color-ink);
   --card: #ffffff;
@@ -150,9 +157,10 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent-soft: var(--accent-soft);
+  --color-primary-soft: var(--accent-soft);
+  --color-primary-hover: var(--accent-hover);
+  --color-accent: var(--color-gray-50);
+  --color-accent-foreground: var(--color-gray-900);
   --color-destructive: var(--destructive);
   --color-border: var(--border);
   --color-input: var(--input);

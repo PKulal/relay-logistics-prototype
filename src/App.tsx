@@ -1,16 +1,26 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import CustomerApp from '@apps/customer/CustomerApp'
+import ErpApp from '@apps/erp/ErpApp'
+import PartnerAppApp from '@apps/partner-app/PartnerAppApp'
+import PartnerPortalApp from '@apps/partner-portal/PartnerPortalApp'
+import { Toaster } from '@shared/ui/sonner'
+import { TooltipProvider } from '@shared/ui/tooltip'
 import Launcher from './launcher/Launcher'
-import { AppPlaceholder } from '@shared/ui/AppPlaceholder'
+import PersonaPicker from './launcher/PersonaPicker'
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Launcher />} />
-      <Route path="/customer/*" element={<AppPlaceholder app="customer" />} />
-      <Route path="/partner/*" element={<AppPlaceholder app="partner-portal" />} />
-      <Route path="/app/*" element={<AppPlaceholder app="partner-app" />} />
-      <Route path="/erp/*" element={<AppPlaceholder app="erp" />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <TooltipProvider delayDuration={300}>
+      <Routes>
+        <Route path="/" element={<Launcher />} />
+        <Route path="/launch/:appId" element={<PersonaPicker />} />
+        <Route path="/customer/*" element={<CustomerApp />} />
+        <Route path="/partner/*" element={<PartnerPortalApp />} />
+        <Route path="/app/*" element={<PartnerAppApp />} />
+        <Route path="/erp/*" element={<ErpApp />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <Toaster />
+    </TooltipProvider>
   )
 }

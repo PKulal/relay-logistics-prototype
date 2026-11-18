@@ -1,1 +1,75 @@
-{}
+{
+  "common": {
+    "backToLauncher": "लॉन्चर पर वापस जाएँ",
+    "cancel": "रद्द करें",
+    "confirm": "पुष्टि करें",
+    "switchLanguage": "भाषा बदलें"
+  },
+  "launcher": {
+    "title": "ऐप चुनें",
+    "open": "खोलें",
+    "continue": "जारी रखें"
+  },
+  "header": {
+    "switchPersona": "व्यक्ति बदलें",
+    "launcher": "लॉन्चर",
+    "logout": "लॉग आउट"
+  },
+  "login": {
+    "mobile": "मोबाइल नंबर",
+    "otp": "ओटीपी",
+    "otpHint": "डेमो ओटीपी: {{otp}}",
+    "wrongOtp": "ओटीपी सही नहीं है। जाँचें और फिर से कोशिश करें।",
+    "sendOtp": "ओटीपी भेजें",
+    "verify": "पुष्टि करें और लॉग इन करें",
+    "welcome": "स्वागत है, {{name}}"
+  },
+  "nav": {
+    "pa": {
+      "home": "होम",
+      "tasks": "काम",
+      "trip": "ट्रिप",
+      "scan": "स्कैन",
+      "myDay": "मेरा दिन",
+      "more": "और",
+      "inbound": "आवक",
+      "outbound": "जावक",
+      "sos": "एसओएस और समस्या बताएँ",
+      "sync": "सिंक कतार"
+    }
+  },
+  "roles": {
+    "field": { "rider": "राइडर", "driver": "ड्राइवर", "hub": "हब स्टाफ" }
+  },
+  "status": {
+    "shipment": {
+      "booked": "बुक हुआ",
+      "pickedUp": "पिकअप हुआ",
+      "atOriginHub": "मूल हब पर",
+      "inTransit": "रास्ते में",
+      "atDestinationHub": "गंतव्य हब पर",
+      "outForDelivery": "डिलीवरी के लिए निकला",
+      "delivered": "डिलीवर हुआ",
+      "undelivered": "डिलीवर नहीं हुआ (NDR)",
+      "deliveredWithException": "अपवाद के साथ डिलीवर",
+      "returnToOrigin": "वापस भेजा जा रहा है",
+      "cancelled": "रद्द"
+    }
+  },
+  "placeholder": {
+    "title": "यह स्क्रीन अभी बनी नहीं है",
+    "bodyPhase": "यह बिल्ड प्लान के चरण {{phase}} में आएगी।"
+  },
+  "access": {
+    "deniedTitle": "आपको इस पेज की अनुमति नहीं है"
+  },
+  "pa": {
+    "onDuty": "ड्यूटी पर",
+    "offDuty": "ड्यूटी से बाहर",
+    "syncQueue": "सिंक कतार",
+    "offline": "ऑफ़लाइन",
+    "synced": "सिंक हुआ",
+    "sos": "एसओएस",
+    "offlineBanner": "आप ऑफ़लाइन हैं। काम सेव है और बाद में सिंक होगा।"
+  }
+}
