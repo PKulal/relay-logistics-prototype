@@ -17,10 +17,12 @@ import * as erp from './erpActions'
 import type { MessageTemplate } from './erpActions'
 import * as pp from './partnerActions'
 import type { FlagReason, ProblemKind } from './partnerActions'
+import * as pick from './pickupActions'
+import type { PickupConfirmation } from './pickupActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 7
+export const STORE_VERSION = 8
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -56,6 +58,11 @@ export interface DemoState {
   assignLegs: (legIds: Id[], staffId: Id, vehicleId: Id | undefined, note: string, userId: Id) => void
   unassignLeg: (legId: Id, userId: Id) => void
   reportProblem: (legId: Id, kind: ProblemKind, text: string, userId: Id) => void
+  /** Partner App (PA-05, PA-14 to PA-17) */
+  setDuty: (staffId: Id, onDuty: boolean) => void
+  arriveAtPickup: (legId: Id, staffId: Id) => void
+  confirmPickup: (c: PickupConfirmation) => void
+  markNotificationsRead: (ids: Id[]) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
   /** Restore the seed data in every app (other tabs follow via sync). */
   resetDemo: () => void
@@ -106,6 +113,11 @@ export const useDemoStore = create<DemoState>()(
       assignLegs: (legIds, staffId, vehicleId, note, userId) => set((s) => ({ data: pp.assignLegs(s.data, legIds, staffId, vehicleId, note, userId, s.demoNow) })),
       unassignLeg: (legId, userId) => set((s) => ({ data: pp.unassignLeg(s.data, legId, userId, s.demoNow) })),
       reportProblem: (legId, kind, text, userId) => set((s) => ({ data: pp.reportProblem(s.data, legId, kind, text, userId, s.demoNow) })),
+
+      setDuty: (staffId, onDuty) => set((s) => ({ data: pick.setDuty(s.data, staffId, onDuty, s.demoNow) })),
+      arriveAtPickup: (legId, staffId) => set((s) => ({ data: pick.arriveAtPickup(s.data, legId, staffId, s.demoNow) })),
+      confirmPickup: (c) => set((s) => ({ data: pick.confirmPickup(s.data, c, s.demoNow) })),
+      markNotificationsRead: (ids) => set((s) => ({ data: pick.markRead(s.data, ids) })),
 
       deleteDraft: (id) =>
         set((s) => {

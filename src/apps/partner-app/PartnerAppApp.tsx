@@ -13,6 +13,19 @@ import { LanguageToggle } from '@shared/ui/LanguageToggle'
 import { AccessDenied, ScreenPlaceholder } from '@shared/ui/Page'
 import { PhoneFrame } from '@shared/ui/PhoneFrame'
 import { SOS_SCREEN, SYNC_SCREEN, TABS, type Tab } from './nav'
+import PA05Home from './PA05Home'
+import PA06Tasks from './PA06Tasks'
+import PA07ScanTab from './PA07ScanTab'
+import TaskScreen from './TaskScreen'
+
+/** Built tab screens by screen id. Trip (PA-21) and Inbound (PA-26) open the task list (PA-06) until their own screens arrive. */
+const BUILT: Record<string, React.ReactNode> = {
+  'PA-05': <PA05Home />,
+  'PA-06': <PA06Tasks />,
+  'PA-07': <PA07ScanTab />,
+  'PA-21': <PA06Tasks />,
+  'PA-26': <PA06Tasks />,
+}
 
 export default function PartnerAppApp() {
   const { t } = useTranslation()
@@ -46,8 +59,10 @@ export default function PartnerAppApp() {
         <Routes>
           <Route element={<PhoneShell staff={staff} tabs={tabs} />}>
             {tabs.map((tab) =>
-              tab.path === '' ? <Route key="home" index element={screen(tab)} /> : <Route key={tab.path} path={tab.path} element={screen(tab)} />,
+              tab.path === '' ? <Route key="home" index element={BUILT[tab.screenId] ?? screen(tab)} /> : <Route key={tab.path} path={tab.path} element={BUILT[tab.screenId] ?? screen(tab)} />,
             )}
+            <Route path="tasks/:legId" element={<TaskScreen />} />
+            <Route path="tasks/:legId/pickup" element={<TaskScreen flow="pickup" />} />
             <Route path={SOS_SCREEN.path} element={screen(SOS_SCREEN)} />
             <Route path={SYNC_SCREEN.path} element={screen(SYNC_SCREEN)} />
             {/* Another role's tab opened by URL */}

@@ -6,10 +6,9 @@
  * The hero LGS-DEL-000781 is NOT here: the reviewer books it live.
  * Consignees, invoice numbers and dates not given in seed-data.md are INVENTED.
  */
-import { quote } from '@shared/engines/quote'
 import { runJourney } from '@shared/sim/journey'
-import { applyEvents } from '@shared/store/actions'
-import { bookShipment, eventIdFactory, type BookingInput } from '@shared/store/booking'
+import { bookShipment, type BookingInput } from '@shared/store/booking'
+import { applyVerifiedWeights } from '@shared/store/pickupActions'
 import type { DemoData, IsoDateTime } from '@shared/types'
 
 const carton = { l: 60, b: 40, h: 40, weight: 20, skuCode: 'SG-LT-400' }
@@ -147,7 +146,13 @@ export function addKeyShipments(seed: DemoData, until: IsoDateTime): DemoData {
     '2026-11-21T10:30:00+05:30',
   )
   data = runJourney(data, 'LGS-DEL-000784', { until })
-  data = addWeightRevision(data, 'LGS-DEL-000784', ['LGS-DEL-000784-03', 'LGS-DEL-000784-04'], { l: 62, b: 42, h: 42 })
+  {
+    // Rider measured two cartons larger at pickup (same action as PA-16 / PA-17)
+    const s = data.shipments['LGS-DEL-000784']
+    const verified = s.pieces.map((p) => (['LGS-DEL-000784-03', 'LGS-DEL-000784-04'].includes(p.id) ? { id: p.id, l: 62, b: 42, h: 42, weight: p.weight } : { id: p.id, l: p.l, b: p.b, h: p.h, weight: p.weight }))
+    const pickupLeg = data.legs[s.legIds[0]]
+    data = applyVerifiedWeights(data, s.id, verified, pickupLeg.staffId ?? 'system', findEvent(data, s.id, 'pickupConfirmed'))
+  }
 
   // ── LGS-MYS-000112: Kaveri Handicrafts parcel, Mysuru → Pune, ₹561.09 from the wallet.
   // Wallet before this booking: ₹9,011.09 → ₹8,450.00 after (seed-data.md §5).
@@ -216,45 +221,3 @@ function setPiece(data: DemoData, shipmentId: string, pieceId: string, patch: Pa
   }
 }
 
-/** Rider measures some pieces larger at pickup → weightRevised event + pending WeightRevision. */
-function addWeightRevision(data: DemoData, shipmentId: string, pieceIds: string[], dims: { l: number; b: number; h: number }): DemoData {
-  const s = data.shipments[shipmentId]
-  const pieces = s.pieces.map((p) => (pieceIds.includes(p.id) ? { ...p, verifiedDims: dims, verifiedWeight: p.weight } : p))
-  const revised = quote(data, {
-    customerId: s.customerId,
-    originPincode: s.originPincode,
-    destPincode: s.destPincode,
-    serviceKind: s.serviceKind,
-    service: s.service,
-    pieces: pieces.map((p) => ({ ...(p.verifiedDims ?? p), weight: p.verifiedWeight ?? p.weight })),
-    declaredValue: s.invoice.value,
-    addOns: s.addOns,
-    paymentMode: s.paymentMode,
-    codAmount: s.codAmount,
-  })
-  const pickupAt = findEvent(data, shipmentId, 'pickupConfirmed')
-  const pickupLeg = data.legs[s.legIds[0]]
-  const id = `WR-${shipmentId.slice(-6)}`
-  const withEvent = applyEvents(
-    data,
-    [{ id: eventIdFactory(data, shipmentId)(), shipmentId, legId: pickupLeg.id, type: 'weightRevised', at: pickupAt, by: pickupLeg.staffId ?? 'system', app: 'partnerApp', pieceIds, photos: [], note: `Measured ${dims.l} × ${dims.b} × ${dims.h} cm` }],
-    pickupAt,
-  )
-  return {
-    ...withEvent,
-    shipments: { ...withEvent.shipments, [shipmentId]: { ...withEvent.shipments[shipmentId], pieces, weights: { ...s.weights, verifiedChargeable: revised.weights.chargeable } } },
-    weightRevisions: {
-      ...data.weightRevisions,
-      [id]: {
-        id,
-        shipmentId,
-        booked: s.weights.chargeable,
-        verified: revised.weights.chargeable,
-        amountDiff: Math.round((revised.price.total - s.price.total) * 100) / 100,
-        photos: [],
-        raisedAt: pickupAt,
-        status: 'pending',
-      },
-    },
-  }
-}

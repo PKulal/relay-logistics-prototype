@@ -148,6 +148,7 @@ const fs = (id: string, partnerId: string, name: string, mobile: string, role: F
   policeVerified: true,
   trained: true,
   onDuty: true,
+  dutySince: '2026-11-23T08:45:00+05:30',
   language: 'hi',
   ...extra,
 })

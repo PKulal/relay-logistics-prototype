@@ -410,6 +410,8 @@ export interface FieldStaff {
   policeVerified: boolean
   trained: boolean
   onDuty: boolean
+  /** When the staff member last went on duty (PA-05 "On duty since 09:02") */
+  dutySince?: IsoDateTime
   language: 'en' | 'hi' | 'kn'
 }
 

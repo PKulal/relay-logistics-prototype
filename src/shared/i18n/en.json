@@ -309,7 +309,33 @@
     "offline": "Offline",
     "synced": "Synced",
     "sos": "SOS",
-    "offlineBanner": "You are offline. Work is saved and will sync."
+    "offlineBanner": "You are offline. Work is saved and will sync.",
+    "task": {
+      "pickup": "Pickup",
+      "handover": "Hand-over",
+      "trip": "Trip",
+      "hub": "Hub work",
+      "delivery": "Delivery"
+    },
+    "new": "New",
+    "km": "{{km}} km",
+    "navigate": "Navigate",
+    "call": "Call",
+    "calling": "Calling {{name}} (masked number)",
+    "tag": {
+      "cod": "COD",
+      "appointment": "Appointment",
+      "fragile": "Fragile",
+      "oda": "ODA",
+      "ewb": "E-way bill"
+    },
+    "later": {
+      "handover": "Hand over to the hub",
+      "lineHaul": "Trip",
+      "originHub": "Hub work",
+      "destHub": "Hub work",
+      "lastMile": "Delivery"
+    }
   },
   "toolbar": {
     "demo": "Demo",
@@ -1129,5 +1155,154 @@
       "licenceExpired": "Licence expired: can’t be assigned",
       "policeVerificationPending": "Police verification pending: can’t be assigned"
     }
+  },
+  "photo": {
+    "take": "Take photo",
+    "retake": "Retake",
+    "taken": "{{label}}: photo taken"
+  },
+  "signature": {
+    "clear": "Clear signature"
+  },
+  "scanner": {
+    "voiceCount": "{{n}} of {{total}}",
+    "voiceWrong": "Wrong piece",
+    "voiceDuplicate": "Already scanned",
+    "allScanned": "All pieces scanned",
+    "pointCamera": "Point the camera at a label",
+    "result": {
+      "ok": "Piece {{n}}/{{total}} ✓ ({{label}})",
+      "duplicate": "Already scanned ({{label}})",
+      "wrong": "Not part of this task ({{label}})"
+    },
+    "tap": "Tap to scan",
+    "wrong": "Wrong label",
+    "continuous": "Continuous scanning",
+    "manual": "Type the piece ID (damaged label)",
+    "pieceId": "Piece ID",
+    "labelPhoto": "Photo of the damaged label",
+    "labelPhotoCaption": "Damaged label",
+    "add": "Add piece",
+    "missing": "Not scanned yet"
+  },
+  "pa05": {
+    "hello": "Hello, {{name}}",
+    "duty": "Duty",
+    "since": "On duty since {{time}}",
+    "nowOn": "You are on duty",
+    "nowOff": "You are off duty",
+    "cannotGoOff": "Finish the task in progress (and deposit any COD) before going off duty.",
+    "next": "Next task",
+    "nothing": "No tasks right now",
+    "today": "Today",
+    "pickups": "Pickups done",
+    "deliveries": "Deliveries done",
+    "failed": "Failed",
+    "departs": "departs {{time}}",
+    "inbound": "Expected inbound",
+    "atHub": "At the hub now",
+    "cod": "COD in hand",
+    "messages": "Messages from the office"
+  },
+  "pa06": {
+    "title": "Tasks",
+    "tab": {
+      "todo": "To do",
+      "inProgress": "Doing",
+      "done": "Done",
+      "failed": "Failed"
+    },
+    "empty": {
+      "todo": "Nothing to do right now",
+      "inProgress": "Nothing in progress",
+      "done": "Nothing finished yet today",
+      "failed": "No failed tasks today"
+    }
+  },
+  "pa07": {
+    "title": "Scan",
+    "body": "Scan any label. The app opens the task it belongs to."
+  },
+  "pa14": {
+    "back": "Tasks",
+    "map": "Pickup location map",
+    "window": "Window",
+    "handTo": "Hand over",
+    "handToValue": "{{place}} by {{time}}",
+    "shipments_one": "{{count}} shipment here",
+    "shipments_other": "{{count}} shipments here",
+    "instructions": "Instructions",
+    "requirements": "Bring back",
+    "req": {
+      "invoice": "Invoice copy",
+      "ewb": "E-way bill",
+      "fragile": "Fragile",
+      "labels": "Labels on every piece"
+    },
+    "arrived": "I’ve arrived",
+    "continue": "Continue pickup",
+    "arrivedOk": "Location checked: you are at the pickup point",
+    "geofence": "Location must be within {{m}} m of the pin"
+  },
+  "pa15": {
+    "back": "Back",
+    "stepOf": "Step {{n}} of {{total}}",
+    "title": {
+      "scan": "Scan and documents",
+      "weigh": "Weight and size",
+      "confirm": "Confirm pickup"
+    },
+    "labels": "1. Labels",
+    "labelsBy": {
+      "shipper": "Shipper has labelled the pieces",
+      "rider": "I will attach labels"
+    },
+    "scan": "2. Scan every piece",
+    "invoice": "3. Invoice copy",
+    "invoicePhoto": "Invoice photo",
+    "ewb": "4. E-way bill",
+    "ewbMatches": "The e-way bill number on the papers matches",
+    "condition": "5. Package condition",
+    "allGood": "All good",
+    "damaged": "Packaging damaged",
+    "damagePhoto": "Photo of the damage",
+    "cannotLater": "Can’t pick up, or a piece is missing? That flow arrives in Phase 4.",
+    "next": "Next",
+    "todo": {
+      "scan": "Scan all pieces and take the invoice photo to continue",
+      "weigh": "Enter the weight and take the scale photo to continue",
+      "confirm": "Get the shipper’s signature or OTP to confirm"
+    }
+  },
+  "pa16": {
+    "measureLarger": "Demo: measure two boxes larger",
+    "sameForAll": "Same for all {{count}} pieces",
+    "allPieces": "All {{count}} pieces",
+    "piece": "Piece {{n}} of {{total}}",
+    "frozen": "SKU {{sku}} weight on record: {{kg}} kg",
+    "weight": "Kg",
+    "scalePhoto": "Scale photo",
+    "scaleCaption": "Scale {{kg}} kg",
+    "tapePhoto": "Tape photo (size differs)",
+    "tapeCaption": "Tape {{dims}} cm",
+    "bookedVsVerified": "Booked {{booked}} · Verified {{verified}}",
+    "cft": "CFT",
+    "revision": "The customer will be asked to accept the new weight: + {{amount}}"
+  },
+  "pa17": {
+    "summary": "Summary",
+    "summaryLine": "{{lr}} · {{pieces}} pcs · {{kg}} · {{photos}} photos",
+    "handedBy": "Handed over by",
+    "shipperConfirms": "Shipper confirms",
+    "method": {
+      "signature": "Signature",
+      "otp": "OTP"
+    },
+    "signHere": "Signature of {{name}}",
+    "sendOtp": "Send OTP to {{mobile}}",
+    "liability": "From now on your company is responsible for these goods.",
+    "confirm": "Confirm pickup",
+    "done": "{{lr}} picked up",
+    "revisionSent": "Weight revision of + {{amount}} sent to the customer"
   }
 }

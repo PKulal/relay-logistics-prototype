@@ -27,7 +27,7 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 - [x] Leg planner runs on booking (assignment engine) → 5 legs created
 - [x] ERP-05 Live job board, ERP-03 Shipment 360
 - [x] PP-11 Dashboard, PP-12 Job inbox, PP-13 Job detail, PP-14 Assign to staff
-- [ ] PA-05 Home, PA-06 Tasks, PA-07 Scanner, PA-14 to PA-17 Pickup
+- [x] PA-05 Home, PA-06 Tasks, PA-07 Scanner, PA-14 to PA-17 Pickup
 - [ ] PA-19 / PA-20 Hand-over give / receive (two phone frames)
 - [ ] PA-25 to PA-29 Hub flow
 - [ ] PA-21 to PA-24 Driver trip (moving map marker)

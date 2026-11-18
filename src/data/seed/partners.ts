@@ -190,10 +190,10 @@ export const namedPartnerUsers: PartnerUser[] = [
 ]
 
 export const namedFieldStaff: FieldStaff[] = [
-  { id: 'FS-RAVI', partnerId: 'P-SWIFTCITY', name: 'Ravi Kumar', mobile: '98730 44556', role: 'rider', vehicleId: 'V-DL01LT4521', licenceValidTill: '2029-06-30', policeVerified: true, trained: true, onDuty: true, language: 'hi' },
-  { id: 'FS-POOJA', partnerId: 'P-NCRXD', name: 'Pooja S.', mobile: '98102 33871', role: 'hub', hubId: 'HUB-GGN', policeVerified: true, trained: true, onDuty: true, language: 'hi' },
-  { id: 'FS-BASAVARAJ', partnerId: 'P-DECCAN', name: 'Basavaraj H.', mobile: '94485 21907', role: 'driver', vehicleId: 'V-KA25AB1234', licenceValidTill: '2028-03-31', policeVerified: true, trained: true, onDuty: true, language: 'kn' },
-  { id: 'FS-MANJU', partnerId: 'P-NKEXP', name: 'Manju R.', mobile: '94486 40213', role: 'rider', vehicleId: 'V-KA63A4471', licenceValidTill: '2030-01-31', policeVerified: true, trained: true, onDuty: true, language: 'kn' },
+  { id: 'FS-RAVI', partnerId: 'P-SWIFTCITY', name: 'Ravi Kumar', mobile: '98730 44556', role: 'rider', vehicleId: 'V-DL01LT4521', licenceValidTill: '2029-06-30', policeVerified: true, trained: true, onDuty: true, dutySince: '2026-11-23T09:02:00+05:30', language: 'hi' },
+  { id: 'FS-POOJA', partnerId: 'P-NCRXD', name: 'Pooja S.', mobile: '98102 33871', role: 'hub', hubId: 'HUB-GGN', policeVerified: true, trained: true, onDuty: true, dutySince: '2026-11-23T09:02:00+05:30', language: 'hi' },
+  { id: 'FS-BASAVARAJ', partnerId: 'P-DECCAN', name: 'Basavaraj H.', mobile: '94485 21907', role: 'driver', vehicleId: 'V-KA25AB1234', licenceValidTill: '2028-03-31', policeVerified: true, trained: true, onDuty: true, dutySince: '2026-11-23T09:02:00+05:30', language: 'kn' },
+  { id: 'FS-MANJU', partnerId: 'P-NKEXP', name: 'Manju R.', mobile: '94486 40213', role: 'rider', vehicleId: 'V-KA63A4471', licenceValidTill: '2030-01-31', policeVerified: true, trained: true, onDuty: true, dutySince: '2026-11-23T09:02:00+05:30', language: 'kn' },
 ]
 
 export const namedVehicles: Vehicle[] = [
