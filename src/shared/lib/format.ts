@@ -1,7 +1,10 @@
 /**
  * Indian display formats (CLAUDE.md rule 8, design-system.md §4).
- * Callers pass dates derived from the store's `demoNow`, never `new Date()`.
+ * Dates and times are always shown in IST, whatever the viewer's time zone.
+ * Callers pass values derived from the store's `demoNow`, never `new Date()`.
  */
+import type { IsoDate, IsoDateTime } from '@shared/types'
+import { istParts } from './time'
 
 const inr = new Intl.NumberFormat('en-IN', {
   style: 'currency',
@@ -16,19 +19,36 @@ export function formatINR(amount: number): string {
 }
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const pad = (n: number) => String(n).padStart(2, '0')
 
-/** → "23-Nov-2026" (local time) */
-export function formatDate(date: Date): string {
-  return `${pad(date.getDate())}-${MONTHS[date.getMonth()]}-${date.getFullYear()}`
+/** A bare date ("2026-11-23") is a calendar date; anything else is an instant shown in IST. */
+function parts(value: IsoDateTime | IsoDate | Date) {
+  if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return istParts(`${value}T12:00:00+05:30`)
+  }
+  return istParts(value)
 }
 
-/** → "14:05" (24-hour, local time) */
-export function formatTime(date: Date): string {
-  return `${pad(date.getHours())}:${pad(date.getMinutes())}`
+/** → "23-Nov-2026" */
+export function formatDate(value: IsoDateTime | IsoDate | Date): string {
+  const p = parts(value)
+  return `${pad(p.day)}-${MONTHS[p.month - 1]}-${p.year}`
+}
+
+/** → "Mon 23-Nov" */
+export function formatDayShort(value: IsoDateTime | IsoDate | Date): string {
+  const p = parts(value)
+  return `${DAYS[p.weekday]} ${pad(p.day)}-${MONTHS[p.month - 1]}`
+}
+
+/** → "14:05" (24-hour IST) */
+export function formatTime(value: IsoDateTime | Date): string {
+  const p = istParts(value)
+  return `${pad(p.hour)}:${pad(p.minute)}`
 }
 
 /** → "23-Nov-2026 14:05" */
-export function formatDateTime(date: Date): string {
-  return `${formatDate(date)} ${formatTime(date)}`
+export function formatDateTime(value: IsoDateTime | Date): string {
+  return `${formatDate(value)} ${formatTime(value)}`
 }

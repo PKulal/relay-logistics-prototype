@@ -5,6 +5,9 @@ import 'leaflet/dist/leaflet.css'
 import './index.css'
 import './shared/i18n'
 import App from './App'
+import { startSync, useDemoStore } from './shared/store'
+
+startSync(useDemoStore)
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
