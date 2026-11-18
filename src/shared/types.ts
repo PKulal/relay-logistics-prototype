@@ -435,12 +435,16 @@ export interface Piece {
   condition?: 'ok' | 'damaged' | 'missing'
 }
 
+export type PriceLineCode = 'freight' | 'fuel' | 'oda' | 'docket' | 'appointment' | 'cod' | 'toPay' | 'fov' | 'specialHandling'
+
 export interface PriceLine {
-  code: 'freight' | 'fuel' | 'oda' | 'docket' | 'appointment' | 'cod' | 'toPay' | 'fov' | 'specialHandling'
-  label: string
-  /** Human-readable basis, e.g. "162 kg × ₹14.00" */
-  basis: string
+  code: PriceLineCode
   amount: number
+  /**
+   * Numbers behind the line, for the screen to render through i18n,
+   * e.g. freight { kg: 162, rate: 14 } → "162 kg × ₹14.00".
+   */
+  basis: { kg?: number; rate?: number; pct?: number; value?: number; pieces?: number; slabs?: number; first?: number; additional?: number }
 }
 
 export interface Price {
@@ -595,6 +599,9 @@ export interface ShipmentEvent {
   exceptionKind?: ExceptionKind
   /** haltReported: true when the delay puts the ETA at risk */
   etaAtRisk?: boolean
+  /** legAssigned: the rider / driver / hub staff given the leg, and their vehicle */
+  assigneeStaffId?: Id
+  assigneeVehicleId?: Id
   /** delivered: recipient, OTP, GRN */
   receivedBy?: string
   grn?: string
