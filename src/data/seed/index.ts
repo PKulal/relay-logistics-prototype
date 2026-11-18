@@ -66,6 +66,7 @@ export function buildBaseSeed(): DemoData {
     partnerInvoices: {},
     payouts: {},
     tickets: {},
+    drafts: {},
 
     notifications: {},
     aiDecisions: {},

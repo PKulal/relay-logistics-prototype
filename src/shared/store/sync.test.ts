@@ -12,6 +12,10 @@ function makeTab() {
     flags: { ...initialFlags },
     advanceTime: (m) => set({ demoNow: `+${m}` }),
     addEvents: () => {},
+    bookShipment: () => '',
+    saveConsignee: () => {},
+    saveDraft: () => {},
+    deleteDraft: () => {},
     setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),
     resetDemo: () => set({ data: buildBaseSeed(), demoNow: DEMO_START }),
   }))

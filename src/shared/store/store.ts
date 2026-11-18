@@ -10,12 +10,13 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { advanceJourneys } from '@shared/sim/journey'
-import type { DemoData, IsoDateTime, ShipmentEvent } from '@shared/types'
+import type { BookingDraft, Consignee, DemoData, Id, IsoDateTime, ShipmentEvent } from '@shared/types'
 import { applyEvents } from './actions'
+import { bookShipment, type BookingInput } from './booking'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 4
+export const STORE_VERSION = 5
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -33,6 +34,13 @@ export interface DemoState {
   advanceTime: (minutes: number) => void
   /** Add chain-of-custody events; shipment and leg statuses are re-derived. */
   addEvents: (events: ShipmentEvent[]) => void
+  /** CP-13: create a shipment (legs, events, credit / wallet, spend). Returns the LR. Throws QuoteError / NoPartnerError. */
+  bookShipment: (input: BookingInput) => Id
+  /** Add or update a consignee (CP-13 Step 2, CP-30) */
+  saveConsignee: (consignee: Consignee) => void
+  /** CP-13 "Save as draft" and its removal once booked */
+  saveDraft: (draft: BookingDraft) => void
+  deleteDraft: (id: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
   /** Restore the seed data in every app (other tabs follow via sync). */
   resetDemo: () => void
@@ -48,7 +56,7 @@ export function freshState(): PersistedDemoState {
 
 export const useDemoStore = create<DemoState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...freshState(),
 
       advanceTime: (minutes) => {
@@ -61,6 +69,24 @@ export const useDemoStore = create<DemoState>()(
       },
 
       addEvents: (events) => set((s) => ({ data: applyEvents(s.data, events, s.demoNow) })),
+
+      bookShipment: (input) => {
+        const { data, demoNow } = get()
+        const result = bookShipment(data, input, demoNow)
+        set({ data: result.data })
+        return result.shipmentId
+      },
+
+      saveConsignee: (consignee) => set((s) => ({ data: { ...s.data, consignees: { ...s.data.consignees, [consignee.id]: consignee } } })),
+
+      saveDraft: (draft) => set((s) => ({ data: { ...s.data, drafts: { ...s.data.drafts, [draft.id]: draft } } })),
+
+      deleteDraft: (id) =>
+        set((s) => {
+          const drafts = { ...s.data.drafts }
+          delete drafts[id]
+          return { data: { ...s.data, drafts } }
+        }),
 
       setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),
 

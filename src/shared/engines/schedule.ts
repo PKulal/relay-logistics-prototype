@@ -79,3 +79,42 @@ export function legWindows(pattern: LegType[], opts: { pickupSlot: Slot; eta: Is
     lastMile,
   ]
 }
+
+// ─── Pickup slots (CP-13 Step 1) ──────────────────────────────────────────────
+
+const toMin = (hhmm: string) => {
+  const [h, m] = hhmm.split(':').map(Number)
+  return h * 60 + m
+}
+const toHhmm = (min: number) => `${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`
+
+/** Sunday is not a working day (assumed; every seeded location works Mon–Sat). */
+export const isWorkingDay = (date: IsoDate) => istParts(ist(date, '12:00')).weekday !== 0
+
+/**
+ * 2-hour pickup slots inside a location's pickup window, e.g. 10:00–17:00 →
+ * 10–12, 12–14, 14–16. Today only before the cut-off, and only slots that haven't started.
+ */
+export function pickupSlots(window: { from: string; to: string }, date: IsoDate, now: IsoDateTime, cutoff: string): Slot[] {
+  if (!isWorkingDay(date)) return []
+  const today = istDate(now)
+  if (date < today) return []
+  const p = istParts(now)
+  const nowMin = p.hour * 60 + p.minute
+  if (date === today && nowMin >= toMin(cutoff)) return []
+  const slots: Slot[] = []
+  for (let start = toMin(window.from); start + 120 <= toMin(window.to); start += 120) {
+    if (date === today && start <= nowMin) continue
+    slots.push({ date, from: toHhmm(start), to: toHhmm(start + 120) })
+  }
+  return slots
+}
+
+/** The next `count` dates a pickup can be booked for, starting from the earliest allowed. */
+export function pickupDates(now: IsoDateTime, cutoff: string, count = 7): IsoDate[] {
+  const dates: IsoDate[] = []
+  for (let d = earliestPickupDate(now, cutoff); dates.length < count; d = addDaysToDate(d, 1)) {
+    if (isWorkingDay(d)) dates.push(d)
+  }
+  return dates
+}

@@ -92,7 +92,6 @@ describe('the hero shipment can be booked live', () => {
         goodsDescription: 'LT switchgear panel 400A',
         pieces: Array.from({ length: 6 }, () => ({ l: 60, b: 40, h: 40, weight: 20, skuCode: 'SG-LT-400' })),
         pickupSlot: { date: '2026-11-23', from: '14:00', to: '16:00' },
-        appointment: { from: '11:00', to: '13:00', dock: 'Dock 2' },
       },
       '2026-11-23T10:05:00+05:30',
     )
@@ -101,8 +100,9 @@ describe('the hero shipment can be booked live', () => {
     const legs = s.legIds.map((id) => data.legs[id])
     expect(s).toMatchObject({ status: 'booked', eta: '2026-11-26', weights: { actual: 120, volumetricOrCft: 162, chargeable: 162 } })
     expect(s.price.total).toBe(3628.26)
-    expect(s.ewb).toEqual({ no: '3410 2256 7781', validTill: '2026-12-03', partBUpdated: false })
-    expect(s.appointment).toEqual({ date: '2026-11-26', from: '11:00', to: '13:00', dock: 'Dock 2' })
+    expect(s.ewb).toEqual({ no: '3410 2256 7781', validTill: '2026-12-03', partBUpdated: false, source: 'auto' })
+    // Appointment requested at booking; the consignee confirms 11:00–13:00 on CP-18
+    expect(s.appointment).toEqual({ date: '2026-11-26', confirmed: false })
     expect(legs.map((l) => [l.id, l.partnerId, l.cost])).toEqual([
       ['JOB-000781-L1', 'P-SWIFTCITY', 250],
       ['JOB-000781-L2', 'P-NCRXD', 162],

@@ -7,13 +7,15 @@ import { navRoutes } from '@shared/shell/routes'
 import { WebShell } from '@shared/shell/WebShell'
 import { useSessionUser } from '@shared/store/session'
 import { Button } from '@shared/ui/button'
-import { NotFound } from '@shared/ui/Page'
+import { AccessDenied, NotFound, ScreenPlaceholder } from '@shared/ui/Page'
 import CP11Dashboard from './CP11Dashboard'
 import CP12GetQuote from './CP12GetQuote'
+import CP13BookShipment from './CP13BookShipment'
+import CP14Confirmation from './CP14Confirmation'
 import { customerNav, type CustomerCtx } from './nav'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'CP-11': CP11Dashboard, 'CP-12': CP12GetQuote }
+const SCREENS = { 'CP-11': CP11Dashboard, 'CP-12': CP12GetQuote, 'CP-13': CP13BookShipment }
 
 /** Customer Portal (/customer) — B2B shippers. Spec: docs/01-customer-portal.md */
 export default function CustomerApp() {
@@ -49,6 +51,9 @@ export default function CustomerApp() {
         }
       >
         {navRoutes(customerNav, ctx, SCREENS)}
+        {/* Screens outside the menu (CP spec §4.3) */}
+        <Route path="book/done/:lr" element={canBook ? <CP14Confirmation /> : <AccessDenied />} />
+        <Route path="shipments/:lr" element={<ScreenPlaceholder screenId="CP-17" title={t('nav.cp.tracking')} phase={2} />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

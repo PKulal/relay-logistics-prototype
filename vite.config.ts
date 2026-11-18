@@ -24,6 +24,7 @@ export default defineConfig({
       'radix-ui',
       'sonner',
       'input-otp',
+      'qrcode',
       'zustand',
       'zustand/middleware',
       'clsx',

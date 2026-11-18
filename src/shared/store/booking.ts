@@ -23,13 +23,22 @@ export interface BookingInput {
   paymentMode: PaymentMode
   codAmount?: number
   addOns: { appointment: boolean; insurance: boolean; specialHandling: boolean }
-  invoice: { no: string; date: IsoDate; value: number; po?: string }
+  invoice: { no: string; date: IsoDate; value: number; po?: string; fileUrl?: string }
   hsn: string
   goodsDescription: string
   pieces: (Dims & { skuCode?: string })[]
   pickupSlot: Slot
-  /** Appointment slot on the ETA date (when addOns.appointment) */
+  /**
+   * Seed only: an already-confirmed appointment slot on the ETA date. Live bookings
+   * leave it out: the appointment is "requested" and the consignee picks the slot (CP-18).
+   */
   appointment?: { from: string; to: string; dock?: string }
+  pickupContact?: { name: string; mobile: string }
+  pickupInstructions?: string
+  packaging?: Shipment['packaging']
+  customerRef?: string
+  /** "I already have one": the customer's 12-digit e-way bill number */
+  existingEwbNo?: string
   /** Seed only: a fixed LR (e.g. LGS-DEL-000784). Live bookings take the next free LR. */
   lr?: Id
   /** Seed only: false skips wallet / credit movements (seeded balances are snapshots). Default true. */
@@ -62,7 +71,13 @@ export function bookShipment(data: DemoData, input: BookingInput, at: IsoDateTim
   })
 
   const eta = computeEta(input.pickupSlot.date, q.transitDays)
+  // A confirmed slot shapes the last-mile window; a requested one keeps the default window until CP-18.
   const deliverySlot = input.addOns.appointment && input.appointment ? { date: eta, ...input.appointment } : undefined
+  const appointment: Shipment['appointment'] = input.addOns.appointment
+    ? deliverySlot
+      ? { ...deliverySlot, confirmed: true }
+      : { date: eta, confirmed: false }
+    : undefined
   const windows = legWindows(q.pattern, { pickupSlot: input.pickupSlot, eta, lane: q.lane, deliverySlot })
   const plan = planAssignment(data, {
     pattern: q.pattern,
@@ -129,14 +144,22 @@ export function bookShipment(data: DemoData, input: BookingInput, at: IsoDateTim
     invoice: input.invoice,
     hsn: input.hsn,
     goodsDescription: input.goodsDescription,
-    ewb: ewb.required ? { no: simulateEwbNumber(lr), validTill: ewb.validTill!, partBUpdated: false } : undefined,
+    ewb: ewb.required
+      ? input.existingEwbNo
+        ? { no: input.existingEwbNo, validTill: ewb.validTill!, partBUpdated: false, source: 'customer' }
+        : { no: simulateEwbNumber(lr), validTill: ewb.validTill!, partBUpdated: false, source: 'auto' }
+      : undefined,
     pickupSlot: input.pickupSlot,
+    pickupContact: input.pickupContact,
+    pickupInstructions: input.pickupInstructions,
+    packaging: input.packaging,
+    customerRef: input.customerRef,
     pieces: input.pieces.map((p, i) => ({ id: `${lr}-${String(i + 1).padStart(2, '0')}`, l: p.l, b: p.b, h: p.h, weight: p.weight, skuCode: p.skuCode })),
     weights: { actual: q.weights.actual, volumetricOrCft: q.weights.volumetricOrCft, chargeable: q.weights.chargeable },
     price: q.price,
     status: 'booked',
     eta,
-    appointment: deliverySlot,
+    appointment,
     legIds: legs.map((l) => l.id),
     updatedAt: at,
   }

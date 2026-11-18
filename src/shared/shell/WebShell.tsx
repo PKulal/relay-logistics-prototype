@@ -4,7 +4,7 @@
  * white sidebar; the ERP uses charcoal (§2).
  */
 import { Bell, ChevronDown, CircleHelp, LogOut, PanelLeftClose, PanelLeftOpen, Repeat, Search, SquareArrowOutUpRight } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -50,6 +50,12 @@ export function WebShell<Ctx>({ app, nav, orgName, orgBadge, user, headerActions
   const navigate = useNavigate()
   const logout = useSession((s) => s.logout)
   const [collapsed, setCollapsed] = useState(readCollapsed)
+  // The content pane (not the window) scrolls, so reset it on every page change
+  const mainRef = useRef<HTMLElement>(null)
+  const { pathname } = useLocation()
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0 })
+  }, [pathname])
 
   const toggle = () => {
     setCollapsed((c) => {
@@ -178,7 +184,7 @@ export function WebShell<Ctx>({ app, nav, orgName, orgBadge, user, headerActions
         </aside>
 
         {/* ── Content ──────────────────────────────── */}
-        <main className="min-w-0 flex-1 overflow-y-auto">
+        <main ref={mainRef} className="min-w-0 flex-1 overflow-y-auto">
           <div className="mx-auto max-w-7xl p-6">
             <Outlet />
           </div>

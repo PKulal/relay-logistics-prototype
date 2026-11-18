@@ -13,6 +13,8 @@ export const OTHER_PINCODE = '__pincode'
 export interface Row {
   key: number
   skuCode: string
+  /** CP-13 package description (CP-12 doesn't ask for it) */
+  description?: string
   qty: string
   l: string
   b: string

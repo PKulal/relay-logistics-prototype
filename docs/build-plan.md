@@ -23,8 +23,8 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 ## Phase 2 — Shipment spine (hero shipment end to end)
 - [x] CP-11 Dashboard (live counts)
 - [x] CP-12 Get quote (real calculation) → must show ₹3,628.26 for the hero inputs
-- [ ] CP-13 Book shipment (6 steps) → CP-14 Confirmation (labels, LR, e-way bill)
-- [ ] Leg planner runs on booking (assignment engine) → 5 legs created
+- [x] CP-13 Book shipment (6 steps) → CP-14 Confirmation (labels, LR, e-way bill)
+- [x] Leg planner runs on booking (assignment engine) → 5 legs created
 - [ ] ERP-05 Live job board, ERP-03 Shipment 360
 - [ ] PP-11 Dashboard, PP-12 Job inbox, PP-13 Job detail, PP-14 Assign to staff
 - [ ] PA-05 Home, PA-06 Tasks, PA-07 Scanner, PA-14 to PA-17 Pickup

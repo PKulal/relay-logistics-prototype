@@ -18,11 +18,12 @@ import type { ParcelTier, PaymentMode } from '@shared/types'
 import { Button } from '@shared/ui/button'
 import { Checkbox } from '@shared/ui/checkbox'
 import { Chip } from '@shared/ui/StatusChip'
+import { Field, NumField } from '@shared/ui/FormField'
 import { Input } from '@shared/ui/input'
-import { Label } from '@shared/ui/label'
 import { NativeSelect } from '@shared/ui/NativeSelect'
 import { PageHeader } from '@shared/ui/Page'
 import { PriceBreakdown, WeightBreakdown } from '@shared/ui/PriceBreakdown'
+import { PrintArea } from '@shared/ui/PrintArea'
 import { RadioGroup, RadioGroupItem } from '@shared/ui/radio-group'
 import { ToggleGroup, ToggleGroupItem } from '@shared/ui/toggle-group'
 import {
@@ -336,7 +337,7 @@ export default function CP12GetQuote() {
 
       {/* Printable quote (Download quote → browser print / Save as PDF) */}
       {q && input && (
-        <div className="print-area hidden print:block">
+        <PrintArea>
           <img src="/brand/logisco-logo.png" alt={t('common.brand')} className="mb-4 h-10" />
           <h1 className="text-page-title">{t('cp12.printTitle')}</h1>
           <p className="mb-4">
@@ -347,37 +348,13 @@ export default function CP12GetQuote() {
           </p>
           <WeightBreakdown weights={q.weights} serviceKind={input.serviceKind} minKg={ptlLine?.minKg} />
           <PriceBreakdown price={q.price} gstPct={data.settings.gstPct} className="mt-4" />
-        </div>
+        </PrintArea>
       )}
     </div>
   )
 }
 
 // ─── Small layout helpers ─────────────────────────────────────────────────────
-
-function Field({ label, htmlFor, children, small, error, className }: { label: string; htmlFor?: string; children: React.ReactNode; small?: boolean; error?: string; className?: string }) {
-  return (
-    <div className={cn('flex flex-col gap-1.5', className)}>
-      <Label htmlFor={htmlFor} className={small ? 'text-caption' : undefined}>
-        {label}
-      </Label>
-      {children}
-      {error && (
-        <p role="alert" className="text-caption font-medium text-status-danger">
-          {error}
-        </p>
-      )}
-    </div>
-  )
-}
-
-function NumField({ label, id, value, onChange }: { label: string; id: string; value: string; onChange: (v: string) => void }) {
-  return (
-    <Field label={label} htmlFor={id} small>
-      <Input id={id} inputMode="decimal" className="tabular" value={value} onChange={(e) => onChange(e.target.value.replace(/[^\d.]/g, ''))} />
-    </Field>
-  )
-}
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
