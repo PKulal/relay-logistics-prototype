@@ -8,7 +8,12 @@ import { WebShell } from '@shared/shell/WebShell'
 import { useSessionUser } from '@shared/store/session'
 import { Button } from '@shared/ui/button'
 import { NotFound } from '@shared/ui/Page'
+import CP11Dashboard from './CP11Dashboard'
+import CP12GetQuote from './CP12GetQuote'
 import { customerNav, type CustomerCtx } from './nav'
+
+/** Built screens, by spec screen id. Unlisted screens show their placeholder. */
+const SCREENS = { 'CP-11': CP11Dashboard, 'CP-12': CP12GetQuote }
 
 /** Customer Portal (/customer) — B2B shippers. Spec: docs/01-customer-portal.md */
 export default function CustomerApp() {
@@ -43,7 +48,7 @@ export default function CustomerApp() {
           />
         }
       >
-        {navRoutes(customerNav, ctx)}
+        {navRoutes(customerNav, ctx, SCREENS)}
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

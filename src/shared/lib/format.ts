@@ -42,6 +42,16 @@ export function formatDayShort(value: IsoDateTime | IsoDate | Date): string {
   return `${DAYS[p.weekday]} ${pad(p.day)}-${MONTHS[p.month - 1]}`
 }
 
+/** → "Thu, 26-Nov-2026" (ETA promises) */
+export function formatDateLong(value: IsoDateTime | IsoDate | Date): string {
+  return `${DAYS[parts(value).weekday]}, ${formatDate(value)}`
+}
+
+/** 162 → "162 kg", 7.5 → "7.5 kg" */
+export function formatKg(kg: number): string {
+  return `${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(kg)} kg`
+}
+
 /** → "14:05" (24-hour IST) */
 export function formatTime(value: IsoDateTime | Date): string {
   const p = istParts(value)

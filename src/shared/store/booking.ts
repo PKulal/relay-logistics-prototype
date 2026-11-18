@@ -160,8 +160,11 @@ export function bookShipment(data: DemoData, input: BookingInput, at: IsoDateTim
 }
 
 function applyBookingMoney(data: DemoData, s: Shipment, at: IsoDateTime): DemoData {
-  const customer = data.customers[s.customerId]
+  const before = data.customers[s.customerId]
   const total = s.price.total
+  // Every booking counts towards this month's spend (CP-11).
+  const customer = { ...before, spendMonthToDate: Math.round((before.spendMonthToDate + total) * 100) / 100 }
+  data = { ...data, customers: { ...data.customers, [customer.id]: customer } }
   if (customer.billing === 'prepaid' && s.paymentMode === 'paid') {
     const balanceAfter = Math.round((customer.walletBalance - total) * 100) / 100
     const txnId = `WT-${s.id}`

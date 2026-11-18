@@ -6,3 +6,11 @@ import * as matchers from '@testing-library/jest-dom/matchers'
 import '@shared/i18n'
 
 expect.extend(matchers)
+
+// jsdom has no ResizeObserver; Radix UI (checkbox, toggle group, …) needs one.
+class ResizeObserverStub {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+globalThis.ResizeObserver ??= ResizeObserverStub as unknown as typeof ResizeObserver

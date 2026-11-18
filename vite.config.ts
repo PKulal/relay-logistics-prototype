@@ -8,8 +8,28 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   // Windows: a lowercase drive letter (c:\ vs C:\) can make Vite bundle two
   // copies of React ("Invalid hook call"). Force a single copy.
+  // Every runtime library is pre-bundled up front: a library discovered mid-session
+  // makes Vite re-optimise and reload ("Outdated Optimize Dep"), which is how a
+  // second React copy crept in during Phase 0.
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-dom/client', 'react-router-dom', 'react-i18next', 'lucide-react'],
+    include: [
+      'react',
+      'react-dom',
+      'react-dom/client',
+      'react-router-dom',
+      'react-i18next',
+      'i18next',
+      'lucide-react',
+      'recharts',
+      'radix-ui',
+      'sonner',
+      'input-otp',
+      'zustand',
+      'zustand/middleware',
+      'clsx',
+      'tailwind-merge',
+      'class-variance-authority',
+    ],
   },
   resolve: {
     dedupe: ['react', 'react-dom'],

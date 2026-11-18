@@ -1,6 +1,6 @@
 /**
  * Demo toolbar (build plan Phase 1; ERP spec §11.1, extended to every app).
- * Collapsed to a small pill by default. Deliberately styled apart from the apps
+ * Collapsed to a small pill (bottom centre, clear of the sidebar and toasts) by default. Deliberately styled apart from the apps
  * (dark with amber) so reviewers can tell demo controls from product UI.
  */
 import { CalendarClock, Clock, FlaskConical, Gauge, Repeat, RotateCcw, TriangleAlert, WifiOff, X, Tag } from 'lucide-react'
@@ -45,7 +45,7 @@ export function DemoToolbar() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-4 left-4 z-50 inline-flex items-center gap-2 rounded-full bg-gray-900 px-3 py-2 text-caption font-semibold text-white shadow-lg hover:bg-gray-700 focus-visible:outline-brand-amber"
+        className="fixed bottom-4 left-1/2 z-50 inline-flex -translate-x-1/2 items-center gap-2 rounded-full bg-gray-900 px-3 py-2 text-caption font-semibold text-white shadow-lg hover:bg-gray-700 focus-visible:outline-brand-amber"
         aria-label={t('toolbar.open')}
       >
         <FlaskConical className="size-4 text-brand-amber" aria-hidden />
@@ -59,7 +59,7 @@ export function DemoToolbar() {
     <>
       <section
         aria-label={t('toolbar.title')}
-        className="fixed bottom-4 left-4 z-50 w-80 rounded-xl bg-gray-900 text-white shadow-2xl [&_:focus-visible]:outline-brand-amber"
+        className="fixed bottom-4 left-1/2 z-50 w-80 -translate-x-1/2 rounded-xl bg-gray-900 text-white shadow-2xl [&_:focus-visible]:outline-brand-amber"
       >
         <header className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
           <FlaskConical className="size-4 text-brand-amber" aria-hidden />

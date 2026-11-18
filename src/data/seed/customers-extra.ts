@@ -20,6 +20,7 @@ const customer = (c: C): Customer => ({
   creditTermsDays: c.billing === 'credit' ? 30 : 0,
   securityDeposit: 0,
   walletBalance: c.billing === 'prepaid' ? 12500 : 0,
+  spendMonthToDate: c.billing === 'credit' ? 64000 : 3900,
   kamId: c.type === 'sme' ? undefined : 'LS-ARJUN',
   rateCardId: 'RC-STANDARD',
   integrations: { tally: false },

@@ -195,3 +195,21 @@
 @utility tabular {
   font-variant-numeric: tabular-nums;
 }
+
+/* Printing (e.g. CP-12 "Download quote" → Save as PDF): only .print-area is printed */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+  .print-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 24px;
+  }
+}

@@ -21,8 +21,8 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 - [x] Demo toolbar: switch app / persona, advance time, inject exception, run weekly scoring, offline toggle, simulation labels, reset
 
 ## Phase 2 — Shipment spine (hero shipment end to end)
-- [ ] CP-11 Dashboard (live counts)
-- [ ] CP-12 Get quote (real calculation) → must show ₹3,628.26 for the hero inputs
+- [x] CP-11 Dashboard (live counts)
+- [x] CP-12 Get quote (real calculation) → must show ₹3,628.26 for the hero inputs
 - [ ] CP-13 Book shipment (6 steps) → CP-14 Confirmation (labels, LR, e-way bill)
 - [ ] Leg planner runs on booking (assignment engine) → 5 legs created
 - [ ] ERP-05 Live job board, ERP-03 Shipment 360

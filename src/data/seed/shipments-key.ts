@@ -179,6 +179,8 @@ export function addKeyShipments(seed: DemoData, until: IsoDateTime): DemoData {
     '2026-11-21T11:00:00+05:30',
   )
   data = runJourney(data, 'LGS-MYS-000112', { until })
+  // The booking added its total to month-to-date spend; the seeded ₹4,820 already includes it.
+  data = { ...data, customers: { ...data.customers, 'C-KAVERI': { ...data.customers['C-KAVERI'], spendMonthToDate: 4820 } } }
 
   // ── LGS-DEL-000790: pickup at risk — Ravi has 7 pending pickups today. Reassigned to QuickLink in ERP-08.
   book(

@@ -246,6 +246,13 @@ export interface Customer {
   creditTermsDays: number
   securityDeposit: number
   walletBalance: number
+  /**
+   * Billed value this calendar month (CP-11 "Spend this month"). Seeded as a
+   * snapshot that covers unmodelled shipments too; every booking adds its total.
+   */
+  spendMonthToDate: number
+  /** COD collected and not yet remitted (CP-11 "COD due", CP-25) */
+  cod?: { pending: number; nextRemittance: IsoDate; remittedThisMonth: number }
   kamId?: Id
   rateCardId: Id
   bank?: { name: string; branch: string; ifsc: string; account: string }

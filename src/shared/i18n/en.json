@@ -332,5 +332,157 @@
     "resetBody": "All four apps go back to the seed data and the clock returns to Mon 23-Nov 10:00. Bookings and actions made in the demo are lost. Logins stay.",
     "resetConfirm": "Reset demo",
     "resetDone": "Demo data reset"
+  },
+  "service": {
+    "parcel": "Parcel",
+    "expressPtl": "Express PTL",
+    "standardPtl": "Standard PTL",
+    "economy": "Economy",
+    "standard": "Standard",
+    "express": "Express"
+  },
+  "payment": {
+    "paid": "Paid",
+    "toPay": "To-Pay",
+    "tbb": "TBB (credit)",
+    "cod": "COD"
+  },
+  "price": {
+    "line": {
+      "freight": "Base freight",
+      "fuel": "Fuel surcharge",
+      "oda": "ODA charge",
+      "docket": "Docket / LR",
+      "appointment": "Appointment delivery",
+      "cod": "COD fee",
+      "toPay": "To-Pay fee",
+      "fov": "Insurance / FOV",
+      "specialHandling": "Special handling"
+    },
+    "basis": {
+      "freightPtl": "{{kg}} × {{rate}}/kg",
+      "freightParcel": "First 0.5 kg {{first}} + {{extra}} × {{additional}}",
+      "pctOfFreight": "{{pct}}% of freight",
+      "pctOf": "{{pct}}% of {{value}}",
+      "oda": "{{rate}}/kg, minimum {{min}}",
+      "perPiece": "{{pieces}} × {{rate}}",
+      "perShipment": "Per shipment"
+    },
+    "subtotal": "Subtotal",
+    "gst": "GST {{pct}}%",
+    "total": "Total"
+  },
+  "weight": {
+    "actual": "Actual",
+    "cft": "CFT ({{cuft}} cu ft)",
+    "volumetric": "Volumetric",
+    "chargeable": "Chargeable",
+    "minApplied": "Minimum {{kg}} kg applies"
+  },
+  "cp11": {
+    "title": "Dashboard",
+    "greeting": "Welcome back, {{name}} · {{company}}",
+    "range": "Date range",
+    "location": "Pickup location",
+    "allLocations": "All pickup locations",
+    "ranges": {
+      "today": "Today",
+      "7d": "Last 7 days",
+      "30d": "Last 30 days",
+      "month": "This month"
+    },
+    "banner": {
+      "walletLow": "Your wallet balance is low. Recharge to keep booking.",
+      "creditHigh": "You have used more than 80% of your credit limit.",
+      "invoiceOverdue": "You have an overdue invoice. Bookings may be put on hold.",
+      "pilot": "Your account is in its pilot period. Your account manager is watching every shipment."
+    },
+    "track": "Track",
+    "byStatus": "Shipments by status",
+    "exceptionsTile": "Exceptions",
+    "sla": "On-time delivery",
+    "slaNone": "No shipments were due in this period.",
+    "slaDetail": "{{onTime}} of {{due}} due shipments delivered on time",
+    "slaVsPrevious": "{{delta}} points vs previous period",
+    "slaGauge": "On-time delivery {{pct}}%",
+    "needAction": "Exceptions needing action",
+    "needActionCount_one": "{{count}} needs action",
+    "needActionCount_other": "{{count}} need action",
+    "noActions": "Nothing needs your action right now",
+    "action": {
+      "weightRevision": "Weight revision to review",
+      "ndr": "Failed delivery: choose what to do",
+      "claim": "Short or damaged: raise a claim"
+    },
+    "act": "Act",
+    "seeAll": "See all {{count}}",
+    "spend": "Spend this month",
+    "creditUsed": "Credit used {{used}} of {{limit}} · available {{available}}",
+    "walletBalance": "Wallet balance {{amount}}",
+    "codDue": "COD due",
+    "codNext": "Next remittance {{date}}",
+    "invoicesDue": "Invoices due"
+  },
+  "cp12": {
+    "title": "Get quote",
+    "subtitle": "All-in price and delivery date before you book. Nothing is added later except a weight revision verified at pickup.",
+    "fillSample": "Fill sample",
+    "reset": "Reset",
+    "formLabel": "Quote details",
+    "service": "Service type",
+    "origin": "Origin",
+    "otherPincode": "Another pincode…",
+    "originPincode": "Origin pincode",
+    "pincodePlaceholder": "6-digit pincode",
+    "destination": "Destination pincode",
+    "dest": {
+      "serviceable": "Serviceable",
+      "oda": "ODA (extra charge)",
+      "notServiceable": "Not serviceable"
+    },
+    "packages": "Packages",
+    "sku": "SKU (optional)",
+    "noSku": "No SKU",
+    "flagged": "flagged",
+    "qty": "Qty",
+    "l": "L (cm)",
+    "b": "B (cm)",
+    "h": "H (cm)",
+    "weight": "Kg / piece",
+    "removeRow": "Remove package row {{n}}",
+    "addRow": "Add package row",
+    "totalActual": "Total actual weight: {{kg}} kg",
+    "value": "Declared goods value",
+    "paymentMode": "Payment mode",
+    "codAmount": "COD amount",
+    "codTooHigh": "COD amount cannot be more than the goods value.",
+    "tier": "Service tier",
+    "addOns": "Add-ons",
+    "addOn": {
+      "appointment": "Appointment delivery",
+      "insurance": "Transit insurance (FOV)",
+      "specialHandling": "Special handling (fragile / heavy)"
+    },
+    "result": "Your quote",
+    "fillIn": "Fill in the route, packages and goods value to see the price.",
+    "error": {
+      "unknownPincode": "We don’t serve this pincode yet.",
+      "originNotServiceable": "We don’t pick up from this pincode yet.",
+      "destNotServiceable": "We don’t serve this pincode yet.",
+      "serviceMismatch": "Choose a service type.",
+      "noLane": "PTL isn’t offered on this route. Try Parcel.",
+      "serviceNotOnLane": "This service isn’t on your rate card for this route."
+    },
+    "chargeableWeight": "Chargeable weight",
+    "priceBuildUp": "Price build-up",
+    "eta": "Delivery by",
+    "etaBasis": "{{days}}-day transit from pickup on {{pickup}} (pickup cut-off {{cutoff}})",
+    "ewbNote": "An e-way bill will be generated automatically (valid {{days}} days).",
+    "tierComparison": "Compare tiers",
+    "bookThis": "Book this",
+    "notServed": "We don’t serve this pincode yet.",
+    "download": "Download quote",
+    "validity": "Quote {{id}} · valid till {{date}}",
+    "printTitle": "Logisco quote"
   }
 }
