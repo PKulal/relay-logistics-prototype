@@ -80,7 +80,8 @@
       "handover": "सौंपना",
       "trip": "ट्रिप",
       "hub": "हब का काम",
-      "delivery": "डिलीवरी"
+      "delivery": "डिलीवरी",
+      "receive": "माल लेना"
     },
     "new": "नया",
     "km": "{{km}} कि.मी.",
@@ -174,7 +175,8 @@
   },
   "pa07": {
     "title": "स्कैन",
-    "body": "कोई भी लेबल स्कैन करें। ऐप उसका काम खोल देगा।"
+    "body": "कोई भी लेबल स्कैन करें। ऐप उसका काम खोल देगा।",
+    "handoverQr": "{{name}} का हैंड-ओवर QR स्कैन करें"
   },
   "pa14": {
     "back": "काम",
@@ -266,5 +268,79 @@
     "actual": "असली",
     "volumetric": "वॉल्यूमेट्रिक",
     "chargeable": "चार्ज होने वाला"
+  },
+  "pa19": {
+    "title": "माल सौंपें",
+    "to": "किसे सौंपना है",
+    "receiverMissing": "{{partner}} में अभी कोई माल लेने के लिए तय नहीं है।",
+    "items": "आइटम स्कैन करके निकालें",
+    "seal": "सील नंबर",
+    "vehicle": "गाड़ी नंबर",
+    "photoTitle": "फ़ोटो",
+    "photo": "सौंपते समय माल",
+    "photoCaption": "हैंड-ओवर · {{count}} पीस",
+    "showCode": "कोड दिखाएँ",
+    "todo": "हर पीस स्कैन करें और फ़ोटो लें",
+    "codeTitle": "हैंड-ओवर कोड",
+    "qrLabel": "हैंड-ओवर QR कोड {{code}}",
+    "codeHelp": "{{name}} यह कोड स्कैन करें, या कोड पढ़कर बताएँ।",
+    "waiting": "{{name}} की पुष्टि का इंतज़ार…",
+    "openReceiver": "{{name}} का फ़ोन खोलें",
+    "liability": "जब तक लेने वाला पुष्टि न करे, माल आपकी ज़िम्मेदारी है।",
+    "done": "माल सौंप दिया",
+    "doneLine": "{{name}}, {{partner}} को {{time}} पर",
+    "doneLiability": "अब माल की ज़िम्मेदारी {{partner}} की है।",
+    "withException": "समस्या के साथ स्वीकार किया गया",
+    "investigate": "{{partner}} को {{time}} तक जाँच करनी है।",
+    "backToTasks": "काम की सूची पर वापस"
+  },
+  "pa20": {
+    "title": "माल लें",
+    "from": "किससे",
+    "pieces_one": "{{count}} पीस",
+    "pieces_other": "{{count}} पीस",
+    "code": "हैंड-ओवर कोड",
+    "waitingGiver": "{{name}} के हैंड-ओवर कोड दिखाने का इंतज़ार।",
+    "noCodeYet": "{{name}} ने अभी कोड नहीं दिखाया है।",
+    "scanQr": "QR स्कैन करें",
+    "codeOk": "कोड सही है",
+    "codeWrong": "कोड मेल नहीं खाता",
+    "count": "गिनती",
+    "countFinished_one": "गिनती पूरी: {{count}} पीस कम है",
+    "countFinished_other": "गिनती पूरी: {{count}} पीस कम हैं",
+    "seals": "सील जाँच",
+    "sealIntact": "{{seal}} ठीक है",
+    "sealBroken": "टूटी हुई या मेल नहीं खाती",
+    "sealPhoto": "सील की फ़ोटो",
+    "condition": "हालत",
+    "allGood": "सब ठीक है",
+    "damaged": "खराब / टूटा हुआ",
+    "pickDamaged": "कौन से पीस खराब हैं?",
+    "damagePhoto": "नुकसान की फ़ोटो",
+    "problems": "यह समस्या के साथ स्वीकार होगा",
+    "problem": {
+      "short_one": "कम: {{count}} पीस नहीं मिला",
+      "short_other": "कम: {{count}} पीस नहीं मिले",
+      "excess_one": "ज़्यादा: {{count}} पीस अतिरिक्त",
+      "excess_other": "ज़्यादा: {{count}} पीस अतिरिक्त",
+      "sealMismatch": "सील टूटी हुई या मेल नहीं खाती",
+      "damage": "खराब पीस",
+      "pickupMissed": "पिकअप छूट गया",
+      "delay": "देरी",
+      "breakdown": "गाड़ी खराब",
+      "ndr": "डिलीवरी नहीं हुई",
+      "weightMismatch": "वज़न अलग"
+    },
+    "hold": "माल रोक दिया जाएगा और {{partner}} को {{hours}} घंटे में जाँच करनी होगी।",
+    "accept": "स्वीकार करें",
+    "acceptException": "समस्या के साथ स्वीकार करें",
+    "todo": {
+      "code": "हैंड-ओवर कोड डालें या स्कैन करें",
+      "count": "हर पीस स्कैन करें, या गिनती पूरी चुनें",
+      "photos": "फ़ोटो लें"
+    },
+    "done_one": "{{name}} से {{count}} पीस मिला",
+    "done_other": "{{name}} से {{count}} पीस मिले",
+    "doneException": "समस्या के साथ स्वीकार किया। {{partner}} के लिए टिकट बना।"
   }
 }

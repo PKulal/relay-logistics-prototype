@@ -19,6 +19,7 @@ import { PhotoCapture } from '@shared/ui/PhotoCapture'
 import { Scanner } from '@shared/ui/Scanner'
 import { SignaturePad } from '@shared/ui/SignaturePad'
 import { SimulatedTag } from '@shared/ui/SimulatedTag'
+import { Card, Choice } from './FieldUi'
 import { useFieldSession } from './useFieldSession'
 
 type Step = 'scan' | 'weigh' | 'confirm'
@@ -296,26 +297,6 @@ export default function PickupFlow({ leg }: { leg: Leg }) {
         {!stepOk[f.step] && <p className="mt-1 text-center text-[13px] text-muted-foreground">{t(`pa15.todo.${f.step}`)}</p>}
       </div>
     </div>
-  )
-}
-
-function Card({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="rounded-2xl border bg-card p-4">
-      <h2 className="mb-2 font-bold">{title}</h2>
-      {children}
-    </section>
-  )
-}
-
-function Choice({ checked, onClick, label, checkbox }: { checked: boolean; onClick: () => void; label: string; checkbox?: boolean }) {
-  return (
-    <button type="button" role={checkbox ? 'checkbox' : 'radio'} aria-checked={checked} onClick={onClick} className="flex min-h-12 w-full items-center gap-3 text-left">
-      <span className={cn('flex size-6 shrink-0 items-center justify-center border-2', checkbox ? 'rounded-md' : 'rounded-full', checked ? 'border-primary bg-primary text-primary-foreground' : 'border-gray-500')}>
-        {checked && <Check className="size-4" aria-hidden />}
-      </span>
-      {label}
-    </button>
   )
 }
 

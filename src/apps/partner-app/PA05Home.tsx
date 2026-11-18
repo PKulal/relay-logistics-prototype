@@ -88,7 +88,7 @@ export default function PA05Home() {
         )}
         {staff.role === 'hub' && (
           <div className="grid grid-cols-2 gap-2">
-            <Tile label={t('pa05.inbound')} value={String(tasks.filter((x) => x.kind === 'hub' && x.state === 'todo').length)} />
+            <Tile label={t('pa05.inbound')} value={String(tasks.filter((x) => (x.kind === 'hub' || x.kind === 'receive') && x.state === 'todo').length)} />
             <Tile label={t('pa05.atHub')} value={String(tasks.filter((x) => x.kind === 'hub' && x.state === 'inProgress').length)} />
           </div>
         )}

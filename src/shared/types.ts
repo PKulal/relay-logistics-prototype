@@ -641,6 +641,8 @@ export interface ShipmentEvent {
   vehicleNo?: string
   photos?: string[]
   counterpartStaffId?: Id
+  /** handoverGiven: the code the receiver scans or types (PA-19 → PA-20) */
+  handoverCode?: string
   /** exceptionReported: what went wrong */
   exceptionKind?: ExceptionKind
   /** haltReported: true when the delay puts the ETA at risk */

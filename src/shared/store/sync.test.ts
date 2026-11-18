@@ -29,6 +29,8 @@ function makeTab() {
     arriveAtPickup: () => {},
     confirmPickup: () => {},
     markNotificationsRead: () => {},
+    giveHandover: () => {},
+    receiveHandover: () => {},
     setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),
     resetDemo: () => set({ data: buildBaseSeed(), demoNow: DEMO_START }),
   }))

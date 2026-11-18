@@ -7,7 +7,7 @@ import type { DemoData, FieldStaff, Id, IsoDateTime, Leg, Shipment } from '@shar
 import { jobSpecials, type Special } from './partnerJobs'
 import { legSla, type SlaState } from './sla'
 
-export type TaskKind = 'pickup' | 'handover' | 'trip' | 'hub' | 'delivery'
+export type TaskKind = 'pickup' | 'handover' | 'receive' | 'trip' | 'hub' | 'delivery'
 export type TaskState = 'todo' | 'inProgress' | 'done' | 'failed'
 export const TASK_STATES: TaskState[] = ['todo', 'inProgress', 'done', 'failed']
 
@@ -40,7 +40,26 @@ function stateOf(leg: Leg): TaskState {
   }
 }
 
-function kindOf(leg: Leg): TaskKind {
+/** The leg before this one in its shipment, if any. */
+export function prevLegOf(data: DemoData, leg: Leg): Leg | undefined {
+  const ids = data.shipments[leg.shipmentId].legIds
+  const i = ids.indexOf(leg.id)
+  return i > 0 ? data.legs[ids[i - 1]] : undefined
+}
+
+/** The leg after this one in its shipment, if any. */
+export function nextLegOf(data: DemoData, leg: Leg): Leg | undefined {
+  const ids = data.shipments[leg.shipmentId].legIds
+  const i = ids.indexOf(leg.id)
+  return i >= 0 && i < ids.length - 1 ? data.legs[ids[i + 1]] : undefined
+}
+
+/** A hub job whose goods are on their way in: the staff member's job is to receive them (PA-20). */
+export function isReceive(data: DemoData, leg: Leg): boolean {
+  return (leg.type === 'originHub' || leg.type === 'destHub') && leg.status === 'assigned' && prevLegOf(data, leg)?.status === 'inProgress'
+}
+
+function kindOf(data: DemoData, leg: Leg): TaskKind {
   switch (leg.type) {
     case 'firstMile':
       // After pickup the rider's job is to hand the goods to the hub
@@ -49,7 +68,7 @@ function kindOf(leg: Leg): TaskKind {
       return 'trip'
     case 'originHub':
     case 'destHub':
-      return 'hub'
+      return isReceive(data, leg) ? 'receive' : 'hub'
     case 'lastMile':
       return 'delivery'
   }
@@ -58,7 +77,7 @@ function kindOf(leg: Leg): TaskKind {
 function placeOf(data: DemoData, leg: Leg, s: Shipment): string {
   const origin = data.pincodes[s.originPincode]
   const dest = data.pincodes[s.destPincode]
-  switch (kindOf(leg)) {
+  switch (kindOf(data, leg)) {
     case 'pickup': {
       return `${data.customers[s.customerId].shortName}, ${origin.area}`
     }
@@ -66,6 +85,10 @@ function placeOf(data: DemoData, leg: Leg, s: Shipment): string {
       return data.hubs[origin.hubId!]?.name ?? origin.city
     case 'trip':
       return `${data.hubs[origin.hubId!]?.name ?? origin.city} → ${data.hubs[dest.hubId!]?.name ?? dest.city}`
+    case 'receive': {
+      const prev = prevLegOf(data, leg)!
+      return `${data.partners[prev.partnerId].shortName} → ${data.hubs[(leg.type === 'originHub' ? origin : dest).hubId!]?.name ?? ''}`
+    }
     case 'hub':
       return s.legIds.indexOf(leg.id) <= 1 ? `${origin.city} → ${dest.city}` : `${dest.city}`
     case 'delivery': {
@@ -100,7 +123,7 @@ export function tasksFor(data: DemoData, staffId: Id, now: IsoDateTime): Task[] 
     tasks.push({
       leg,
       shipment: s,
-      kind: kindOf(leg),
+      kind: kindOf(data, leg),
       state,
       sla: legSla(leg, now),
       place: placeOf(data, leg, s),

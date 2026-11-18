@@ -1,6 +1,8 @@
 /**
  * Opens the right screen for a task (/app/tasks/:legId). Opening a task marks
- * its "New" notification read. Screens for later build-plan items show their
+ * its "New" notification read. After pickup the rider's task is the hand-over
+ * (PA-19); a hub job with goods on the way is the receive (PA-20). Screens for
+ * later build-plan items show their
  * placeholder with the screen id.
  */
 import { useEffect } from 'react'
@@ -8,8 +10,11 @@ import { useTranslation } from 'react-i18next'
 import { Navigate, useParams } from 'react-router-dom'
 import { useData } from '@shared/hooks/useDemo'
 import { useDemoStore } from '@shared/store'
+import { isReceive } from '@shared/engines/fieldTasks'
 import { NotFound, ScreenPlaceholder } from '@shared/ui/Page'
 import PA14PickupDetail from './PA14PickupDetail'
+import PA19HandOver from './PA19HandOver'
+import PA20Receive from './PA20Receive'
 import PickupFlow from './PickupFlow'
 import { useFieldSession } from './useFieldSession'
 
@@ -27,6 +32,7 @@ export default function TaskScreen({ flow }: { flow?: 'pickup' }) {
   const { legId = '' } = useParams()
   const { staff } = useFieldSession()
   const leg = useData((d) => d.legs[legId])
+  const receive = useData((d) => (d.legs[legId] ? isReceive(d, d.legs[legId]) : false))
   const unread = useData((d) => d.notifications)
 
   useEffect(() => {
@@ -50,6 +56,9 @@ export default function TaskScreen({ flow }: { flow?: 'pickup' }) {
   // The pickup flow for a job that is no longer waiting for pickup (e.g. just
   // confirmed): back to the task list, where it now shows as the hand-over.
   if (flow === 'pickup') return <Navigate to="/app/tasks" replace />
+
+  if (leg.type === 'firstMile' && (leg.status === 'inProgress' || leg.status === 'handedOver')) return <PA19HandOver leg={leg} />
+  if (receive) return <PA20Receive leg={leg} />
 
   const screenId = leg.type === 'firstMile' ? LATER.handover : LATER[leg.type]
   return (

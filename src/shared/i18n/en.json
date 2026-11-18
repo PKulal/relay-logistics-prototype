@@ -315,7 +315,8 @@
       "handover": "Hand-over",
       "trip": "Trip",
       "hub": "Hub work",
-      "delivery": "Delivery"
+      "delivery": "Delivery",
+      "receive": "Receive"
     },
     "new": "New",
     "km": "{{km}} km",
@@ -1221,7 +1222,8 @@
   },
   "pa07": {
     "title": "Scan",
-    "body": "Scan any label. The app opens the task it belongs to."
+    "body": "Scan any label. The app opens the task it belongs to.",
+    "handoverQr": "Scan hand-over QR from {{name}}"
   },
   "pa14": {
     "back": "Tasks",
@@ -1304,5 +1306,79 @@
     "confirm": "Confirm pickup",
     "done": "{{lr}} picked up",
     "revisionSent": "Weight revision of + {{amount}} sent to the customer"
+  },
+  "pa19": {
+    "title": "Hand over",
+    "to": "Hand over to",
+    "receiverMissing": "No one at {{partner}} is assigned to receive yet.",
+    "items": "Scan items out",
+    "seal": "Seal number",
+    "vehicle": "Vehicle number",
+    "photoTitle": "Photo",
+    "photo": "Goods at hand-over",
+    "photoCaption": "Hand-over · {{count}} pcs",
+    "showCode": "Show code",
+    "todo": "Scan every piece and take the photo",
+    "codeTitle": "Hand-over code",
+    "qrLabel": "Hand-over QR code {{code}}",
+    "codeHelp": "Let {{name}} scan this code, or read it out.",
+    "waiting": "Waiting for {{name}} to confirm…",
+    "openReceiver": "Open {{name}}’s phone",
+    "liability": "The goods stay your responsibility until the receiver confirms.",
+    "done": "Handed over",
+    "doneLine": "To {{name}}, {{partner}} at {{time}}",
+    "doneLiability": "Responsibility for the goods is now with {{partner}}.",
+    "withException": "Accepted with an exception",
+    "investigate": "{{partner}} must investigate by {{time}}.",
+    "backToTasks": "Back to tasks"
+  },
+  "pa20": {
+    "title": "Receive hand-over",
+    "from": "From",
+    "pieces_one": "{{count}} piece",
+    "pieces_other": "{{count}} pieces",
+    "code": "Hand-over code",
+    "waitingGiver": "Waiting for {{name}} to show the hand-over code.",
+    "noCodeYet": "{{name}} has not shown a code yet.",
+    "scanQr": "Scan QR",
+    "codeOk": "Code matches",
+    "codeWrong": "Code does not match",
+    "count": "Count",
+    "countFinished_one": "Count finished: {{count}} piece missing",
+    "countFinished_other": "Count finished: {{count}} pieces missing",
+    "seals": "Seal check",
+    "sealIntact": "{{seal}} intact",
+    "sealBroken": "Broken or not matching",
+    "sealPhoto": "Seal photo",
+    "condition": "Condition",
+    "allGood": "All good",
+    "damaged": "Damaged",
+    "pickDamaged": "Which pieces are damaged?",
+    "damagePhoto": "Damage photo",
+    "problems": "This will be accepted with an exception",
+    "problem": {
+      "short_one": "Short: {{count}} piece missing",
+      "short_other": "Short: {{count}} pieces missing",
+      "excess_one": "Excess: {{count}} extra piece",
+      "excess_other": "Excess: {{count}} extra pieces",
+      "sealMismatch": "Seal broken or not matching",
+      "damage": "Damaged pieces",
+      "pickupMissed": "Pickup missed",
+      "delay": "Delay",
+      "breakdown": "Breakdown",
+      "ndr": "Delivery failed",
+      "weightMismatch": "Weight mismatch"
+    },
+    "hold": "The goods go on hold and {{partner}} must investigate within {{hours}} hours.",
+    "accept": "Accept",
+    "acceptException": "Accept with exception",
+    "todo": {
+      "code": "Enter or scan the hand-over code",
+      "count": "Scan every piece, or mark the count finished",
+      "photos": "Take the photos"
+    },
+    "done_one": "Received {{count}} piece from {{name}}",
+    "done_other": "Received {{count}} pieces from {{name}}",
+    "doneException": "Accepted with exception. A ticket is raised for {{partner}}."
   }
 }

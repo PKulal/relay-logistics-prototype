@@ -19,6 +19,8 @@ import * as pp from './partnerActions'
 import type { FlagReason, ProblemKind } from './partnerActions'
 import * as pick from './pickupActions'
 import type { PickupConfirmation } from './pickupActions'
+import * as hand from './handoverActions'
+import type { HandoverGive, HandoverReceive } from './handoverActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
@@ -63,6 +65,9 @@ export interface DemoState {
   arriveAtPickup: (legId: Id, staffId: Id) => void
   confirmPickup: (c: PickupConfirmation) => void
   markNotificationsRead: (ids: Id[]) => void
+  /** Partner App hand-overs (PA-19 give, PA-20 receive) */
+  giveHandover: (g: HandoverGive) => void
+  receiveHandover: (r: HandoverReceive) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
   /** Restore the seed data in every app (other tabs follow via sync). */
   resetDemo: () => void
@@ -118,6 +123,8 @@ export const useDemoStore = create<DemoState>()(
       arriveAtPickup: (legId, staffId) => set((s) => ({ data: pick.arriveAtPickup(s.data, legId, staffId, s.demoNow) })),
       confirmPickup: (c) => set((s) => ({ data: pick.confirmPickup(s.data, c, s.demoNow) })),
       markNotificationsRead: (ids) => set((s) => ({ data: pick.markRead(s.data, ids) })),
+      giveHandover: (g) => set((s) => ({ data: hand.giveHandover(s.data, g, s.demoNow) })),
+      receiveHandover: (r) => set((s) => ({ data: hand.receiveHandover(s.data, r, s.demoNow) })),
 
       deleteDraft: (id) =>
         set((s) => {

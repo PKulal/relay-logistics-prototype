@@ -10,7 +10,7 @@ import { useData, useDemoNow } from '@shared/hooks/useDemo'
 import { formatDayShort } from '@shared/lib/format'
 import { useFieldSession } from './useFieldSession'
 
-const ICON: Record<TaskKind, typeof Truck> = { pickup: Boxes, handover: ArrowLeftRight, trip: Truck, hub: Warehouse, delivery: PackageCheck }
+const ICON: Record<TaskKind, typeof Truck> = { pickup: Boxes, handover: ArrowLeftRight, receive: ArrowLeftRight, trip: Truck, hub: Warehouse, delivery: PackageCheck }
 
 const SLA_CLASS = {
   onTrack: 'text-status-success',
