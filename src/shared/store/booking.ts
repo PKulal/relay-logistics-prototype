@@ -14,6 +14,7 @@ import { computeEta, legWindows, type Slot } from '@shared/engines/schedule'
 import { simulateEwbNumber } from '@shared/sim/ewayBill'
 import type { AiDecision, DemoData, Id, IsoDate, IsoDateTime, Leg, PaymentMode, Service, ServiceKind, Shipment, ShipmentEvent } from '@shared/types'
 import { applyEvents, nextLr } from './actions'
+import { defaultAssignee, partnerOpsUser } from './staffing'
 
 export interface BookingInput {
   customerId: Id
@@ -45,6 +46,12 @@ export interface BookingInput {
   lr?: Id
   /** Seed only: false skips wallet / credit movements (seeded balances are snapshots). Default true. */
   applyMoney?: boolean
+  /**
+   * Live bookings: partners with autoAccept take their legs straight away and give
+   * them to their default staff member (SIMULATED partner API). The seed leaves this
+   * off because its simulated journeys write those events themselves.
+   */
+  autoAccept?: boolean
 }
 
 /** Distance used for e-way bill validity when there is no line-haul lane (assumed). */
@@ -215,6 +222,18 @@ export function bookShipment(data: DemoData, input: BookingInput, at: IsoDateTim
     { id: newId(), shipmentId: lr, type: 'booked', at, by: input.bookedByUserId, app: 'customer' },
     ...legs.map((l): ShipmentEvent => ({ id: newId(), shipmentId: lr, legId: l.id, type: 'legOffered', at, by: 'system', app: 'erp' })),
   ]
+  if (input.autoAccept) {
+    for (const l of legs) {
+      if (!next.partners[l.partnerId].autoAccept) continue
+      const by = partnerOpsUser(next, l.partnerId)
+      // SIMULATED: accepted through the partner's API integration
+      events.push({ id: newId(), shipmentId: lr, legId: l.id, type: 'legAccepted', at, by, app: 'partnerPortal', note: 'API' })
+      const staffId = defaultAssignee(next, l)
+      if (staffId) {
+        events.push({ id: newId(), shipmentId: lr, legId: l.id, type: 'legAssigned', at, by, app: 'partnerPortal', assigneeStaffId: staffId, assigneeVehicleId: next.fieldStaff[staffId].vehicleId })
+      }
+    }
+  }
   return { data: applyEvents(next, events, at), shipmentId: lr }
 }
 

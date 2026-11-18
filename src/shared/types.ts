@@ -365,6 +365,12 @@ export interface Partner {
   hubIds: Id[]
   coordinatorId?: Id
   trial?: { tripsDone: number; tripsRequired: number; score: number }
+  /**
+   * SIMULATED partner API integration: offered jobs are accepted and given to the
+   * partner's default staff member at once. Off for partners the demo drives by
+   * hand in the Partner Portal (SwiftCity, QuickLink).
+   */
+  autoAccept: boolean
 }
 
 export type DocStatus = 'pending' | 'submitted' | 'verified' | 'flagged' | 'rejected'
@@ -581,6 +587,7 @@ export const EVENT_TYPES = [
   'legFlagged',
   'legWithdrawn',
   'legAssigned',
+  'legUnassigned',
   'pickupArrived',
   'pickupConfirmed',
   'pickupFailed',

@@ -50,8 +50,8 @@ export function PieceLabel({ data, s, index, large }: { data: DemoData; s: Shipm
   )
 }
 
-/** Printable LR (consignment note). */
-export function LrDocument({ data, s }: { data: DemoData; s: Shipment }) {
+/** Printable LR (consignment note). Partners print it without the customer's price (PP-12 masking). */
+export function LrDocument({ data, s, showPrice = true }: { data: DemoData; s: Shipment; showPrice?: boolean }) {
   const { t } = useTranslation()
   const customer = data.customers[s.customerId]
   const loc = data.pickupLocations[s.pickupLocationId]
@@ -86,7 +86,7 @@ export function LrDocument({ data, s }: { data: DemoData; s: Shipment }) {
           {row(t('cp14.eta'), formatDateLong(s.eta))}
         </tbody>
       </table>
-      <PriceBreakdown price={s.price} gstPct={data.settings.gstPct} className="mt-4 max-w-md" />
+      {showPrice && <PriceBreakdown price={s.price} gstPct={data.settings.gstPct} className="mt-4 max-w-md" />}
     </div>
   )
 }

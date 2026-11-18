@@ -86,6 +86,9 @@ export function deriveStatus({ legs, events }: StatusInput): StatusResult {
       case 'legAssigned':
         setLeg(ev.legId, 'assigned')
         break
+      case 'legUnassigned':
+        setLeg(ev.legId, 'accepted') // PP-14 "Unassign": back to accepted, no staff
+        break
 
       // ── First mile ──────────────────────────────────────────────
       case 'pickupArrived':

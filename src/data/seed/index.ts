@@ -7,7 +7,7 @@ import { consignees, customers, customerUsers, pickupLocations, skus } from './c
 import { extraConsignees, extraCustomers, extraCustomerUsers, extraPickupLocations, extraSkus } from './customers-extra'
 import { generateShipments } from './generator'
 import { hubs, lanes, partnerRates, pincodes, rateCards, settings } from './master'
-import { applications, namedFieldStaff, namedPartners, namedPartnerUsers, namedVehicles, weeklyScores } from './partners'
+import { applications, namedFieldStaff, namedPartners, namedPartnerUsers, namedVehicles, partnerInvoices, payouts, weeklyScores } from './partners'
 import { extraFieldStaff, extraPartners, extraPartnerUsers, extraVehicles } from './partners-extra'
 import { addKeyShipments } from './shipments-key'
 import { staff } from './staff'
@@ -63,8 +63,8 @@ export function buildBaseSeed(): DemoData {
     creditNotes: {},
     walletTxns: {},
     codRecords: {},
-    partnerInvoices: {},
-    payouts: {},
+    partnerInvoices: byId(partnerInvoices),
+    payouts: byId(payouts),
     tickets: {},
     drafts: {},
 

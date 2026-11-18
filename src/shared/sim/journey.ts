@@ -9,7 +9,8 @@
 import { addHours, addMinutes, isBefore } from '@shared/lib/time'
 import { applyEvents } from '@shared/store/actions'
 import { eventIdFactory } from '@shared/store/booking'
-import type { AppKey, DemoData, FieldRole, Id, IsoDateTime, Leg, LegType, Shipment, ShipmentEvent } from '@shared/types'
+import { defaultAssignee, partnerOpsUser } from '@shared/store/staffing'
+import type { AppKey, DemoData, Id, IsoDateTime, Leg, Shipment, ShipmentEvent } from '@shared/types'
 
 export type Outcome = 'normal' | 'ndr' | 'short' | 'cancel' | 'pickupFailed' | 'rto'
 
@@ -28,24 +29,6 @@ export interface JourneyOptions {
   shortPieceIds?: Id[]
   /** Close legs for payout this many days after delivery (0 = never) */
   closeAfterDays?: number
-}
-
-const ROLE_FOR: Record<LegType, FieldRole> = {
-  firstMile: 'rider',
-  lastMile: 'rider',
-  originHub: 'hub',
-  destHub: 'hub',
-  lineHaul: 'driver',
-}
-
-export function defaultAssignee(data: DemoData, leg: Leg): Id | undefined {
-  return Object.values(data.fieldStaff).find((s) => s.partnerId === leg.partnerId && s.role === ROLE_FOR[leg.type])?.id
-}
-
-/** The partner office user who accepts jobs: Operations if there is one, else Admin. */
-export function partnerOpsUser(data: DemoData, partnerId: Id): Id {
-  const users = Object.values(data.partnerUsers).filter((u) => u.partnerId === partnerId)
-  return (users.find((u) => u.role === 'operations') ?? users.find((u) => u.role === 'admin'))?.id ?? 'system'
 }
 
 type Step = Omit<ShipmentEvent, 'id' | 'shipmentId' | 'app' | 'by'> & { by?: Id; app?: AppKey }

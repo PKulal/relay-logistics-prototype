@@ -4,7 +4,7 @@
  * GSTINs, mobiles and emails not given in seed-data.md are INVENTED
  * (none ends in "Z9", which is reserved for failing GST verification).
  */
-import type { FieldStaff, Partner, PartnerApplication, PartnerUser, Vehicle, WeeklyScore } from '@shared/types'
+import type { FieldStaff, Partner, PartnerApplication, PartnerInvoice, PartnerUser, Payout, Vehicle, WeeklyScore } from '@shared/types'
 
 const NCR = ['110020', '110001', '110037', '122001', '122050', '201301']
 const HUBBALLI = ['580030', '580025', '580020', '590001', '581110', '591201']
@@ -30,6 +30,7 @@ export const namedPartners: Partner[] = [
     laneIds: [],
     hubIds: [],
     coordinatorId: 'LS-MEERA',
+    autoAccept: false,
   },
   {
     id: 'P-METRODASH',
@@ -50,6 +51,7 @@ export const namedPartners: Partner[] = [
     laneIds: [],
     hubIds: [],
     coordinatorId: 'LS-MEERA',
+    autoAccept: true,
   },
   {
     id: 'P-QUICKLINK',
@@ -70,6 +72,7 @@ export const namedPartners: Partner[] = [
     laneIds: [],
     hubIds: [],
     coordinatorId: 'LS-MEERA',
+    autoAccept: false,
   },
   {
     id: 'P-NCRXD',
@@ -90,6 +93,7 @@ export const namedPartners: Partner[] = [
     laneIds: [],
     hubIds: ['HUB-GGN'],
     coordinatorId: 'LS-MEERA',
+    autoAccept: true,
   },
   {
     id: 'P-DECCAN',
@@ -110,6 +114,7 @@ export const namedPartners: Partner[] = [
     laneIds: ['LN-DEL-HBL', 'LN-HBL-DEL'],
     hubIds: [],
     coordinatorId: 'LS-MEERA',
+    autoAccept: true,
     trial: { tripsDone: 2, tripsRequired: 3, score: 84 },
   },
   {
@@ -131,6 +136,7 @@ export const namedPartners: Partner[] = [
     laneIds: [],
     hubIds: ['HUB-HBL'],
     coordinatorId: 'LS-MEERA',
+    autoAccept: true,
   },
   {
     id: 'P-NKEXP',
@@ -151,6 +157,7 @@ export const namedPartners: Partner[] = [
     laneIds: [],
     hubIds: [],
     coordinatorId: 'LS-MEERA',
+    autoAccept: true,
   },
   {
     id: 'P-FASTTRACK',
@@ -171,6 +178,7 @@ export const namedPartners: Partner[] = [
     laneIds: [],
     hubIds: [],
     coordinatorId: 'LS-MEERA',
+    autoAccept: true,
   },
 ]
 
@@ -215,6 +223,17 @@ export const applications: PartnerApplication[] = [
 
 /** SwiftCity last week, Parcel profile (seed-data.md §6, Partner Portal spec §7.3). */
 export const weeklyScores: WeeklyScore[] = [
+  // INVENTED: the week before, so the dashboard can show the trend (86.2 vs 85.2 → ↑1)
+  {
+    id: 'WS-SWIFTCITY-2026-11-09',
+    partnerId: 'P-SWIFTCITY',
+    week: '2026-11-09',
+    profile: 'parcel',
+    kpis: { pickup: 95, onTime: 90, firstAttempt: 87, damagePer10k: 5, damagePct: 83, scanCompliance: 94, responsiveness: 45 },
+    total: 85.2,
+    tierBefore: 'gold',
+    tierAfter: 'gold',
+  },
   {
     id: 'WS-SWIFTCITY-2026-11-16',
     partnerId: 'P-SWIFTCITY',
@@ -224,5 +243,27 @@ export const weeklyScores: WeeklyScore[] = [
     total: 86.2,
     tierBefore: 'gold',
     tierAfter: 'gold',
+  },
+]
+
+/**
+ * SwiftCity's next payout (seed-data.md §6): self-billed SB/SWC/25-26/047,
+ * ₹1,56,240 + GST ₹28,123 = ₹1,84,363, less a ₹300 deduction → ₹1,84,063 on 27-Nov.
+ */
+export const partnerInvoices: PartnerInvoice[] = [
+  { id: 'SB/SWC/25-26/047', partnerId: 'P-SWIFTCITY', cycle: '2026-11-16/2026-11-22', mode: 'selfBilled', lines: [], taxable: 156240, gst: 28123, total: 184363, status: 'approved' },
+]
+
+export const payouts: Payout[] = [
+  {
+    id: 'PO-SWC-2026-1127',
+    batchId: 'PB-2026-1127',
+    partnerId: 'P-SWIFTCITY',
+    invoiceId: 'SB/SWC/25-26/047',
+    gross: 184363,
+    deductions: [{ reason: 'Late pickup penalty', amount: 300 }],
+    net: 184063,
+    dueDate: '2026-11-27',
+    status: 'scheduled',
   },
 ]

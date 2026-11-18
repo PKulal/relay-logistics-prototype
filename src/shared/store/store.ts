@@ -15,10 +15,12 @@ import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
 import * as erp from './erpActions'
 import type { MessageTemplate } from './erpActions'
+import * as pp from './partnerActions'
+import type { FlagReason, ProblemKind } from './partnerActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 6
+export const STORE_VERSION = 7
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -48,6 +50,12 @@ export interface DemoState {
   updatePartB: (lr: Id, userId: Id) => void
   messageCustomer: (lr: Id, template: MessageTemplate, body: string, userId: Id) => void
   logMaskedCall: (lr: Id, partnerId: Id, userId: Id) => void
+  /** Partner Portal job actions (PP-12 to PP-14) */
+  acceptLegs: (legIds: Id[], userId: Id) => void
+  flagLeg: (legId: Id, reason: FlagReason, remark: string, userId: Id) => void
+  assignLegs: (legIds: Id[], staffId: Id, vehicleId: Id | undefined, note: string, userId: Id) => void
+  unassignLeg: (legId: Id, userId: Id) => void
+  reportProblem: (legId: Id, kind: ProblemKind, text: string, userId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
   /** Restore the seed data in every app (other tabs follow via sync). */
   resetDemo: () => void
@@ -79,7 +87,7 @@ export const useDemoStore = create<DemoState>()(
 
       bookShipment: (input) => {
         const { data, demoNow } = get()
-        const result = bookShipment(data, input, demoNow)
+        const result = bookShipment(data, { autoAccept: true, ...input }, demoNow)
         set({ data: result.data })
         return result.shipmentId
       },
@@ -92,6 +100,12 @@ export const useDemoStore = create<DemoState>()(
       updatePartB: (lr, userId) => set((s) => ({ data: erp.updatePartB(s.data, lr, userId, s.demoNow) })),
       messageCustomer: (lr, template, body, userId) => set((s) => ({ data: erp.messageCustomer(s.data, lr, template, body, userId, s.demoNow) })),
       logMaskedCall: (lr, partnerId, userId) => set((s) => ({ data: erp.logMaskedCall(s.data, lr, partnerId, userId, s.demoNow) })),
+
+      acceptLegs: (legIds, userId) => set((s) => ({ data: pp.acceptLegs(s.data, legIds, userId, s.demoNow) })),
+      flagLeg: (legId, reason, remark, userId) => set((s) => ({ data: pp.flagLeg(s.data, legId, reason, remark, userId, s.demoNow) })),
+      assignLegs: (legIds, staffId, vehicleId, note, userId) => set((s) => ({ data: pp.assignLegs(s.data, legIds, staffId, vehicleId, note, userId, s.demoNow) })),
+      unassignLeg: (legId, userId) => set((s) => ({ data: pp.unassignLeg(s.data, legId, userId, s.demoNow) })),
+      reportProblem: (legId, kind, text, userId) => set((s) => ({ data: pp.reportProblem(s.data, legId, kind, text, userId, s.demoNow) })),
 
       deleteDraft: (id) =>
         set((s) => {

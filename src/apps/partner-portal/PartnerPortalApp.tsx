@@ -5,9 +5,16 @@ import { visibleNav } from '@shared/nav'
 import { navRoutes } from '@shared/shell/routes'
 import { WebShell } from '@shared/shell/WebShell'
 import { useSessionUser } from '@shared/store/session'
-import { NotFound } from '@shared/ui/Page'
+import { AccessDenied, NotFound } from '@shared/ui/Page'
 import { TierBadge } from '@shared/ui/TierBadge'
 import { partnerNav, type PartnerCtx } from './nav'
+import PP11Dashboard from './PP11Dashboard'
+import PP12JobInbox from './PP12JobInbox'
+import PP13JobDetail from './PP13JobDetail'
+import PP14Assign from './PP14Assign'
+
+/** Built screens, by spec screen id. Unlisted screens show their placeholder. */
+const SCREENS = { 'PP-11': PP11Dashboard, 'PP-12': PP12JobInbox }
 
 /** Partner Portal (/partner) — partner company office. Spec: docs/02-partner-portal.md */
 export default function PartnerPortalApp() {
@@ -40,7 +47,10 @@ export default function PartnerPortalApp() {
           />
         }
       >
-        {navRoutes(partnerNav, ctx)}
+        {navRoutes(partnerNav, ctx, SCREENS)}
+        {/* Screens outside the menu (PP spec §4.3): job detail and assignment, for Admin and Operations */}
+        <Route path="jobs/assign" element={user.role === 'finance' ? <AccessDenied /> : <PP14Assign />} />
+        <Route path="jobs/:jobId" element={<PP13JobDetail />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

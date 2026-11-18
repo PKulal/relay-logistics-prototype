@@ -20,6 +20,11 @@ function makeTab() {
     updatePartB: () => {},
     messageCustomer: () => {},
     logMaskedCall: () => {},
+    acceptLegs: () => {},
+    flagLeg: () => {},
+    assignLegs: () => {},
+    unassignLeg: () => {},
+    reportProblem: () => {},
     setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),
     resetDemo: () => set({ data: buildBaseSeed(), demoNow: DEMO_START }),
   }))

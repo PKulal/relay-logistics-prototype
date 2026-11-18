@@ -31,6 +31,7 @@ export const extraPartners: Partner[] = [
     laneIds: ['LN-DEL-BLR', 'LN-BLR-DEL', 'LN-BOM-BLR', 'LN-BLR-BOM'],
     hubIds: [],
     coordinatorId: 'LS-MEERA',
+    autoAccept: true,
   },
   {
     id: 'P-WESTLINE',
@@ -51,6 +52,7 @@ export const extraPartners: Partner[] = [
     laneIds: ['LN-DEL-BOM', 'LN-BOM-DEL', 'LN-BOM-BLR', 'LN-BLR-BOM'],
     hubIds: [],
     coordinatorId: 'LS-MEERA',
+    autoAccept: true,
   },
   {
     id: 'P-PEENYA',
@@ -71,6 +73,7 @@ export const extraPartners: Partner[] = [
     laneIds: [],
     hubIds: ['HUB-BLR'],
     coordinatorId: 'LS-MEERA',
+    autoAccept: true,
   },
   {
     id: 'P-BHIWANDI',
@@ -91,6 +94,7 @@ export const extraPartners: Partner[] = [
     laneIds: [],
     hubIds: ['HUB-BOM'],
     coordinatorId: 'LS-MEERA',
+    autoAccept: true,
   },
   {
     id: 'P-DOORSTEP',
@@ -111,6 +115,7 @@ export const extraPartners: Partner[] = [
     laneIds: [],
     hubIds: [],
     coordinatorId: 'LS-MEERA',
+    autoAccept: true,
   },
 ]
 

@@ -37,15 +37,18 @@ export function applyEvents(data: DemoData, newEvents: ShipmentEvent[], now: Iso
     if (shipment.status !== result.shipmentStatus) {
       shipments[shipmentId] = { ...shipment, status: result.shipmentStatus, updatedAt: now }
     }
-    // Who holds each leg also comes from events: the latest legAssigned wins.
-    const assigned = new Map<Id, ShipmentEvent>()
-    for (const e of sortEvents(shipmentEvents)) if (e.type === 'legAssigned' && e.legId) assigned.set(e.legId, e)
+    // Who holds each leg also comes from events: the latest legAssigned wins; a later legUnassigned clears it.
+    const assigned = new Map<Id, ShipmentEvent | null>()
+    for (const e of sortEvents(shipmentEvents)) {
+      if (e.legId && e.type === 'legAssigned') assigned.set(e.legId, e)
+      if (e.legId && e.type === 'legUnassigned') assigned.set(e.legId, null)
+    }
 
     for (const leg of shipmentLegs) {
       const status = result.legStatuses[leg.id]
       const a = assigned.get(leg.id)
-      const staffId = a?.assigneeStaffId ?? leg.staffId
-      const vehicleId = a?.assigneeVehicleId ?? leg.vehicleId
+      const staffId = a === null ? undefined : (a?.assigneeStaffId ?? leg.staffId)
+      const vehicleId = a === null ? undefined : (a?.assigneeVehicleId ?? leg.vehicleId)
       if (leg.status !== status || leg.staffId !== staffId || leg.vehicleId !== vehicleId) {
         legs[leg.id] = { ...leg, status, staffId, vehicleId, updatedAt: now }
       }
