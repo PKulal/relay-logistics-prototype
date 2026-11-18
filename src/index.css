@@ -1,0 +1,189 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/*
+ * Logisco design tokens — source: docs/design-system.md
+ * Screens never hard-code colours: use these utilities (bg-red-500, text-ink,
+ * bg-accent …) or var(--accent).
+ */
+
+@theme {
+  /* §4 Typography */
+  --font-heading: 'Montserrat', 'Noto Sans Devanagari', system-ui, sans-serif;
+  --font-sans: 'Inter', 'Noto Sans Devanagari', system-ui, sans-serif;
+
+  /* §1 Brand colours (from the logo) */
+  --color-brand-red: #be0000;
+  --color-brand-green: #288a2f;
+  --color-brand-amber: #f8bc44;
+  --color-ink: #151515;
+  --color-charcoal: #1f2937;
+
+  /* §1 Scales — replace Tailwind's defaults for these four hues */
+  --color-red-50: #fdecec;
+  --color-red-100: #fad1d1;
+  --color-red-500: #be0000;
+  --color-red-600: #a30000;
+  --color-red-700: #870000;
+  --color-red-900: #4d0000;
+
+  --color-green-50: #eaf5eb;
+  --color-green-100: #cbe7cd;
+  --color-green-500: #288a2f;
+  --color-green-600: #217427;
+  --color-green-700: #1a5e20;
+  --color-green-900: #0e3612;
+
+  --color-amber-50: #fef6e6;
+  --color-amber-100: #fde7b8;
+  --color-amber-500: #f8bc44;
+  --color-amber-600: #e0a21f;
+  --color-amber-700: #b07a0c;
+  --color-amber-900: #5c3f05;
+
+  --color-gray-50: #f7f7f8;
+  --color-gray-100: #ededef;
+  --color-gray-500: #8a8a93;
+  --color-gray-600: #5f5f68;
+  --color-gray-700: #3f3f46;
+  --color-gray-900: #18181b;
+
+  /* §3 Status colours (fg on bg) */
+  --color-status-success: #217427;
+  --color-status-success-bg: #eaf5eb;
+  --color-status-warning: #b07a0c;
+  --color-status-warning-bg: #fef6e6;
+  --color-status-danger: #b42318;
+  --color-status-danger-bg: #fef3f2;
+  --color-status-info: #1d4ed8;
+  --color-status-info-bg: #eff6ff;
+  --color-status-neutral: #3f3f46;
+  --color-status-neutral-bg: #ededef;
+
+  /* §3 Partner tier badges (fg on bg) */
+  --color-tier-platinum: #5f5f68;
+  --color-tier-platinum-bg: #ededef;
+  --color-tier-gold: #b07a0c;
+  --color-tier-gold-bg: #fef6e6;
+  --color-tier-silver: #3f3f46;
+  --color-tier-silver-bg: #f7f7f8;
+  --color-tier-bronze: #8a4b1f;
+  --color-tier-bronze-bg: #fbefe6;
+
+  /* §5 Layout */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --shadow-card: 0 1px 2px rgb(21 21 21 / 0.06), 0 1px 3px rgb(21 21 21 / 0.08);
+
+  /* §4 Type scale (web) — size / line-height */
+  --text-page-title: 24px;
+  --text-page-title--line-height: 32px;
+  --text-section: 18px;
+  --text-section--line-height: 26px;
+  --text-card-title: 16px;
+  --text-card-title--line-height: 24px;
+  --text-body: 14px;
+  --text-body--line-height: 20px;
+  --text-table: 13px;
+  --text-table--line-height: 18px;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+}
+
+/* §2 Per-app accent. Set data-app on each app's root element. */
+:root {
+  --accent: var(--color-brand-red);
+  --accent-foreground: #ffffff;
+  --accent-soft: var(--color-red-50);
+}
+[data-app='customer'],
+[data-app='erp'],
+[data-app='launcher'] {
+  --accent: var(--color-red-500);
+  --accent-hover: var(--color-red-600);
+  --accent-soft: var(--color-red-50);
+}
+/* green 600 rather than 500: white text on it passes WCAG AA (§8) */
+[data-app='partner-portal'],
+[data-app='partner-app'] {
+  --accent: var(--color-green-600);
+  --accent-hover: var(--color-green-700);
+  --accent-soft: var(--color-green-50);
+}
+
+/*
+ * shadcn/ui semantic tokens, mapped to ours so generated components follow
+ * the app accent automatically. (Tailwind's own `accent` utility therefore
+ * means "the current app's accent".)
+ */
+:root {
+  --background: #ffffff;
+  --foreground: var(--color-ink);
+  --card: #ffffff;
+  --card-foreground: var(--color-ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--color-ink);
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-foreground);
+  --secondary: var(--color-gray-100);
+  --secondary-foreground: var(--color-gray-900);
+  --muted: var(--color-gray-50);
+  --muted-foreground: var(--color-gray-600);
+  --destructive: var(--color-status-danger);
+  --border: var(--color-gray-100);
+  --input: #d4d4d8;
+  --ring: var(--accent);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html,
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading font-semibold;
+  }
+  /* §8 visible 2px focus ring in the app accent */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+/* §4 Money, weights and timers */
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}

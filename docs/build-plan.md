@@ -5,10 +5,10 @@ Work top to bottom. One unchecked item (or a small group) per Claude Code sessio
 Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner App (03), ERP = ERP & Control Tower (04).
 
 ## Phase 0 — Project setup
-- [ ] Vite + React + TypeScript project; Tailwind; shadcn/ui; React Router; Zustand; i18next; Recharts; Leaflet; SheetJS; Vitest
-- [ ] Folder structure as in CLAUDE.md; path aliases (`@shared`, `@apps`, `@data`)
-- [ ] Fonts and colour tokens from design-system.md; `--accent` per app
-- [ ] Lint, type-check and test scripts working
+- [x] Vite + React + TypeScript project; Tailwind; shadcn/ui; React Router; Zustand; i18next; Recharts; Leaflet; SheetJS; Vitest
+- [x] Folder structure as in CLAUDE.md; path aliases (`@shared`, `@apps`, `@data`)
+- [x] Fonts and colour tokens from design-system.md; `--accent` per app
+- [x] Lint, type-check and test scripts working
 
 ## Phase 1 — Foundation
 - [ ] Types (`src/shared/types.ts`) from data-model.md

@@ -1,0 +1,31 @@
+{
+  "common": {
+    "brand": "Logisco",
+    "tagline": "AI-enabled B2B Parcel & PTL platform",
+    "backToLauncher": "Back to launcher",
+    "comingSoon": "This app is not built yet. Its screens arrive in later phases of the build plan."
+  },
+  "launcher": {
+    "title": "Choose an app",
+    "subtitle": "Four apps, one shared set of demo data. Open them in separate tabs to watch changes flow between them.",
+    "open": "Open"
+  },
+  "apps": {
+    "customer": {
+      "name": "Customer Portal",
+      "description": "B2B shippers get quotes, book and track shipments, and manage invoices."
+    },
+    "partnerPortal": {
+      "name": "Partner Portal",
+      "description": "Delivery partner offices accept jobs, assign staff and track payouts."
+    },
+    "partnerApp": {
+      "name": "Partner App",
+      "description": "Riders, drivers and hub staff run pickups, trips and deliveries on the phone."
+    },
+    "erp": {
+      "name": "Logisco ERP + Control Tower",
+      "description": "Logisco staff watch the network, handle exceptions and run finance."
+    }
+  }
+}
