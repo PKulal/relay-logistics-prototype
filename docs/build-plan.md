@@ -53,7 +53,7 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
   - [ ] Maker-checker on claim settlement: ERP-37 spec has Claims Officer (maker) and Claims Head (approver); seed-data.md has only Farhan Ali, so he decides and approves for now
   - [ ] Claim outcome feeds the partner's damage / on-time / responsiveness KPIs (source §10 Step 5) — with the Phase 5 scoring item
 - [x] Customer money: CP-23 wallet, CP-24 invoices, CP-25 COD, PA-34 COD collection, ERP-31, ERP-34
-- [ ] Partner money: PP-25 to PP-28; ERP-32 3-way match (₹72), ERP-33 payout batch with maker-checker
+- [x] Partner money: PP-25 to PP-28; ERP-32 3-way match (₹72), ERP-33 payout batch with maker-checker
 - [ ] PP-20 escalations, PP-21 delivery exceptions, PA-18 pickup failed, PA-30 short / excess, PA-12 SOS
 
 ## Phase 5 — Depth

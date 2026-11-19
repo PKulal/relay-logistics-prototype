@@ -20,7 +20,7 @@ import type { Tone } from '@shared/ui/tones'
 import { exportCodReport } from './moneyFiles'
 import { useCustomerSession } from './useCustomerSession'
 
-const REC_TONE: Record<CodRecord['status'], Tone> = { pending: 'neutral', collected: 'warning', deposited: 'info', remitted: 'success' }
+const REC_TONE: Record<CodRecord['status'], Tone> = { pending: 'neutral', collected: 'warning', atOffice: 'warning', deposited: 'info', remitted: 'success' }
 
 export default function CP25Cod() {
   const { t } = useTranslation()

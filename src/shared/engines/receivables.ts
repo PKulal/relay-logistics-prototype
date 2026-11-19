@@ -191,7 +191,7 @@ export const COD_REMIT_DAYS = 2
 export const COD_DEPOSIT_HOURS = 24
 
 export const remitDate = (r: CodRecord): IsoDate => addDaysToDate(istDate(r.deliveredAt ?? r.collectedAt ?? r.depositedAt!), COD_REMIT_DAYS)
-const unremitted = (r: CodRecord) => r.status === 'collected' || r.status === 'deposited'
+const unremitted = (r: CodRecord) => r.status === 'collected' || r.status === 'atOffice' || r.status === 'deposited'
 
 /** CP-25 summary (and CP-11 "COD due"). */
 export function codSummary(data: DemoData, customerId: Id, now: IsoDateTime) {
@@ -212,10 +212,10 @@ export function codSummary(data: DemoData, customerId: Id, now: IsoDateTime) {
 /** Cash a rider holds (PA-36): collected in cash, not yet handed over. */
 export const cashInHand = (data: DemoData, staffId: Id) => Object.values(data.codRecords).filter((r) => r.collectedBy === staffId && r.status === 'collected' && r.mode !== 'upi')
 
-/** ERP-34 "Collected, not deposited": by partner, oldest first, hours since the first collection. */
+/** ERP-34 "Collected, not deposited": with riders or at the partner office, by partner, oldest first. */
 export function notDeposited(data: DemoData, now: IsoDateTime) {
   const by = new Map<Id, CodRecord[]>()
-  for (const r of Object.values(data.codRecords)) if (r.status === 'collected' && r.partnerId) by.set(r.partnerId, [...(by.get(r.partnerId) ?? []), r])
+  for (const r of Object.values(data.codRecords)) if ((r.status === 'collected' || r.status === 'atOffice') && r.partnerId) by.set(r.partnerId, [...(by.get(r.partnerId) ?? []), r])
   return [...by.entries()]
     .map(([partnerId, rs]) => {
       const oldest = rs.map((r) => r.collectedAt!).sort()[0]

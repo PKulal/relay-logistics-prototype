@@ -141,10 +141,11 @@ export function depositCod(data: DemoData, staffId: Id, x: CodDeposit, at: IsoDa
   const total = round2(held.reduce((s, r) => s + r.amount, 0))
   if (!held.length || round2(x.amount) !== total || !x.ref.trim()) return data
   const codRecords = { ...data.codRecords }
-  for (const r of held) codRecords[r.id] = { ...r, status: 'deposited', depositedAt: at, deposit: { to: x.to, ref: x.ref.trim(), by: staffId } }
+  // Bank: straight into Logisco's account. Office: the partner deposits it to Logisco in PP-28.
+  for (const r of held) codRecords[r.id] = { ...r, status: x.to === 'bank' ? 'deposited' : 'atOffice', depositedAt: x.to === 'bank' ? at : undefined, deposit: { to: x.to, ref: x.ref.trim(), by: staffId } }
   const partnerId = data.fieldStaff[staffId]?.partnerId
   let next: DemoData = { ...data, codRecords }
-  if (partnerId) next = notify(next, { app: 'partnerPortal', partnerId }, 'COD deposited', `${data.fieldStaff[staffId].name} · ₹${total} · ${held.length} LR`, '/partner', at)
+  if (partnerId) next = notify(next, { app: 'partnerPortal', partnerId }, 'COD deposited', `${data.fieldStaff[staffId].name} · ₹${total} · ${held.length} LR`, '/partner/finance/cod', at)
   return next
 }
 
@@ -194,11 +195,11 @@ export function decideRemittanceBatch(data: DemoData, id: Id, decision: 'approve
  */
 export function raiseCodShortage(data: DemoData, recordId: Id, amount: number, evidence: string, by: Id, at: IsoDateTime): DemoData {
   const r = data.codRecords[recordId]
-  if (!r || r.shortage || r.status === 'remitted' || !(amount > 0) || amount > r.amount || !evidence.trim()) return data
+  if (!r || r.shortage || r.status === 'remitted' || r.status === 'deposited' || !(amount > 0) || amount > r.amount || !evidence.trim()) return data
   const rec: CodRecord = {
     ...r,
     shortage: { amount, evidence: evidence.trim(), by, at, status: 'raised' },
-    ...(r.status === 'collected' ? { status: 'deposited' as const, depositedAt: at, deposit: { to: 'office' as const, ref: `Shortage ₹${amount} to payout` } } : {}),
+    ...(r.status === 'collected' || r.status === 'atOffice' ? { status: 'deposited' as const, depositedAt: at, deposit: { to: 'office' as const, ref: `Shortage ₹${amount} to payout` } } : {}),
   }
   let next: DemoData = { ...data, codRecords: { ...data.codRecords, [r.id]: rec } }
   if (r.partnerId) next = notify(next, { app: 'partnerPortal', partnerId: r.partnerId }, 'COD shortage', `${r.shipmentId} · ₹${amount} · deducted from your next payout`, '/partner', at)

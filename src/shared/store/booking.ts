@@ -148,6 +148,7 @@ export function bookShipment(data: DemoData, input: BookingInput, at: IsoDateTim
     window: windows[i],
     slaDueAt: windows[i].to,
     cost: p.cost,
+    rateLineId: p.rateLineId,
     updatedAt: at,
   }))
 

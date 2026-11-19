@@ -21,9 +21,13 @@ import PP07Verification from './onboarding/PP07Verification'
 import PP08Agreement from './onboarding/PP08Agreement'
 import PP09Setup from './onboarding/PP09Setup'
 import PP10Tracker from './onboarding/PP10Tracker'
+import PP25Daily from './PP25Daily'
+import PP26Invoices from './PP26Invoices'
+import PP27Payouts from './PP27Payouts'
+import PP28Cod from './PP28Cod'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'PP-10': PP10Tracker, 'PP-11': PP11Dashboard, 'PP-12': PP12JobInbox, 'PP-22': PP22Claims }
+const SCREENS = { 'PP-10': PP10Tracker, 'PP-11': PP11Dashboard, 'PP-12': PP12JobInbox, 'PP-22': PP22Claims, 'PP-25': PP25Daily, 'PP-26': PP26Invoices, 'PP-27': PP27Payouts, 'PP-28': PP28Cod }
 
 /** Before the monitored trial the partner sees only its onboarding (no jobs yet). */
 const PRE_TRIAL: PartnerStatus[] = ['applied', 'kyc', 'agreement', 'integration']

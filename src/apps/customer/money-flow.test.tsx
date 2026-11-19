@@ -2,6 +2,7 @@ import { act, cleanup, fireEvent, render, screen, within } from '@testing-librar
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import ErpApp from '@apps/erp/ErpApp'
 import PartnerAppApp from '@apps/partner-app/PartnerAppApp'
+import PartnerPortalApp from '@apps/partner-portal/PartnerPortalApp'
 import { useDemoStore } from '@shared/store'
 import { useSession } from '@shared/store/session'
 import { TooltipProvider } from '@shared/ui/tooltip'
@@ -22,6 +23,7 @@ function app(path: string) {
           <Route path="/customer/*" element={<CustomerApp />} />
           <Route path="/erp/*" element={<ErpApp />} />
           <Route path="/app/*" element={<PartnerAppApp />} />
+          <Route path="/partner/*" element={<PartnerPortalApp />} />
         </Routes>
       </TooltipProvider>
     </MemoryRouter>,
@@ -113,7 +115,17 @@ describe('Customer money: CP-23, CP-24, CP-25, PA-34, PA-36, ERP-31, ERP-34', ()
     fireEvent.change(screen.getByLabelText('Amount (₹)'), { target: { value: '4200' } })
     fireEvent.change(screen.getByLabelText('Cashier OTP'), { target: { value: '1234' } })
     tap('Submit deposit')
-    expect(st().data.codRecords['COD-000786'].status).toBe('deposited')
+    expect(st().data.codRecords['COD-000786'].status).toBe('atOffice')
+
+    // PP-28: NK Express deposits the office cash to Logisco
+    useSession.getState().login('partnerPortal', 'PU-NAVEEN')
+    app('/partner/finance/cod')
+    expect(within(screen.getByTestId('cod-collections')).getByRole('row', { name: LR })).toHaveTextContent('At office')
+    fireEvent.click(screen.getByRole('checkbox', { name: LR }))
+    expect(screen.getByLabelText(/^Amount/)).toHaveValue(4200)
+    fireEvent.change(screen.getByLabelText(/^UTR/), { target: { value: 'axisn2026112309911' } })
+    tap('Submit deposit')
+    expect(st().data.codRecords['COD-000786']).toMatchObject({ status: 'deposited', partnerDeposit: { method: 'bankTransfer', ref: 'AXISN2026112309911' } })
 
     // ERP-34: Lakshmi makes the batch, can't approve it
     useSession.getState().login('erp', 'LS-LAKSHMI')

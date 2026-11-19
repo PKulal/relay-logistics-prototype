@@ -813,6 +813,8 @@ export interface Leg {
   window: { from: IsoDateTime; to: IsoDateTime }
   slaDueAt: IsoDateTime
   cost: number
+  /** Partner rate line the cost came from (3-way match) */
+  rateLineId?: Id
   tripId?: Id
   updatedAt: IsoDateTime
 }
@@ -1145,7 +1147,10 @@ export interface CodRecord {
   deposit?: { to: 'office' | 'bank' | 'nodal'; ref: string; by?: Id }
   remittanceId?: Id
   remittedAt?: IsoDateTime
-  status: 'pending' | 'collected' | 'deposited' | 'remitted'
+  /** atOffice: the rider handed the cash to the partner office (PA-36), which deposits it to Logisco in PP-28 */
+  status: 'pending' | 'collected' | 'atOffice' | 'deposited' | 'remitted'
+  /** PP-28: the partner office's deposit into Logisco's collection account */
+  partnerDeposit?: { method: 'bankTransfer' | 'cashSlip' | 'upi'; ref: string; by: Id; at: IsoDateTime }
   /** Cash short against the amount due (ERP-34): deducted from the partner, never the shipper */
   shortage?: { amount: number; evidence: string; by: Id; at: IsoDateTime; status: 'raised' | 'deducted' }
 }
@@ -1165,29 +1170,86 @@ export interface CodRemittance {
   checkerId?: Id
 }
 
+/** One leg on a partner invoice, matched 3 ways (source §9): agreed rate × verified weight × e-POD / hand-over. */
+export interface PartnerInvoiceLine {
+  legId: Id
+  rate: number
+  unit: RateUnit
+  verifiedWeight: number
+  /** Weight the partner billed (uploaded invoices) */
+  billedWeight?: number
+  billed: number
+  matched: number
+  /** e-POD or hand-over scan present */
+  pod: boolean
+  result: 'match' | 'mismatch'
+  reason?: 'weight' | 'amount' | 'noPod'
+  /** Partner's answer to a mismatch (PP-26) */
+  partner?: 'accepted' | 'disputed'
+  /** Dispute desk (ERP-32): 48-hour SLA */
+  dispute?: { reason: string; files: string[]; at: IsoDateTime; by: Id; dueAt: IsoDateTime; decision?: 'matched' | 'billed' | 'partial'; amount?: number; note?: string; decidedBy?: Id; decidedAt?: IsoDateTime }
+  /** Amount payable once the line is closed */
+  final?: number
+}
+
+/** Partner invoice per payout cycle (PP-26, ERP-32): self-billed by Logisco or uploaded by the partner. */
 export interface PartnerInvoice {
   id: Id
   partnerId: Id
+  /** "2026-11-16/2026-11-22" */
   cycle: string
+  date?: IsoDate
   mode: 'selfBilled' | 'uploaded'
-  lines: { legId: Id; rate: number; verifiedWeight: number; billed: number; matched: number; result: 'match' | 'mismatch' }[]
+  /** Seeded older invoices predate the demo data and have no lines */
+  lines: PartnerInvoiceLine[]
   taxable: number
   gst: number
   total: number
-  status: 'draft' | 'submitted' | 'matched' | 'disputed' | 'approved' | 'paid'
+  /** submitted: mismatches waiting for the partner; matched: every line closed; approved: in the next payout */
+  status: 'submitted' | 'matched' | 'disputed' | 'approved' | 'paid'
+  pdf?: string
+  lineFile?: string
+  createdBy?: Id
+  createdAt?: IsoDateTime
+  approvedBy?: Id
+  approvedAt?: IsoDateTime
 }
 
+export type PayoutDeductionKind = 'penalty' | 'claim' | 'codShortage' | 'earlyPay'
+
+/** A payout to a partner (PP-27, ERP-33): the weekly cycle by tier, or an early-pay request. */
 export interface Payout {
   id: Id
-  batchId: Id
+  batchId?: Id
   partnerId: Id
+  kind?: 'cycle' | 'earlyPay'
   invoiceId?: Id
+  invoiceIds?: Id[]
   gross: number
-  deductions: { reason: string; amount: number; ref?: string }[]
+  deductions: { kind?: PayoutDeductionKind; reason: string; amount: number; ref?: string }[]
   net: number
   dueDate: IsoDate
+  mode?: 'NEFT' | 'IMPS'
   utr?: string
+  paidAt?: IsoDateTime
+  /** Early pay: who asked, the fee, and the batch that later set it off against the cycle payout */
+  requestedBy?: Id
+  fee?: number
+  settledInBatch?: Id
   status: 'scheduled' | 'pendingApproval' | 'approved' | 'paid' | 'onHold'
+}
+
+/** ERP-33 payout batch: Finance makes it, a different approver releases it. */
+export interface PayoutBatch {
+  id: Id
+  date: IsoDate
+  tiers: Tier[]
+  payoutIds: Id[]
+  status: 'pendingApproval' | 'released'
+  makerId: Id
+  submittedAt: IsoDateTime
+  checkerId?: Id
+  releasedAt?: IsoDateTime
 }
 
 export interface Ticket {
@@ -1318,6 +1380,7 @@ export interface DemoData {
   codRecords: Record<Id, CodRecord>
   codRemittances: Record<Id, CodRemittance>
   partnerInvoices: Record<Id, PartnerInvoice>
+  payoutBatches: Record<Id, PayoutBatch>
   payouts: Record<Id, Payout>
   tickets: Record<Id, Ticket>
   /** ERP-06: AI risk suggestions an operator dismissed, by leg */

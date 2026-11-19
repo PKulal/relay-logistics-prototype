@@ -3,6 +3,7 @@ import type { Claim } from '@shared/types'
 import { ageing, cashInHand, codSummary, collectionsPriority, creditSummary, depositedNotRemitted, invoiceRunPreview, invoiceStatus, ledger, notDeposited, walletKind } from '@shared/engines/receivables'
 import { completeDelivery } from './deliveryActions'
 import { settleClaim } from './claimActions'
+import { recordPartnerCodDeposit } from './payoutActions'
 import { codFromDeliveries, createRemittanceBatch, decideRemittanceBatch, depositCod, generateInvoices, payInvoices, raiseCodShortage, rechargeWallet, sendReminder } from './moneyActions'
 
 const now = DEMO_START
@@ -99,7 +100,10 @@ describe('money actions', () => {
 
     expect(depositCod(d, 'FS-MANJU', { to: 'office', amount: 4000, ref: '4417' }, now)).toBe(d)
     d = depositCod(d, 'FS-MANJU', { to: 'office', amount: 4200, ref: '4417' }, now)
-    expect(d.codRecords['COD-000786']).toMatchObject({ status: 'deposited', deposit: { to: 'office', ref: '4417', by: 'FS-MANJU' } })
+    expect(d.codRecords['COD-000786']).toMatchObject({ status: 'atOffice', deposit: { to: 'office', ref: '4417', by: 'FS-MANJU' } })
+    // PP-28: NK Express deposits the office cash to Logisco
+    d = recordPartnerCodDeposit(d, 'P-NKEXP', { method: 'bankTransfer', amount: 4200, ref: 'AXISN2026112309911', recordIds: ['COD-000786'] }, 'PU-NAVEEN', now)
+    expect(d.codRecords['COD-000786'].status).toBe('deposited')
 
     const b = createRemittanceBatch(d, 'C-SHARMA', 'LS-LAKSHMI', now)
     expect(b.id).toBe('REM-2026-1104')

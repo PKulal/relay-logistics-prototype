@@ -12,7 +12,7 @@ import { extraConsignees, extraCustomers, extraCustomerUsers, extraPickupLocatio
 import { generateShipments } from './generator'
 import { hubDayBags, hubDayManifests, hubDayTrips } from './hubDay'
 import { hubs, lanes, partnerRates, pincodes, rateCards, settings } from './master'
-import { applications, namedFieldStaff, namedPartners, namedPartnerUsers, namedVehicles, partnerInvoices, payouts, weeklyScores } from './partners'
+import { applications, namedFieldStaff, namedPartners, namedPartnerUsers, namedVehicles, partnerInvoices, payoutBatchHistory, payouts, weeklyScores } from './partners'
 import { extraFieldStaff, extraPartners, extraPartnerUsers, extraVehicles } from './partners-extra'
 import { addKeyShipments } from './shipments-key'
 import { staff } from './staff'
@@ -70,6 +70,7 @@ export function buildBaseSeed(): DemoData {
     walletTxns: {},
     codRecords: {},
     codRemittances: {},
+    payoutBatches: byId(payoutBatchHistory),
     partnerInvoices: byId(partnerInvoices),
     payouts: byId(payouts),
     tickets: {},

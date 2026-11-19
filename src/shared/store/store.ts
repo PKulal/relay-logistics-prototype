@@ -36,6 +36,8 @@ import * as ndr from './ndrActions'
 import * as ct from './controlTowerActions'
 import * as clm from './claimActions'
 import * as money from './moneyActions'
+import * as pay from './payoutActions'
+import type { PartnerCodDeposit, UploadInvoice } from './payoutActions'
 import type { CodDeposit } from './moneyActions'
 import type { PayMethod } from '@shared/sim/payment'
 import type { PartnerClaimResponse, RaiseClaim, Settle } from './claimActions'
@@ -51,7 +53,7 @@ import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 20
+export const STORE_VERSION = 21
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -208,6 +210,18 @@ export interface DemoState {
   createRemittanceBatch: (customerId: Id, by: Id) => Id | undefined
   decideRemittanceBatch: (id: Id, decision: 'approve' | 'hold', by: Id) => void
   raiseCodShortage: (recordId: Id, amount: number, evidence: string, by: Id) => void
+  /** Partner money (PP-25..28, ERP-32/33) */
+  runSelfBilling: (cycle: string, by: Id) => Id[]
+  uploadPartnerInvoice: (partnerId: Id, x: UploadInvoice, by: Id) => Id | undefined
+  acceptMatchedLine: (invoiceId: Id, legId: Id, by: Id) => void
+  disputeLine: (invoiceId: Id, legId: Id, reason: string, files: string[], by: Id) => void
+  resolvePartnerDispute: (invoiceId: Id, legId: Id, x: { decision: 'matched' | 'billed' | 'partial'; amount?: number; note: string }, by: Id) => void
+  approvePartnerInvoice: (invoiceId: Id, by: Id) => void
+  submitPayoutBatch: (date: IsoDate, by: Id) => Id | undefined
+  releasePayoutBatch: (id: Id, by: Id) => void
+  requestEarlyPay: (partnerId: Id, amount: number, by: Id) => Id | undefined
+  releaseEarlyPay: (id: Id, by: Id) => void
+  recordPartnerCodDeposit: (partnerId: Id, x: PartnerCodDeposit, by: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -404,6 +418,33 @@ export const useDemoStore = create<DemoState>()(
       },
       decideRemittanceBatch: (id, decision, by) => set((s) => ({ data: money.decideRemittanceBatch(s.data, id, decision, by, s.demoNow) })),
       raiseCodShortage: (recordId, amount, evidence, by) => set((s) => ({ data: money.raiseCodShortage(s.data, recordId, amount, evidence, by, s.demoNow) })),
+      runSelfBilling: (cycle, by) => {
+        const r = pay.runSelfBilling(get().data, cycle, by, get().demoNow)
+        set({ data: r.data })
+        return r.ids
+      },
+      uploadPartnerInvoice: (partnerId, x, by) => {
+        const r = pay.uploadPartnerInvoice(get().data, partnerId, x, by, get().demoNow)
+        set({ data: r.data })
+        return r.id
+      },
+      acceptMatchedLine: (invoiceId, legId, by) => set((s) => ({ data: pay.acceptMatchedLine(s.data, invoiceId, legId, by, s.demoNow) })),
+      disputeLine: (invoiceId, legId, reason, files, by) => set((s) => ({ data: pay.disputeLine(s.data, invoiceId, legId, reason, files, by, s.demoNow) })),
+      resolvePartnerDispute: (invoiceId, legId, x, by) => set((s) => ({ data: pay.resolveDispute(s.data, invoiceId, legId, x, by, s.demoNow) })),
+      approvePartnerInvoice: (invoiceId, by) => set((s) => ({ data: pay.approvePartnerInvoice(s.data, invoiceId, by, s.demoNow) })),
+      submitPayoutBatch: (date, by) => {
+        const r = pay.submitPayoutBatch(get().data, date, by, get().demoNow)
+        set({ data: r.data })
+        return r.id
+      },
+      releasePayoutBatch: (id, by) => set((s) => ({ data: pay.releasePayoutBatch(s.data, id, by, s.demoNow) })),
+      requestEarlyPay: (partnerId, amount, by) => {
+        const r = pay.requestEarlyPay(get().data, partnerId, amount, by, get().demoNow)
+        set({ data: r.data })
+        return r.id
+      },
+      releaseEarlyPay: (id, by) => set((s) => ({ data: pay.releaseEarlyPay(s.data, id, by, s.demoNow) })),
+      recordPartnerCodDeposit: (partnerId, x, by) => set((s) => ({ data: pay.recordPartnerCodDeposit(s.data, partnerId, x, by, s.demoNow) })),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),
 
 

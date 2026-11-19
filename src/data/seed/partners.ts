@@ -4,7 +4,8 @@
  * GSTINs, mobiles and emails not given in seed-data.md are INVENTED
  * (none ends in "Z9", which is reserved for failing GST verification).
  */
-import type { FieldStaff, Partner, PartnerApplication, PartnerInvoice, PartnerUser, Payout, Vehicle, WeeklyScore } from '@shared/types'
+import type { FieldStaff, Partner, PartnerApplication, PartnerInvoice, PartnerUser, Payout, PayoutBatch, Vehicle, WeeklyScore } from '@shared/types'
+import { addDaysToDate } from '@shared/lib/time'
 
 const NCR = ['110020', '110001', '110037', '122001', '122050', '201301']
 const HUBBALLI = ['580030', '580025', '580020', '590001', '581110', '591201']
@@ -293,7 +294,8 @@ export const applications: PartnerApplication[] = [
       status: 'signed',
       issuedAt: AT('2026-10-22', '15:00'),
       issuedBy: 'LS-MEERA',
-      signed: { at: AT('2026-10-24', '11:15'), by: 'PU-PRAKASH', method: 'aadhaarOtp', selfBilling: true },
+      // Deccan bills Logisco itself (PP-26 upload; seed-data.md §3 "Deccan overbilling")
+      signed: { at: AT('2026-10-24', '11:15'), by: 'PU-PRAKASH', method: 'aadhaarOtp', selfBilling: false },
     },
     setup: {
       apiKey: 'lg_p_sbx_7c2e',
@@ -397,14 +399,53 @@ export const partnerInvoices: PartnerInvoice[] = [
   { id: 'SB/SWC/25-26/047', partnerId: 'P-SWIFTCITY', cycle: '2026-11-16/2026-11-22', mode: 'selfBilled', lines: [], taxable: 156240, gst: 28123, total: 184363, status: 'approved' },
 ]
 
+/** Paid history (PP-27 sample PO-2026-0412 · ₹1,71,880 · IMPS). INVENTED: the other amounts and UTRs. */
+const paid = (id: string, batchId: string, partnerId: string, date: string, gross: number, utr: string, mode: 'NEFT' | 'IMPS' = 'NEFT', deductions: Payout['deductions'] = []): Payout => ({
+  id,
+  batchId,
+  partnerId,
+  kind: 'cycle',
+  gross,
+  deductions,
+  net: gross - deductions.reduce((s, d) => s + d.amount, 0),
+  dueDate: date,
+  mode,
+  utr,
+  paidAt: `${date}T16:00:00+05:30`,
+  status: 'paid',
+})
+export const payoutHistory: Payout[] = [
+  paid('PO-2026-0412', 'PB-2026-1120', 'P-SWIFTCITY', '2026-11-20', 172180, 'HDFCN52026112071240', 'IMPS', [{ kind: 'penalty', reason: 'Missed scan penalty', amount: 300 }]),
+  paid('PO-2026-0398', 'PB-2026-1113', 'P-SWIFTCITY', '2026-11-13', 165240, 'HDFCN52026111364118'),
+  paid('PO-2026-0384', 'PB-2026-1106', 'P-SWIFTCITY', '2026-11-06', 158910, 'HDFCN52026110658802'),
+  // NCR CrossDock: CLM-2026-0142's ₹10,000 recovery deducted on 20-Nov (seed-data.md §4)
+  paid('PO-2026-0415', 'PB-2026-1120', 'P-NCRXD', '2026-11-20', 71300, 'HDFCN52026112071252', 'NEFT', [{ kind: 'claim', reason: 'Claim CLM-2026-0142', amount: 10000, ref: 'CLM-2026-0142' }]),
+  paid('PO-2026-0401', 'PB-2026-1113', 'P-NCRXD', '2026-11-13', 58450, 'HDFCN52026111364131'),
+  paid('PO-2026-0418', 'PB-2026-1120', 'P-NKEXP', '2026-11-20', 24860, 'HDFCN52026112071266'),
+  paid('PO-2026-0404', 'PB-2026-1113', 'P-NKEXP', '2026-11-13', 22140, 'HDFCN52026111364147'),
+]
+
+export const payoutBatchHistory: PayoutBatch[] = ['2026-11-06', '2026-11-13', '2026-11-20'].map((date) => ({
+  id: `PB-${date.slice(0, 4)}-${date.slice(5, 7)}${date.slice(8)}`,
+  date,
+  tiers: ['platinum', 'gold', 'silver'],
+  payoutIds: payoutHistory.filter((p) => p.dueDate === date).map((p) => p.id),
+  status: 'released',
+  makerId: 'LS-LAKSHMI',
+  submittedAt: `${addDaysToDate(date, -1)}T17:00:00+05:30`,
+  checkerId: 'LS-RAHUL',
+  releasedAt: `${date}T16:00:00+05:30`,
+}))
+
 export const payouts: Payout[] = [
+  ...payoutHistory,
   {
     id: 'PO-SWC-2026-1127',
-    batchId: 'PB-2026-1127',
     partnerId: 'P-SWIFTCITY',
     invoiceId: 'SB/SWC/25-26/047',
     gross: 184363,
-    deductions: [{ reason: 'Late pickup penalty', amount: 300 }],
+    kind: 'cycle',
+    deductions: [{ kind: 'penalty', reason: 'Late pickup penalty', amount: 300, ref: 'JOB-000604-L1' }],
     net: 184063,
     dueDate: '2026-11-27',
     status: 'scheduled',

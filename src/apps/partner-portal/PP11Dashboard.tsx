@@ -5,6 +5,7 @@
  * Operations sees job / capacity / escalation widgets; Finance sees payout, COD
  * and deductions; Admin sees all.
  */
+import { nextPayout, partnerCodOutstanding } from '@shared/engines/payables'
 import { AlertTriangle, ArrowRight, BadgeIndianRupee, Gauge, Inbox, ShieldAlert, UserPlus, Wallet } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -41,10 +42,11 @@ export default function PP11Dashboard() {
       tiles: todayTiles(data, partner.id, now),
       capacity: capacityToday(data, partner.id, now),
       score: scoreTrend(data, partner.id),
-      payout: Object.values(data.payouts)
-        .filter((p) => p.partnerId === partner.id && p.status !== 'paid')
-        .sort((a, b) => a.dueDate.localeCompare(b.dueDate))[0],
-      cod: Object.values(data.codRecords).filter((c) => c.status === 'collected' && data.legs[data.shipments[c.shipmentId]?.legIds.at(-1) ?? '']?.partnerId === partner.id),
+      payout: (() => {
+        const n = nextPayout(data, partner.id, now)
+        return n.payout ?? (n.line ? { net: n.line.net, dueDate: n.date, deductions: n.line.deductions } : undefined)
+      })(),
+      cod: partnerCodOutstanding(data, partner.id).records,
       escalations: Object.values(data.exceptions).filter((e) => e.ownerPartnerId === partner.id && e.status !== 'resolved'),
       alerts: partnerAlerts(data, partner.id, now),
     }

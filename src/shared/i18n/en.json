@@ -4254,7 +4254,7 @@
     "total": "Total",
     "rule": "Deposit within {{hours}} hours of collection.",
     "to": "Deposit to",
-    "office": "Partner office cashier",
+    "office": "Partner office cashier (the office deposits it to Logisco)",
     "bank": "Bank (slip photo)",
     "amount": "Amount (₹)",
     "mustEqual": "Deposit all cash in hand: {{amount}}",
@@ -4319,5 +4319,327 @@
       "raised": "In the next payout",
       "deducted": "Deducted"
     }
+  },
+  "payout": {
+    "ded": {
+      "penalty": "Penalty",
+      "claim": "Claim recovery",
+      "codShortage": "COD shortage",
+      "earlyPay": "Early pay"
+    }
+  },
+  "pp25": {
+    "title": "Finance panel",
+    "subtitle": "Daily reconciliation: legs completed, earnings at rate card × verified weight, deductions with evidence, COD and payout status.",
+    "export": "Export (Excel)",
+    "empty": "No completed legs in the last 7 days",
+    "col": {
+      "date": "Date",
+      "legs": "Legs completed",
+      "earnings": "Earnings",
+      "deductions": "Deductions",
+      "cod": "COD collected / deposited",
+      "net": "Net for the day",
+      "status": "Payout status"
+    },
+    "status": {
+      "pendingMatch": "Pending match",
+      "matched": "Matched",
+      "inBatch": "In payout batch",
+      "paid": "Paid"
+    },
+    "leg": {
+      "job": "Job",
+      "lr": "LR",
+      "type": "Leg",
+      "done": "Completed",
+      "weight": "Verified weight",
+      "earning": "Earning",
+      "invoice": "Invoice"
+    }
+  },
+  "pp26": {
+    "title": "Invoices",
+    "subSelf": "Logisco self-bills you from completed legs each cycle. Every line is matched against your rate card, the verified weight and the e-POD.",
+    "subUpload": "Upload your invoice with its line file. Every line is matched against your rate card, the verified weight and the e-POD.",
+    "upload": "Upload invoice",
+    "empty": "No invoices yet",
+    "col": {
+      "no": "Invoice no.",
+      "cycle": "Cycle",
+      "legs": "Legs",
+      "amounts": "Taxable / GST / total",
+      "match": "Match",
+      "mode": "Mode",
+      "status": "Status"
+    },
+    "match": {
+      "matched": "Matched",
+      "partlyMatched": "Partly matched",
+      "disputed": "Mismatch under dispute"
+    },
+    "mode": {
+      "selfBilled": "Self-billed",
+      "uploaded": "Uploaded"
+    },
+    "status": {
+      "submitted": "Waiting for you",
+      "matched": "Matched",
+      "disputed": "Under dispute",
+      "approved": "Approved for payout",
+      "paid": "Paid"
+    },
+    "back": "All invoices",
+    "detailSub": "{{cycle}} · {{mode}} · payable {{payable}}",
+    "linesExcel": "Lines (Excel)",
+    "noLines": "Issued before line-level billing in this demo; the cycle total was matched in full.",
+    "line": {
+      "job": "Job",
+      "rate": "Rate card",
+      "weight": "Verified weight",
+      "pod": "e-POD / hand-over",
+      "billedMatched": "Billed / matched",
+      "billed": "Billed",
+      "matched": "Matched",
+      "result": "Result",
+      "final": "Final",
+      "done": "Completed",
+      "billedWeight": "Weight billed (kg)"
+    },
+    "podYes": "Present",
+    "podNo": "Missing",
+    "result": {
+      "match": "Match",
+      "weight": "Mismatch: weight {{billed}} vs {{verified}} kg",
+      "noPod": "Mismatch: no e-POD / hand-over",
+      "amount": "Mismatch: amount"
+    },
+    "accept": "Accept matched amount",
+    "accepted": "Line closed at the matched amount",
+    "acceptedAt": "You accepted {{amount}}",
+    "dispute": "Dispute line",
+    "reason": "Reason",
+    "evidence": "Evidence",
+    "sendDispute": "Send to dispute desk",
+    "disputed": "Sent to the Logisco dispute desk (48 h)",
+    "underDispute": "With the dispute desk · {{hours}} h left",
+    "decided": "Decided: {{decision}} · {{amount}} {{note}}",
+    "uploadTitle": "Upload invoice",
+    "uploadSub": "Your invoice PDF and the line file (job ID, weight billed, rate, amount).",
+    "sample": "Fill sample",
+    "f": {
+      "no": "Invoice no.",
+      "date": "Invoice date",
+      "amount": "Amount before GST (₹)",
+      "amountHint": "Must equal the line file",
+      "pdf": "Invoice PDF",
+      "lines": "Line file (Excel)",
+      "linesHint": "Job ID, weight billed, rate, amount"
+    },
+    "fromFile_one": "{{count}} line from the file",
+    "fromFile_other": "{{count}} lines from the file",
+    "noLegs": "No completed legs waiting to be billed.",
+    "includeX": "Include {{id}}",
+    "billedWeightX": "Weight billed for {{id}}",
+    "willMismatch": "Weights differ from the verified weight: these lines will be flagged",
+    "lineTotal": "Line total {{amount}}",
+    "submit": "Submit invoice",
+    "uploaded": "{{id}} submitted and matched",
+    "failed": "The invoice couldn't be submitted; check the form",
+    "err": {
+      "dup": "This invoice number is already used",
+      "sum": "The lines add up to {{sum}}",
+      "lines": "Include at least one line"
+    }
+  },
+  "pp27": {
+    "title": "Payouts",
+    "cycle": {
+      "platinum": "Platinum: paid within 3 days, in every batch.",
+      "gold": "Gold: paid weekly on Fridays by NEFT. Early pay available.",
+      "silver": "Silver: paid weekly on Fridays by NEFT. Early pay available.",
+      "bronze": "Bronze and partners in trial: paid fortnightly on Fridays by NEFT.",
+      "probation": "Probation: paid fortnightly on Fridays by NEFT."
+    },
+    "next": "Next payout",
+    "nextOn": "Next payout · {{date}}",
+    "status": {
+      "scheduled": "Scheduled",
+      "pendingApproval": "Waiting for release",
+      "approved": "Approved",
+      "paid": "Paid",
+      "onHold": "On hold"
+    },
+    "earnings": "Matched earnings (incl. GST)",
+    "net": "Net payout",
+    "nothingYet": "Nothing approved for this payout yet.",
+    "carry": "Deductions exceed this cycle's earnings; the balance carries forward.",
+    "history": "Payout history",
+    "noHistory": "No payouts yet",
+    "earlyTag": "early pay",
+    "col": {
+      "id": "Payout",
+      "date": "Date",
+      "gross": "Gross",
+      "deductions": "Deductions",
+      "net": "Net",
+      "mode": "Mode",
+      "utr": "UTR",
+      "status": "Status"
+    },
+    "early": {
+      "title": "Early pay",
+      "available": "Available now: {{amount}} (matched, unpaid). Fee {{pct}}%.",
+      "amount": "Request amount (₹)",
+      "max": "Up to {{amount}}",
+      "feeNet": "Fee {{fee}} · you receive {{net}} by IMPS",
+      "request": "Request early pay",
+      "otpTitle": "Confirm with OTP",
+      "otpBody": "Early pay of {{amount}}. OTP sent to {{mobile}} (demo: 123456).",
+      "otp": "OTP",
+      "done": "{{id}} requested; paid by IMPS once Logisco releases it",
+      "failed": "The request couldn't be made"
+    }
+  },
+  "pp28": {
+    "title": "COD deposits",
+    "subtitle": "Cash your riders collect on delivery, deposited into Logisco's collection account within 24 hours.",
+    "outstanding": "Collected, not deposited",
+    "oldest": "Oldest {{at}}",
+    "dueBy": "Due by",
+    "late": "Late: flagged to Logisco",
+    "collections": "Collections (last 3 days)",
+    "empty": "No COD collections",
+    "col": {
+      "lr": "LR",
+      "rider": "Rider",
+      "amount": "Amount",
+      "collected": "Collected at",
+      "status": "Deposit status"
+    },
+    "stage": {
+      "withRider": "With rider",
+      "atOffice": "At office",
+      "deposited": "Deposited",
+      "short": "Short"
+    },
+    "record": "Record deposit",
+    "nothingAtOffice": "No cash at the office. Riders hand in cash from the Partner App.",
+    "covered": "Shipments covered",
+    "method": "Deposit method",
+    "m": {
+      "bankTransfer": "Bank transfer (UTR)",
+      "cashSlip": "Cash deposit at bank (slip)",
+      "upi": "UPI to Logisco collection account"
+    },
+    "amount": "Amount (₹)",
+    "utr": "UTR",
+    "upiRef": "UPI reference",
+    "slip": "Deposit slip",
+    "submit": "Submit deposit",
+    "done": "{{amount}} deposited to Logisco",
+    "rule": "Shortages are deducted from your payout with evidence.",
+    "err": {
+      "pick": "Choose the shipments covered",
+      "sum": "The shipments add up to {{sum}}"
+    }
+  },
+  "erp32": {
+    "title": "Partner payables",
+    "subtitle": "3-way match: rate card × verified weight × e-POD per leg. Disputes are decided within {{hours}} hours.",
+    "disputes": "Dispute desk",
+    "noDisputes": "No open disputes",
+    "invoices": "Partner invoices",
+    "col": {
+      "invoice": "Invoice",
+      "partner": "Partner",
+      "job": "Job",
+      "diff": "Difference",
+      "reason": "Partner's reason",
+      "left": "Time left",
+      "cycle": "Cycle",
+      "payable": "Payable",
+      "decision": "Decision"
+    },
+    "hoursLeft_one": "{{count}} h left",
+    "hoursLeft_other": "{{count}} h left",
+    "sb": {
+      "title": "Self-billing run",
+      "none": "No finished cycle with unbilled legs for self-billing partners.",
+      "cycle": "Cycle",
+      "legs": "Legs",
+      "generate_one": "Generate {{count}} self-billed invoice",
+      "generate_other": "Generate {{count}} self-billed invoices",
+      "confirm_one": "Generate {{count}} self-billed invoice?",
+      "confirm_other": "Generate {{count}} self-billed invoices?",
+      "confirmBody": "{{amount}} for {{cycle}}, from completed legs at rate card × verified weight. Partners see them in PP-26.",
+      "done_one": "{{count}} self-billed invoice generated",
+      "done_other": "{{count}} self-billed invoices generated"
+    },
+    "back": "All partner invoices",
+    "headerSub": "{{cycle}} · {{mode}} · payable {{payable}}",
+    "aiMatch": "Matched by AI",
+    "approve": "Approve for payout",
+    "confirmApprove": "Approve {{amount}} for payout?",
+    "confirmBody": "The invoice goes into the partner's next payout batch.",
+    "approved": "{{id}} approved for payout",
+    "partnerSays": "Partner:",
+    "decision": {
+      "matched": "Pay matched",
+      "billed": "Pay billed",
+      "partial": "Partial"
+    },
+    "partialAmount": "Amount ({{lo}} to {{hi}})",
+    "note": "Note to the partner",
+    "resolve": "Resolve dispute",
+    "resolved": "Dispute resolved; the partner sees the outcome",
+    "partnerAccepted": "partner accepted",
+    "waitingPartner": "Waiting for the partner"
+  },
+  "erp33": {
+    "title": "Payout batches",
+    "subtitle": "Platinum every batch; Gold and Silver weekly; Bronze fortnightly. Finance submits, a different approver releases.",
+    "batch": "Batch",
+    "batchOn": "{{date}} · {{id}}",
+    "tiers": "Tiers:",
+    "draft": "Draft",
+    "status": {
+      "pendingApproval": "Waiting for approval",
+      "released": "Released"
+    },
+    "empty": "Nothing approved for this batch yet.",
+    "col": {
+      "partner": "Partner",
+      "invoices": "Invoices",
+      "earnings": "Matched earnings",
+      "deductions": "Deductions (evidence)",
+      "net": "Net",
+      "utr": "UTR",
+      "request": "Request",
+      "amount": "Amount",
+      "fee": "Fee",
+      "batch": "Batch",
+      "date": "Date",
+      "partners": "Partners",
+      "makerChecker": "Maker / approver"
+    },
+    "carry": "Carried forward",
+    "submit": "Submit for approval",
+    "release": "Approve and release",
+    "madeBy": "Submitted by {{maker}}, {{at}}",
+    "waitingApprover": "Waiting for the approver",
+    "confirmSubmit_one": "Submit {{count}} payout for approval?",
+    "confirmSubmit_other": "Submit {{count}} payouts for approval?",
+    "submitBody": "{{amount}} in total. A different person must approve and release it.",
+    "confirmRelease": "Release {{amount}}?",
+    "releaseBody_one": "NEFT file for {{count}} partner; UTRs go back to the Partner Portal.",
+    "releaseBody_other": "NEFT file for {{count}} partners; UTRs go back to the Partner Portal.",
+    "submitted": "{{id}} submitted for approval",
+    "released": "{{id}} released; UTRs sent to partners",
+    "early": "Early-pay requests",
+    "noEarly": "No early-pay requests",
+    "releaseImps": "Release by IMPS",
+    "earlyReleased": "{{id}} paid by IMPS",
+    "history": "Released batches"
   }
 }
