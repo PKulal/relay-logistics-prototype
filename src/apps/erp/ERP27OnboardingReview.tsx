@@ -1,17 +1,21 @@
 /**
  * ERP-27 Customer onboarding review — docs/04-erp-control-tower.md §6.7.
  * Source §6 Phases 1–3: qualification, the AI lane-cost preview (Logisco
- * only), the track and the KYC results; Sales clears a flagged KYC. Rate card,
- * contract issue, pilot plan and Mark live come with Part 3b.
+ * only), the track and the KYC results; Sales clears a flagged KYC. Phases 4–6:
+ * the rate card to offer, Issue contract, change requests, the pilot plan and
+ * Mark live after the 2-week pilot.
  */
 import { ArrowLeft, CheckCircle2, CircleAlert, CircleDashed, Sparkles } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
-import { laneMargin, laneVerdict } from '@shared/engines/onboarding'
-import { useData } from '@shared/hooks/useDemo'
-import { formatDate } from '@shared/lib/format'
+import { assisted, laneMargin, laneVerdict } from '@shared/engines/onboarding'
+import { useData, useDemoNow } from '@shared/hooks/useDemo'
+import { formatDate, formatDateTime } from '@shared/lib/format'
+import { istDate } from '@shared/lib/time'
 import { useDemoStore } from '@shared/store'
+import { offerCardFor, PILOT_DAYS, pilotDay } from '@shared/store/contractActions'
 import type { CheckState, Customer, CustomerTrack } from '@shared/types'
 import { Button } from '@shared/ui/button'
 import { NativeSelect } from '@shared/ui/NativeSelect'
@@ -183,7 +187,8 @@ function Review({ customerId }: { customerId: string }) {
         {k?.reviewedBy && <p className="text-caption text-muted-foreground">{t('erp27.reviewedBy', { name: k.reviewedBy === 'system' ? t('erp27.automatic') : data.staff[k.reviewedBy]?.name })}</p>}
       </section>
 
-      <p className="text-caption text-muted-foreground">{t('erp27.later')}</p>
+      {['contract', 'integration', 'pilot', 'live'].includes(c.status) && <ContractPanel c={c} />}
+      {c.onboarding.pilot && <PilotPanel c={c} />}
     </div>
   )
 }
@@ -198,5 +203,95 @@ function Check({ label, state, detail }: { label: string; state: CheckState; det
         {detail && <span className="tabular block text-caption text-muted-foreground">{detail}</span>}
       </span>
     </li>
+  )
+}
+
+/** Phase 4–5: rate card to offer and the contract (source §6 Steps 5–6). */
+function ContractPanel({ c }: { c: Customer }) {
+  const { t } = useTranslation()
+  const { user } = useErpSession()
+  const data = useData((d) => d)
+  const k = c.onboarding?.contract
+  const liveCards = Object.values(data.rateCards).filter((r) => r.status === 'live' && (!r.customerId || r.customerId === c.id))
+  const [cardId, setCardId] = useState(k?.rateCardId ?? offerCardFor(data, c.id))
+  const canIssue = (user.role === 'sales' || user.role === 'pricing') && c.status === 'contract' && assisted(c.track) && k?.status !== 'signed'
+  return (
+    <section className="flex flex-col gap-3 rounded-xl border bg-card p-5 shadow-card" aria-labelledby="ct-h">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 id="ct-h" className="text-card-title">
+          {t('erp27.contract')}
+        </h2>
+        <Chip tone={!k ? 'neutral' : k.status === 'signed' ? 'success' : k.status === 'changesRequested' ? 'warning' : 'info'}>{t(`erp27.contractStatus.${k?.status ?? 'none'}`)}</Chip>
+      </div>
+      {!assisted(c.track) && !k && <p className="text-muted-foreground">{t('erp27.selfServeContract')}</p>}
+      {(assisted(c.track) || k) && (
+        <div className="flex flex-wrap items-end gap-2">
+          <label className="flex flex-col gap-1 text-caption">
+            {t('erp27.offerCard')}
+            <NativeSelect aria-label={t('erp27.offerCard')} value={cardId} disabled={!canIssue} onChange={(e) => setCardId(e.target.value)}>
+              {liveCards.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name}
+                </option>
+              ))}
+            </NativeSelect>
+          </label>
+          <Button disabled={!canIssue || (k?.status === 'issued' && k.rateCardId === cardId)} onClick={() => (useDemoStore.getState().issueContract(c.id, cardId, user.id), toast.success(t('erp27.issued')))}>
+            {k ? t('erp27.reissue') : t('erp27.issue')}
+          </Button>
+          {user.role === 'pricing' && (
+            <Button variant="outline" asChild>
+              <Link to="/erp/pricing/rate-cards">{t('erp27.rateCards')}</Link>
+            </Button>
+          )}
+        </div>
+      )}
+      {k && (
+        <p className="text-caption text-muted-foreground">
+          {t('erp27.contractLine', { card: data.rateCards[k.rateCardId]?.name, at: formatDateTime(k.issuedAt), from: formatDate(k.effectiveDate), months: k.termMonths })}
+          {k.signedAt && ` · ${t('erp27.signed', { at: formatDateTime(k.signedAt), method: t(`cp08.method.${k.method}`) })}`}
+        </p>
+      )}
+      {k && k.changeRequests.length > 0 && (
+        <ul className="flex flex-col gap-1 rounded-lg bg-muted p-3 text-caption" aria-label={t('erp27.changeRequests')}>
+          {k.changeRequests.map((r, i) => (
+            <li key={i}>
+              <span className="font-medium">{r.line}</span>: {r.remark} <span className="text-muted-foreground">· {formatDateTime(r.at)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  )
+}
+
+/** Phase 6: the 2-week pilot and Mark live (source §6 Steps 7–8). */
+function PilotPanel({ c }: { c: Customer }) {
+  const { t } = useTranslation()
+  const { user } = useErpSession()
+  const now = useDemoNow()
+  const p = c.onboarding!.pilot!
+  const ready = c.status === 'pilot' && istDate(now) > p.end
+  return (
+    <section className="flex flex-col gap-2 rounded-xl border bg-card p-5 shadow-card" aria-labelledby="pl-h">
+      <h2 id="pl-h" className="text-card-title">
+        {t('erp27.pilot')}
+      </h2>
+      <p className="tabular">{t('cp10.pilotDay', { day: pilotDay(c, now), total: PILOT_DAYS, from: formatDate(p.start), to: formatDate(p.end) })}</p>
+      <p className="text-caption text-muted-foreground">
+        {t('cp10.kpiOnTime', { pct: p.kpis.onTimePct })} · {t('cp10.kpiExceptions', { pct: p.kpis.maxExceptionPct })}
+        {c.onboarding?.integrationDone?.skipped ? ` · ${t('erp27.integrationSkipped')}` : ''}
+      </p>
+      {c.status === 'live' ? (
+        <p className="font-medium text-status-success">{t('erp27.isLive', { at: formatDateTime(c.onboarding!.liveAt!) })}</p>
+      ) : (
+        <>
+          <Button className="self-start" disabled={!ready || user.role !== 'sales'} onClick={() => (useDemoStore.getState().markLive(c.id, user.id), toast.success(t('erp27.wentLive')))}>
+            {t('erp27.markLive')}
+          </Button>
+          {!ready && <p className="text-caption text-muted-foreground">{t('erp27.liveAfter', { date: formatDate(p.end) })}</p>}
+        </>
+      )}
+    </section>
   )
 }

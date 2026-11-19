@@ -160,6 +160,8 @@ export interface CustomerRateCard {
   validFrom: IsoDate
   validTo: IsoDate
   status: 'draft' | 'pendingApproval' | 'live' | 'expired'
+  /** ERP-22 / ERP-23: who asked for approval, and the decision */
+  approval?: { requestedBy: Id; requestedAt: IsoDateTime; decidedBy?: Id; decidedAt?: IsoDateTime; decision?: 'approve' | 'reject' | 'sendBack'; comment?: string }
 }
 
 export type RateUnit = 'perShipment' | 'perKg' | 'perTrip' | 'perPiece' | 'storagePerDay'
@@ -259,7 +261,8 @@ export interface Customer {
   rateCardId: Id
   bank?: { name: string; branch: string; ifsc: string; account: string }
   signatory?: { name: string; designation: string; email: string; mobile: string }
-  integrations: { tally: boolean }
+  /** CP-09 (source §6 Step 6): ERP connector, API key, ONDC link, Excel template */
+  integrations: { tally: boolean; erp?: 'tally' | 'sap' | 'zoho'; apiKey?: string; ondcSellerId?: string; templateDownloaded?: boolean }
   branding?: { logoUrl?: string; colour?: string }
   city: string
   /** Onboarding record (CP-04 to CP-10, ERP-26/27/30); absent for accounts seeded live */
@@ -324,6 +327,26 @@ export interface CustomerOnboarding {
   qualification?: Qualification
   kyc?: KycRecord
   credit?: CreditApplication
+  contract?: ContractRecord
+  /** CP-09 done (or skipped: portal booking only) */
+  integrationDone?: { at: IsoDateTime; skipped: boolean }
+  /** Source §6 Step 7: 2 weeks of hyper-care */
+  pilot?: { start: IsoDate; end: IsoDate; kpis: { onTimePct: number; maxExceptionPct: number } }
+  liveAt?: IsoDateTime
+}
+
+/** Source §6 Step 5: rate card, SLA and contract, generated and e-signed. */
+export interface ContractRecord {
+  rateCardId: Id
+  issuedAt: IsoDateTime
+  issuedBy: Id
+  status: 'issued' | 'changesRequested' | 'signed'
+  effectiveDate: IsoDate
+  termMonths: number
+  changeRequests: { at: IsoDateTime; by: Id; line: string; remark: string }[]
+  signedAt?: IsoDateTime
+  signedBy?: Id
+  method?: 'aadhaarOtp' | 'dsc' | 'clickWrap'
 }
 
 export type CustomerRole = 'admin' | 'dispatch' | 'finance'

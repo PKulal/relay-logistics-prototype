@@ -5,6 +5,7 @@
  */
 import { assisted, billingFor, constitutionOf, creditScore, DEFAULT_KAM, gstinCheck, gstLookup, leadScore, pennyDrop, suggestedCredit, trackFor, yearsSince } from '@shared/engines/onboarding'
 import type { CreditApplication, Customer, CustomerOnboarding, CustomerStatus, CustomerType, DemoData, Id, IsoDateTime, KycRecord, Lead, LeadSource, LeadStage, PickupLocation, Qualification } from '@shared/types'
+import { issueContract, offerCardFor } from './contractActions'
 import { audit } from './erpActions'
 
 const pad = (n: number, w = 4) => String(n).padStart(w, '0')
@@ -297,17 +298,21 @@ export function logLeadActivity(data: DemoData, leadId: Id, kind: 'call' | 'visi
 
 // ─── Automatic decisions (demo default; the toolbar's "Manual approvals" turns them off) ──
 
-/** Pending onboarding decisions: KYC under review and credit applications. */
-export function pendingDecisions(data: DemoData): { customerId: Id; kind: 'kyc' | 'credit' }[] {
+export type DecisionKind = 'kyc' | 'credit' | 'contract'
+
+/** Pending onboarding decisions: KYC under review, credit applications, contracts to issue (assisted tracks). */
+export function pendingDecisions(data: DemoData): { customerId: Id; kind: DecisionKind }[] {
   return Object.values(data.customers).flatMap((c) => [
     ...(c.onboarding?.kyc?.status === 'underReview' ? [{ customerId: c.id, kind: 'kyc' as const }] : []),
     ...(c.onboarding?.credit?.status === 'underReview' ? [{ customerId: c.id, kind: 'credit' as const }] : []),
+    ...(c.onboarding && c.status === 'contract' && assisted(c.track) && !c.onboarding.contract ? [{ customerId: c.id, kind: 'contract' as const }] : []),
   ])
 }
 
 /** SIMULATED: Logisco decides by the rules (KYC cleared; credit by the AI score). */
-export function autoDecide(data: DemoData, customerId: Id, kind: 'kyc' | 'credit', at: IsoDateTime): DemoData {
+export function autoDecide(data: DemoData, customerId: Id, kind: DecisionKind, at: IsoDateTime): DemoData {
   if (kind === 'kyc') return clearKyc(data, customerId, 'system', at)
+  if (kind === 'contract') return issueContract(data, customerId, offerCardFor(data, customerId), 'system', at)
   const app = data.customers[customerId]?.onboarding?.credit
   if (!app) return data
   const s = suggestedCredit(app.score, app.requestedLimit)

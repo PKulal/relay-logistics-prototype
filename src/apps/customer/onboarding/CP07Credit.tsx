@@ -146,7 +146,7 @@ export default function CP07Credit() {
             </Button>
           )}
           {app.accepted && (
-            <Button className="self-start" onClick={() => navigate('/customer/onboarding/next')}>
+            <Button className="self-start" onClick={() => navigate('/customer/onboarding/contract')}>
               {t('cp06.continue')} <ArrowRight />
             </Button>
           )}

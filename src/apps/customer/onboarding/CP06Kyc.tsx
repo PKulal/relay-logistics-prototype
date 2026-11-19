@@ -112,7 +112,7 @@ export default function CP06Kyc() {
 
   const sigOk = !!sig.name.trim() && !!sig.designation.trim() && /^\S+@\S+\.\S+$/.test(sig.email) && /^\d{10}$/.test(sig.mobile.replace(/\s/g, ''))
   const ready = kycReady(data, c.id)
-  const nextPath = c.billing === 'credit' ? '/customer/onboarding/credit' : '/customer/onboarding/next'
+  const nextPath = c.billing === 'credit' ? '/customer/onboarding/credit' : '/customer/onboarding/contract'
 
   return (
     <div className="max-w-4xl">

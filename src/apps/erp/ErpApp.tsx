@@ -9,13 +9,15 @@ import { useSessionUser } from '@shared/store/session'
 import { NotFound, ScreenPlaceholder } from '@shared/ui/Page'
 import ERP03Shipment360 from './ERP03Shipment360'
 import ERP05JobBoard from './ERP05JobBoard'
+import ERP22RateCards from './ERP22RateCards'
+import ERP23Approvals from './ERP23Approvals'
 import ERP26Leads from './ERP26Leads'
 import ERP27OnboardingReview from './ERP27OnboardingReview'
 import ERP30CreditReview from './ERP30CreditReview'
 import { erpNav, type ErpCtx } from './nav'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'ERP-05': ERP05JobBoard, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-30': ERP30CreditReview }
+const SCREENS = { 'ERP-05': ERP05JobBoard, 'ERP-22': ERP22RateCards, 'ERP-23': ERP23Approvals, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-30': ERP30CreditReview }
 
 /** Logisco ERP + Control Tower (/erp) — Logisco staff. Spec: docs/04-erp-control-tower.md */
 export default function ErpApp() {
@@ -60,6 +62,7 @@ export default function ErpApp() {
         {/* ERP-03 Shipment 360 is opened from search and lists, not the menu; every role can open it */}
         <Route path="shipments/:lr" element={<ERP03Shipment360 />} />
         <Route path="sales/onboarding/:customerId" element={<ERP27OnboardingReview />} />
+        <Route path="pricing/rate-cards/:cardId" element={<ERP22RateCards />} />
         {navRoutes(erpNav, ctx, SCREENS)}
         <Route path="*" element={<NotFound />} />
       </Route>

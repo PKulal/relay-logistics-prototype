@@ -27,14 +27,16 @@ import * as trip from './tripActions'
 import * as dlv from './deliveryActions'
 import * as appt from './appointmentActions'
 import * as onb from './onboardingActions'
-import type { CreditDecision, CreditRequest, SignUpInput } from './onboardingActions'
+import type { CreditDecision, CreditRequest, DecisionKind, SignUpInput } from './onboardingActions'
+import * as ctr from './contractActions'
+import type { IntegrationStep, RateEdit, SkuRow } from './contractActions'
 import type { AppointmentInput } from './appointmentActions'
 import type { CompleteDelivery, GiveToRider, ReceiveLoad } from './deliveryActions'
 import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 11
+export const STORE_VERSION = 13
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -113,7 +115,20 @@ export interface DemoState {
   assignLead: (leadId: Id, ownerId: Id, by: Id) => void
   moveLead: (leadId: Id, stage: LeadStage, by: Id) => void
   logLeadActivity: (leadId: Id, kind: 'call' | 'visit' | 'email', note: string, by: Id) => void
-  autoDecide: (customerId: Id, kind: 'kyc' | 'credit') => void
+  autoDecide: (customerId: Id, kind: DecisionKind) => void
+  /** Onboarding Phases 3–4 (CP-08 to CP-10; ERP-22/23/27) */
+  createNegotiatedCard: (customerId: Id, fromId: Id, by: Id) => Id
+  editRateCard: (cardId: Id, e: RateEdit) => void
+  submitRateCard: (cardId: Id, by: Id) => void
+  decideRateCard: (cardId: Id, decision: 'approve' | 'reject' | 'sendBack', comment: string, by: Id) => void
+  issueContract: (customerId: Id, rateCardId: Id, by: Id) => void
+  requestContractChanges: (customerId: Id, line: string, remark: string, by: Id) => void
+  signContract: (customerId: Id, method: 'aadhaarOtp' | 'dsc' | 'clickWrap', by: Id) => void
+  setIntegration: (customerId: Id, s: IntegrationStep) => void
+  uploadSkus: (customerId: Id, rows: SkuRow[], by: Id) => void
+  fixSku: (skuId: Id, d: { l: number; b: number; h: number; weight: number }) => void
+  completeIntegration: (customerId: Id, skipped: boolean, by: Id) => void
+  markLive: (customerId: Id, by: Id) => void
   setTrack: (customerId: Id, track: Customer['track'], by: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
   /** Restore the seed data in every app (other tabs follow via sync). */
@@ -210,6 +225,22 @@ export const useDemoStore = create<DemoState>()(
       moveLead: (leadId, stage, by) => set((s) => ({ data: onb.moveLead(s.data, leadId, stage, by, s.demoNow) })),
       logLeadActivity: (leadId, kind, note, by) => set((s) => ({ data: onb.logLeadActivity(s.data, leadId, kind, note, by, s.demoNow) })),
       autoDecide: (customerId, kind) => set((s) => ({ data: onb.autoDecide(s.data, customerId, kind, s.demoNow) })),
+      createNegotiatedCard: (customerId, fromId, by) => {
+        const r = ctr.createNegotiatedCard(get().data, customerId, fromId, by, get().demoNow)
+        set({ data: r.data })
+        return r.cardId
+      },
+      editRateCard: (cardId, e) => set((s) => ({ data: ctr.editRateCard(s.data, cardId, e) })),
+      submitRateCard: (cardId, by) => set((s) => ({ data: ctr.submitRateCard(s.data, cardId, by, s.demoNow) })),
+      decideRateCard: (cardId, decision, comment, by) => set((s) => ({ data: ctr.decideRateCard(s.data, cardId, decision, comment, by, s.demoNow) })),
+      issueContract: (customerId, rateCardId, by) => set((s) => ({ data: ctr.issueContract(s.data, customerId, rateCardId, by, s.demoNow) })),
+      requestContractChanges: (customerId, line, remark, by) => set((s) => ({ data: ctr.requestContractChanges(s.data, customerId, line, remark, by, s.demoNow) })),
+      signContract: (customerId, method, by) => set((s) => ({ data: ctr.signContract(s.data, customerId, method, by, s.demoNow) })),
+      setIntegration: (customerId, step) => set((s) => ({ data: ctr.setIntegration(s.data, customerId, step, s.demoNow) })),
+      uploadSkus: (customerId, rows, by) => set((s) => ({ data: ctr.uploadSkus(s.data, customerId, rows, by, s.demoNow) })),
+      fixSku: (skuId, d) => set((s) => ({ data: ctr.fixSku(s.data, skuId, d) })),
+      completeIntegration: (customerId, skipped, by) => set((s) => ({ data: ctr.completeIntegration(s.data, customerId, skipped, by, s.demoNow) })),
+      markLive: (customerId, by) => set((s) => ({ data: ctr.markLive(s.data, customerId, by, s.demoNow) })),
       setTrack: (customerId, track, by) => set((s) => ({ data: onb.setTrack(s.data, customerId, track, by, s.demoNow) })),
 
 

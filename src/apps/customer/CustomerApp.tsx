@@ -17,9 +17,11 @@ import CP17Shipment from './CP17Shipment'
 import CP05Qualification from './onboarding/CP05Qualification'
 import CP06Kyc from './onboarding/CP06Kyc'
 import CP07Credit from './onboarding/CP07Credit'
-import OnboardingNext from './onboarding/OnboardingNext'
 import OnboardingHome from './onboarding/OnboardingHome'
-import { isOnboarding } from './onboarding/steps'
+import { canBookNow, isOnboarding } from './onboarding/steps'
+import CP08Contract from './onboarding/CP08Contract'
+import CP09Integration from './onboarding/CP09Integration'
+import CP10Tracker from './onboarding/CP10Tracker'
 import { customerNav, type CustomerCtx } from './nav'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
@@ -38,8 +40,8 @@ export default function CustomerApp() {
   const ctx: CustomerCtx = { role: user.role, customer }
   // Until the account is in pilot (CP-10), the dashboard and booking lead to the current onboarding step
   const onboarding = isOnboarding(customer)
-  const canBook = (user.role === 'admin' || user.role === 'dispatch') && !onboarding
-  const screens = onboarding ? { ...SCREENS, 'CP-11': OnboardingHome, 'CP-13': OnboardingHome } : SCREENS
+  const canBook = (user.role === 'admin' || user.role === 'dispatch') && canBookNow(customer)
+  const screens = { ...SCREENS, ...(onboarding ? { 'CP-11': OnboardingHome } : {}), ...(canBookNow(customer) ? {} : { 'CP-13': OnboardingHome }) }
 
   return (
     <Routes>
@@ -65,11 +67,12 @@ export default function CustomerApp() {
         {/* Screens outside the menu (CP spec §4.3) */}
         <Route path="book/done/:lr" element={canBook ? <CP14Confirmation /> : <AccessDenied />} />
         <Route path="shipments/:lr" element={<CP17Shipment />} />
-        <Route path="onboarding" element={<OnboardingHome />} />
+        <Route path="onboarding" element={<CP10Tracker />} />
         <Route path="onboarding/qualification" element={<CP05Qualification />} />
         <Route path="onboarding/kyc" element={<CP06Kyc />} />
         <Route path="onboarding/credit" element={<CP07Credit />} />
-        <Route path="onboarding/next" element={<OnboardingNext />} />
+        <Route path="onboarding/contract" element={<CP08Contract />} />
+        <Route path="onboarding/integration" element={<CP09Integration />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

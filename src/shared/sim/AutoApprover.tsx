@@ -8,7 +8,7 @@
 import { useEffect } from 'react'
 import { useData, useFlags } from '@shared/hooks/useDemo'
 import { useDemoStore } from '@shared/store'
-import { pendingDecisions } from '@shared/store/onboardingActions'
+import { pendingDecisions, type DecisionKind } from '@shared/store/onboardingActions'
 
 export const AUTO_DECISION_MS = 4000
 
@@ -18,7 +18,7 @@ export function AutoApprover() {
   useEffect(() => {
     if (manualApprovals || !pending) return
     const timers = pending.split('|').map((key) => {
-      const [customerId, kind] = key.split(':') as [string, 'kyc' | 'credit']
+      const [customerId, kind] = key.split(':') as [string, DecisionKind]
       return setTimeout(() => {
         if (document.visibilityState === 'visible') useDemoStore.getState().autoDecide(customerId, kind)
       }, AUTO_DECISION_MS)
