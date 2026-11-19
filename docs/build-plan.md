@@ -31,7 +31,7 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 - [x] PA-19 / PA-20 Hand-over give / receive (two phone frames)
 - [x] PA-25 to PA-29 Hub flow
 - [x] PA-21 to PA-24 Driver trip (moving map marker)
-- [ ] PA-31 to PA-33 Delivery with e-POD
+- [x] PA-31 to PA-33 Delivery with e-POD
 - [ ] CP-16 Shipments list, CP-17 Tracking (timeline updates live), CP-18 Public tracking + appointment
 - [ ] End-to-end check: book → deliver across all four apps with no page refresh
 
@@ -45,7 +45,7 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 - [ ] NDR: PA-35 → CP-21 + WhatsApp preview (CP-18) → reattempt task back to PA
 - [ ] Control Tower: ERP-06 at-risk list, ERP-07 exceptions, ERP-08 reassign (000790 → QuickLink), ERP-09, ERP-10
 - [ ] Claims: CP-22 → ERP-36 / ERP-37 (liability engine) → PP-22 deduction
-- [ ] Customer money: CP-23 wallet, CP-24 invoices, CP-25 COD, ERP-31, ERP-34
+- [ ] Customer money: CP-23 wallet, CP-24 invoices, CP-25 COD, PA-34 COD collection, ERP-31, ERP-34
 - [ ] Partner money: PP-25 to PP-28; ERP-32 3-way match (₹72), ERP-33 payout batch with maker-checker
 - [ ] PP-20 escalations, PP-21 delivery exceptions, PA-18 pickup failed, PA-30 short / excess, PA-12 SOS
 

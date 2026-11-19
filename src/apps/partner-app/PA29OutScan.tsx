@@ -23,6 +23,7 @@ import { SimulatedTag } from '@shared/ui/SimulatedTag'
 import { Card } from './FieldUi'
 import { HandoverCode } from './HandoverCode'
 import { ManifestPrintButton } from './ManifestPrint'
+import { ToRiders } from './RiderHandover'
 import { useHub } from './useHub'
 
 export default function PA29OutScan() {
@@ -40,6 +41,7 @@ export default function PA29OutScan() {
   return (
     <div className="flex flex-col gap-4 p-4 pb-28">
       <h1 className="font-heading text-[22px] font-bold">{t('pa29.title')}</h1>
+      <ToRiders />
       {!manifest && <p className="rounded-2xl border bg-card p-4 text-muted-foreground">{t('pa29.empty')}</p>}
       {manifest && (
         <>

@@ -14,3 +14,8 @@ export function sendOtp(_to: string): Promise<void> {
 export function verifyLoginOtp(code: string): boolean {
   return code === DEMO_LOGIN_OTP
 }
+
+/** Delivery OTP sent to the consignee's mobile (PA-33). */
+export function verifyDeliveryOtp(code: string): boolean {
+  return code === DEMO_DELIVERY_OTP
+}

@@ -334,7 +334,8 @@
       "originHub": "Hub work",
       "destHub": "Hub work",
       "lastMile": "Delivery"
-    }
+    },
+    "ndr": "Cannot deliver"
   },
   "toolbar": {
     "demo": "Demo",
@@ -1614,5 +1615,82 @@
     "handOver": "Hand over to hub",
     "sealRecorded": "Broken seal recorded",
     "handOverTitle": "Hand over to hub"
+  },
+  "rider": {
+    "toRiders": "To riders",
+    "title": "Hand over to {{name}}",
+    "nothing": "Nothing waiting for this rider."
+  },
+  "pa31": {
+    "title": "Delivery run",
+    "loadCheck": "Load check at the hub",
+    "waitingHub_one": "{{count}} shipment is waiting at the hub. Ask the hub to hand it over.",
+    "waitingHub_other": "{{count}} shipments are waiting at the hub. Ask the hub to hand them over.",
+    "takeLoad": "Take the load",
+    "loaded_one": "Took {{count}} shipment",
+    "loaded_other": "Took {{count}} shipments",
+    "stops_one": "{{count}} stop",
+    "stops_other": "{{count}} stops",
+    "noStops": "No deliveries on your run yet.",
+    "map": "Delivery stops map",
+    "cod": "COD {{amount}}",
+    "onRun": "On the run",
+    "startRun_one": "Start run · {{count}} delivery",
+    "startRun_other": "Start run · {{count}} deliveries",
+    "startHint": "Consignees get their delivery window with your masked number.",
+    "started_one": "Run started · {{count}} shipment Out for Delivery",
+    "started_other": "Run started · {{count}} shipments Out for Delivery"
+  },
+  "pa32": {
+    "map": "Delivery address map",
+    "contact": "Contact",
+    "masked": "Calls go through a masked number",
+    "appointment": "Appointment",
+    "window": "Delivery window",
+    "notBooked": "The consignee has not booked a slot yet (due {{date}})",
+    "dock": "Dock {{dock}}",
+    "outsideSlot": "You are outside the booked slot. Call the consignee before unloading.",
+    "pieces": "Pieces",
+    "cod": "Collect on delivery",
+    "cannot": "Cannot deliver",
+    "startFirst": "Start the run first"
+  },
+  "pa33": {
+    "title": "Deliver",
+    "step": {
+      "scan": "1. Scan pieces delivered",
+      "condition": "2. Piece condition",
+      "receivedBy": "3. Received by",
+      "verify": "4. Verification",
+      "grn": "5. GRN number",
+      "photo": "6. Delivery photo"
+    },
+    "pieceN": "Piece {{n}}",
+    "cond": {
+      "ok": "OK",
+      "short": "Short",
+      "damaged": "Damaged"
+    },
+    "scanOrShort": "Scan it, or mark it short",
+    "piecePhoto": "Photo",
+    "remark": "Remark",
+    "method": {
+      "otp": "OTP",
+      "signature": "e-signature"
+    },
+    "sendOtp": "Send OTP to the consignee",
+    "otp": "Delivery OTP",
+    "otpHint": "Demo OTP: {{otp}}",
+    "grnHint": "If the consignee issues a goods received note",
+    "podPhoto": "Goods at the delivery point",
+    "geo": "{{lat}}°N {{lng}}°E · {{time}}",
+    "codLater": "COD collection (PA-34) comes in Phase 4.",
+    "withException_one": "{{count}} piece short or damaged: Delivered with Exception",
+    "withException_other": "{{count}} pieces short or damaged: Delivered with Exception",
+    "complete": "Complete delivery",
+    "todo": "Check every piece, confirm with OTP or signature and take the photo",
+    "doneToast": "{{lr}} delivered. e-POD sent to the shipper.",
+    "doneException": "{{lr}} delivered with exception. e-POD sent to the shipper.",
+    "done": "Delivered"
   }
 }

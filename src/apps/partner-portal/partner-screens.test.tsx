@@ -52,7 +52,7 @@ describe('SwiftCity takes the hero pickup (PP-12 → PP-14 → PP-13)', () => {
   it('Neha sees the offer, accepts and assigns Ravi with his tempo', async () => {
     renderPortal('PU-NEHA', '/partner/jobs')
     const table = await screen.findByRole('table')
-    const row = (await within(table).findByText('JOB-000781-L1', {}, { timeout: 3000 })).closest('tr')!
+    const row = (await within(table).findByText('JOB-000781-L1', {}, { timeout: 15000 })).closest('tr')!
     expect(row).toHaveTextContent('Pickup')
     expect(row).toHaveTextContent('Sharma Electricals 110020 → NCR CrossDock, Gurugram')
     expect(row).toHaveTextContent('6 pcs / 120 kg')
@@ -99,7 +99,7 @@ describe('PP-11 dashboard', () => {
   it('Operations: the hero pickup is waiting to be accepted; score 86.2 Gold up 1', async () => {
     renderPortal('PU-NEHA', '/partner')
     expect(await screen.findByRole('heading', { name: '1 job to accept' })).toBeInTheDocument()
-    expect(await screen.findByText('JOB-000781-L1', {}, { timeout: 3000 })).toBeInTheDocument()
+    expect(await screen.findByText('JOB-000781-L1', {}, { timeout: 15000 })).toBeInTheDocument()
     expect(screen.getByText('86.2')).toBeInTheDocument()
     expect(screen.getByText(/↑ 1 vs last week/)).toBeInTheDocument()
     expect(screen.queryByText('Next payout')).not.toBeInTheDocument()
@@ -107,7 +107,7 @@ describe('PP-11 dashboard', () => {
 
   it('Finance: next payout ₹1,84,063 on 27-Nov, no job widgets', async () => {
     renderPortal('PU-ANIL', '/partner')
-    expect(await screen.findByText('₹1,84,063.00', {}, { timeout: 3000 })).toBeInTheDocument()
+    expect(await screen.findByText('₹1,84,063.00', {}, { timeout: 15000 })).toBeInTheDocument()
     expect(screen.getByText('On 27-Nov-2026 · deductions ₹300.00')).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: /to accept/ })).not.toBeInTheDocument()
   })
@@ -115,6 +115,6 @@ describe('PP-11 dashboard', () => {
   it('a hub partner sees the hero leg already accepted and assigned through its API', async () => {
     renderPortal('PU-DEEPAK', '/partner/jobs?tab=assigned')
     const table = await screen.findByRole('table')
-    expect(await within(table).findByText('JOB-000781-L2', {}, { timeout: 3000 })).toBeInTheDocument()
+    expect(await within(table).findByText('JOB-000781-L2', {}, { timeout: 15000 })).toBeInTheDocument()
   })
 })

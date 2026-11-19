@@ -19,6 +19,10 @@ import HubExceptions from './HubExceptions'
 import PA20ReceiveManifest from './PA20ReceiveManifest'
 import PA21Trip from './PA21Trip'
 import PA22StartTrip from './PA22StartTrip'
+import PA31DeliveryRun from './PA31DeliveryRun'
+import PA32Stop from './PA32Stop'
+import PA33Deliver from './PA33Deliver'
+import RiderHandover from './RiderHandover'
 import PA25HubHome from './PA25HubHome'
 import PA26InScan from './PA26InScan'
 import PA27Sort from './PA27Sort'
@@ -79,6 +83,15 @@ export default function PartnerAppApp() {
                 <Route path="hub/bags" element={<PA28Bags />} />
                 <Route path="hub/exceptions" element={<HubExceptions />} />
                 <Route path="outbound/:manifestId" element={<PA29OutScan />} />
+                <Route path="outbound/rider/:riderId" element={<RiderHandover />} />
+              </>
+            )}
+            {staff.role === 'rider' && (
+              <>
+                <Route path="run" element={<PA31DeliveryRun />} />
+                <Route path="run/:legId" element={<PA32Stop />} />
+                <Route path="run/:legId/deliver" element={<PA33Deliver />} />
+                <Route path="run/:legId/ndr" element={screen({ screenId: 'PA-35', labelKey: 'pa.ndr', phase: 4 })} />
               </>
             )}
             {staff.role === 'driver' && (

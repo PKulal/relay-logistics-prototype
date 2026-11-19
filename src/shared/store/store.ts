@@ -24,6 +24,8 @@ import type { HandoverGive, HandoverReceive } from './handoverActions'
 import * as hub from './hubActions'
 import type { Dispatch, InScan, ReceiveManifest, SealBag } from './hubActions'
 import * as trip from './tripActions'
+import * as dlv from './deliveryActions'
+import type { CompleteDelivery, GiveToRider, ReceiveLoad } from './deliveryActions'
 import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
@@ -81,6 +83,11 @@ export interface DemoState {
   reportHalt: (x: ReportHalt) => void
   arriveTrip: (tripId: Id, staffId: Id) => void
   handOverAtArrival: (x: ArrivalHandover) => void
+  /** Partner App last mile (hub → rider, PA-31 to PA-33) */
+  giveToRider: (x: GiveToRider) => void
+  receiveLoad: (x: ReceiveLoad) => void
+  startRun: (legIds: Id[], staffId: Id) => void
+  completeDelivery: (x: CompleteDelivery) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
   /** Restore the seed data in every app (other tabs follow via sync). */
   resetDemo: () => void
@@ -150,6 +157,10 @@ export const useDemoStore = create<DemoState>()(
       reportHalt: (x) => set((s) => ({ data: trip.reportHalt(s.data, x, s.demoNow) })),
       arriveTrip: (tripId, staffId) => set((s) => ({ data: trip.arriveTrip(s.data, tripId, staffId, s.demoNow) })),
       handOverAtArrival: (x) => set((s) => ({ data: trip.handOverAtArrival(s.data, x, s.demoNow) })),
+      giveToRider: (x) => set((s) => ({ data: dlv.giveToRider(s.data, x, s.demoNow) })),
+      receiveLoad: (x) => set((s) => ({ data: dlv.receiveLoad(s.data, x, s.demoNow) })),
+      startRun: (legIds, staffId) => set((s) => ({ data: dlv.startRun(s.data, legIds, staffId, s.demoNow) })),
+      completeDelivery: (x) => set((s) => ({ data: dlv.completeDelivery(s.data, x, s.demoNow) })),
 
 
       setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),

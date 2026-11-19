@@ -53,6 +53,8 @@ export default defineConfig({
     setupFiles: ['./src/test-setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
     // Several suites build the full seed (~0.5 s alone, slower with 16 files in parallel)
-    testTimeout: 15000,
+    // End-to-end flow tests replay the whole hero journey (and days of background movement) in setup
+    testTimeout: 60000,
+    hookTimeout: 60000,
   },
 })

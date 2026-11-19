@@ -73,6 +73,8 @@ export default function TaskScreen({ flow }: { flow?: 'pickup' }) {
   if (flow === 'pickup') return <Navigate to="/app/tasks" replace />
 
   if (leg.type === 'firstMile' && (leg.status === 'inProgress' || leg.status === 'handedOver')) return <PA19HandOver leg={leg} />
+  // Deliveries: the run (load check, stops) or the stop itself once on the run
+  if (leg.type === 'lastMile') return <Navigate to={leg.status === 'inProgress' ? `/app/run/${leg.id}` : '/app/run'} replace />
   if (receive && leg.type === 'lineHaul') {
     // A driver takes a whole manifest: the one holding this shipment's bags
     const prev = prevLegOf(data, leg)!

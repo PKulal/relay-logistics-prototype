@@ -56,7 +56,7 @@ export function nextLegOf(data: DemoData, leg: Leg): Leg | undefined {
 
 /** A hub job whose goods are on their way in: the staff member's job is to receive them (PA-20). */
 export function isReceive(data: DemoData, leg: Leg): boolean {
-  return (leg.type === 'originHub' || leg.type === 'destHub' || leg.type === 'lineHaul') && leg.status === 'assigned' && underWay(prevLegOf(data, leg))
+  return leg.type !== 'firstMile' && leg.status === 'assigned' && underWay(prevLegOf(data, leg))
 }
 
 /** The leg before is moving the goods: in progress, or a truck still going after a halt or breakdown was flagged. */
@@ -75,7 +75,8 @@ function kindOf(data: DemoData, leg: Leg): TaskKind {
     case 'destHub':
       return isReceive(data, leg) ? 'receive' : 'hub'
     case 'lastMile':
-      return 'delivery'
+      // The rider first takes the load from the hub (PA-31 load check)
+      return isReceive(data, leg) ? 'receive' : 'delivery'
   }
 }
 
@@ -92,7 +93,7 @@ function placeOf(data: DemoData, leg: Leg, s: Shipment): string {
       return `${data.hubs[origin.hubId!]?.name ?? origin.city} → ${data.hubs[dest.hubId!]?.name ?? dest.city}`
     case 'receive': {
       const prev = prevLegOf(data, leg)!
-      return `${data.partners[prev.partnerId].shortName} → ${data.hubs[(leg.type === 'destHub' ? dest : origin).hubId!]?.name ?? ''}`
+      return `${data.partners[prev.partnerId].shortName} → ${data.hubs[(leg.type === 'destHub' || prev.type === 'destHub' ? dest : origin).hubId!]?.name ?? ''}`
     }
     case 'hub':
       return s.legIds.indexOf(leg.id) <= 1 ? `${origin.city} → ${dest.city}` : `${dest.city}`
@@ -115,14 +116,18 @@ export function tasksFor(data: DemoData, staffId: Id, now: IsoDateTime): Task[] 
   // record was written, which for seeded data is the seed time, not the work time)
   const lastAt = new Map<Id, IsoDateTime>()
   const ids = new Set(mine.map((l) => l.id))
+  // Legs whose goods the staff member already holds (taken at a hand-over)
+  const holding = new Set<Id>()
   for (const e of Object.values(data.events)) {
     if (e.legId && ids.has(e.legId) && (!lastAt.has(e.legId) || e.at > lastAt.get(e.legId)!)) lastAt.set(e.legId, e.at)
+    if (e.type === 'handoverReceived' && e.legId && ids.has(e.legId)) holding.add(e.legId)
   }
   const tasks: Task[] = []
   for (const leg of mine) {
     const state = stateOf(leg)
     const day = istDate(leg.window.from)
-    if (state === 'todo' && day > today && leg.type !== 'lineHaul') continue // future work shows on its day
+    // Future work shows on its day; trips, loads waiting to be taken and goods already held show now
+    if (state === 'todo' && day > today && leg.type !== 'lineHaul' && !isReceive(data, leg) && !holding.has(leg.id)) continue
     if ((state === 'done' || state === 'failed') && istDate(lastAt.get(leg.id) ?? leg.updatedAt) !== today) continue
     const s = data.shipments[leg.shipmentId]
     tasks.push({

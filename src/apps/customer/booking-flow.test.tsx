@@ -52,7 +52,7 @@ describe('CP-13 → CP-14 booking flow', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /Confirm booking/ }))
 
-    expect(await screen.findByTestId('lr', {}, { timeout: 3000 })).toHaveTextContent('LGS-DEL-000781')
+    expect(await screen.findByTestId('lr', {}, { timeout: 15000 })).toHaveTextContent('LGS-DEL-000781')
     expect(screen.getByRole('heading', { name: '6 labels' })).toBeInTheDocument()
     expect(screen.getAllByRole('article')).toHaveLength(6)
     expect(screen.getByText('EWB 3410 2256 7781')).toBeInTheDocument()
