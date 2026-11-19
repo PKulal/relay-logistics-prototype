@@ -294,9 +294,9 @@ function addTrialJob(data: DemoData, partnerId: Id, job: TrialJob, at: IsoDateTi
 }
 
 /** A line-haul trip of a partner in trial arrives: it is scored as a trial job. */
-export function recordTripForTrial(data: DemoData, trip: Trip, at: IsoDateTime): DemoData {
+export function recordTripForTrial(data: DemoData, trip: Trip, at: IsoDateTime, simulated?: boolean): DemoData {
   const partnerId = data.vehicles[trip.vehicleId]?.partnerId
-  return partnerId ? addTrialJob(data, partnerId, tripTrialJob(trip, at), at) : data
+  return partnerId ? addTrialJob(data, partnerId, { ...tripTrialJob(trip, at), ...(simulated && { simulated }) }, at) : data
 }
 
 /** Demo tooling: a scored trial job for a partner with no live work in the demo data. */

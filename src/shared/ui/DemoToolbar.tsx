@@ -3,17 +3,18 @@
  * Collapsed to a small pill (bottom centre, clear of the sidebar and toasts) by default. Deliberately styled apart from the apps
  * (dark with amber) so reviewers can tell demo controls from product UI.
  */
-import { CalendarClock, Clock, FlaskConical, Gauge, Repeat, RotateCcw, TriangleAlert, UserCheck, WifiOff, X, Tag } from 'lucide-react'
+import { CalendarClock, Clock, FlaskConical, Gauge, Repeat, RotateCcw, TriangleAlert, Truck, UserCheck, WifiOff, X, Tag } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
 import { toast } from 'sonner'
 import { cn } from '@/shared/lib/utils'
 import { APPS } from '@shared/apps'
-import { useDemoNow, useFlags } from '@shared/hooks/useDemo'
+import { useData, useDemoNow, useFlags } from '@shared/hooks/useDemo'
 import { formatDayShort, formatTime } from '@shared/lib/format'
 import { useDemoStore } from '@shared/store'
 import { useSession } from '@shared/store/session'
+import { DECCAN_TRIAL_TRIP } from '@shared/store/tripActions'
 import { ConfirmDialog } from './ConfirmDialog'
 import { Switch } from './switch'
 import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip'
@@ -29,6 +30,17 @@ export function DemoToolbar() {
   const { pathname } = useLocation()
   const currentApp = APPS.find((a) => pathname === a.path || pathname.startsWith(`${a.path}/`))
   const clock = `${formatDayShort(demoNow)} ${formatTime(demoNow)}`
+  // Deccan's monitored trial: 2 of 3 trips in the seed; the third is the hero trip
+  const deccanTrial = useData((d) => (d.partners['P-DECCAN']?.status === 'trial' && d.partners['P-DECCAN'].trial ? d.partners['P-DECCAN'].trial : undefined))
+  const canCompleteTrip = !!deccanTrial && deccanTrial.tripsDone < deccanTrial.tripsRequired
+
+  const completeTrip = () => {
+    useDemoStore.getState().completeTrialTrip(DECCAN_TRIAL_TRIP)
+    const tr = useDemoStore.getState().data.partners['P-DECCAN'].trial!
+    toast.success(t('toolbar.tripDone', { trip: DECCAN_TRIAL_TRIP, done: tr.tripsDone, required: tr.tripsRequired, score: tr.score }), {
+      description: flags.manualApprovals ? t('toolbar.tripDoneManual') : t('toolbar.tripDoneAuto'),
+    })
+  }
 
   const advance = (minutes: number) => {
     const before = useDemoStore.getState().data.shipments
@@ -124,6 +136,11 @@ export function DemoToolbar() {
                   {t('toolbar.runScoring')}
                 </ToolButton>
               </ComingLater>
+              <div className="col-span-2">
+                <ToolButton icon={Truck} disabled={!canCompleteTrip} onClick={completeTrip}>
+                  {t('toolbar.completeTrip')}
+                </ToolButton>
+              </div>
             </div>
           </div>
 

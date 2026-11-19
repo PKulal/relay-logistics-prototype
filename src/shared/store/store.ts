@@ -163,6 +163,8 @@ export interface DemoState {
   simulateTrialJob: (partnerId: Id) => void
   decideTrial: (partnerId: Id, d: 'live' | 'extend' | 'decline', reasons: string, by: Id) => void
   autoDecideCommercial: (id: Id, kind: CommercialDecisionKind) => void
+  /** Demo toolbar: Deccan's third trial trip (the hero trip) */
+  completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
   /** Restore the seed data in every app (other tabs follow via sync). */
   resetDemo: () => void
@@ -306,6 +308,7 @@ export const useDemoStore = create<DemoState>()(
       simulateTrialJob: (partnerId) => set((s) => ({ data: pag.simulateTrialJob(s.data, partnerId, s.demoNow) })),
       decideTrial: (partnerId, d, reasons, by) => set((s) => ({ data: pag.decideTrial(s.data, partnerId, d, reasons, by, s.demoNow) })),
       autoDecideCommercial: (id, kind) => set((s) => ({ data: pag.autoDecideCommercial(s.data, id, kind, s.demoNow) })),
+      completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),
 
 
       setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),

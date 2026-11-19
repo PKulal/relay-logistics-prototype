@@ -42,7 +42,7 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 - [x] Partner: PP-04 to PP-10; ERP-11 to ERP-14 (applications, KYC desk, commercials, trial)
   - [x] Part 4a: PP-04 registration (/partner/apply), PP-05 status and network fit, PP-06 documents and KYC (§4.1 checklist, GSTIN / PAN / penny-drop / Vahan / Sarathi / DigiLocker, OCR flags), PP-07 outcome and hub audit; ERP-11 applications, ERP-12 KYC desk and hub audit; automatic partner decisions under "Manual onboarding approvals"
   - [x] Part 4b: PP-08 rate card and agreement (counter-proposals, AI margin check, Aadhaar OTP / DSC e-sign, self-billing consent), PP-09 go-live setup (API sandbox for A / E, Partner App staff with photo and ID, training), PP-10 tracker and trial; ERP-13 commercials with Pricing approval below target, ERP-14 trial and go-live at Bronze. Arriving line-haul trips score as trial jobs (the hero trip TRP-2026-0931 is Deccan's third)
-- [ ] Deccan Roadlines mid-trial; “complete third trip” demo action → go-live at Bronze
+- [x] Deccan Roadlines mid-trial; “complete third trip” demo action → go-live at Bronze (Demo toolbar → Scenarios; the hero trip TRP-2026-0931 arrives for real if it is on the road, otherwise it is scored for the trial only)
 - [ ] Hindi for the web portals: fill the missing Hindi strings in the Customer Portal, Partner Portal and ERP screens built so far (client §14: English + Hindi in every app); new screens ship with Hindi
 
 ## Phase 4 — Exceptions and money

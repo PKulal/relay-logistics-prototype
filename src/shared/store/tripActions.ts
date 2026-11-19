@@ -135,6 +135,23 @@ export function arriveTrip(data: DemoData, tripId: Id, staffId: Id, at: IsoDateT
   return recordTripForTrial(applyEvents({ ...data, trips: { ...data.trips, [trip.id]: arrived } }, events, at), arrived, at)
 }
 
+/** Deccan's third trial trip is the hero trip (seed-data.md §6, PP-10 prototype note). */
+export const DECCAN_TRIAL_TRIP: Id = 'TRP-2026-0931'
+
+/**
+ * Demo toolbar "Complete Deccan's third trial trip": a trip on the road arrives
+ * for real (driver taps Arrived); a trip not yet started is only scored for the
+ * trial, as an on-time arrival at its ETA (SIMULATED, marked as a demo job), so
+ * the hero shipment's own journey is untouched.
+ */
+export function completeTrialTrip(data: DemoData, tripId: Id, at: IsoDateTime): DemoData {
+  const trip = data.trips[tripId]
+  const partner = trip && data.partners[data.vehicles[trip.vehicleId]?.partnerId]
+  if (!trip || partner?.status !== 'trial' || trip.status === 'arrived') return data
+  if (trip.status === 'inTransit') return arriveTrip(data, tripId, trip.driverId, at)
+  return recordTripForTrial(data, { ...trip, arrivedAt: trip.eta }, at, true)
+}
+
 export interface ArrivalHandover {
   tripId: Id
   staffId: Id

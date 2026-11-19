@@ -56,4 +56,15 @@ describe('DemoToolbar', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Reset demo' }))
     expect(useDemoStore.getState().demoNow).toBe('2026-11-23T10:00:00+05:30')
   })
+
+  it("completes Deccan's third trial trip once (the hero trip TRP-2026-0931)", () => {
+    renderToolbar()
+    fireEvent.click(screen.getByRole('button', { name: 'Open demo controls' }))
+    fireEvent.click(screen.getByRole('button', { name: "Complete Deccan's third trial trip" }))
+    expect(useDemoStore.getState().data.partners['P-DECCAN'].trial).toMatchObject({ tripsDone: 3, score: 89 })
+    expect(useDemoStore.getState().data.partners['P-DECCAN'].trial!.jobs!.at(-1)).toMatchObject({ ref: 'TRP-2026-0931', simulated: true, onTime: true })
+    // The hero trip itself is untouched
+    expect(useDemoStore.getState().data.trips['TRP-2026-0931'].status).toBe('planned')
+    expect(screen.getByRole('button', { name: "Complete Deccan's third trial trip" })).toBeDisabled()
+  })
 })

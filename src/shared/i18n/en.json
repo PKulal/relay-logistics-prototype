@@ -364,7 +364,11 @@
     "resetBody": "All four apps go back to the seed data and the clock returns to Mon 23-Nov 10:00. Bookings and actions made in the demo are lost. Logins stay.",
     "resetConfirm": "Reset demo",
     "resetDone": "Demo data reset",
-    "manualApprovals": "Manual onboarding approvals"
+    "manualApprovals": "Manual onboarding approvals",
+    "completeTrip": "Complete Deccan's third trial trip",
+    "tripDone": "{{trip}} counted: Deccan trial {{done}} of {{required}}, score {{score}}",
+    "tripDoneAuto": "Deccan Roadlines goes live at Bronze in a few seconds (ERP-14).",
+    "tripDoneManual": "Decide go-live in ERP → Partner Management → Trials and go-live."
   },
   "service": {
     "parcel": "Parcel",

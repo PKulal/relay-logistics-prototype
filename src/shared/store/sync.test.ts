@@ -88,6 +88,7 @@ function makeTab() {
     simulateTrialJob: () => {},
     decideTrial: () => {},
     autoDecideCommercial: () => {},
+    completeTrialTrip: () => {},
     createNegotiatedCard: () => '',
     editRateCard: () => {},
     submitRateCard: () => {},
@@ -114,13 +115,12 @@ describe('cross-tab sync', () => {
     const stopA = startSync(tabA)
     const stopB = startSync(tabB)
 
+    // BroadcastChannel delivery is async and slower under a loaded test run: wait for it, not a fixed delay
     tabA.getState().setFlag('showSimulationLabels', true)
-    await flush()
-    expect(tabB.getState().flags.showSimulationLabels).toBe(true)
+    await vi.waitFor(() => expect(tabB.getState().flags.showSimulationLabels).toBe(true))
 
     tabB.getState().advanceTime(60)
-    await flush()
-    expect(tabA.getState().demoNow).toBe('+60')
+    await vi.waitFor(() => expect(tabA.getState().demoNow).toBe('+60'))
 
     stopA()
     stopB()

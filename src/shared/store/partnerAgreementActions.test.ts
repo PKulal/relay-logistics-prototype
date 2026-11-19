@@ -16,6 +16,7 @@ import {
   signPartnerAgreement,
   simulateTrialJob,
 } from './partnerAgreementActions'
+import { completeTrialTrip } from './tripActions'
 import { applyAsPartner, autoDecidePartner, runPartnerCheck, submitPartnerKyc, uploadPartnerDoc, type PartnerApplyInput } from './partnerOnboardingActions'
 
 const now = DEMO_START
@@ -84,6 +85,16 @@ describe('Deccan: the hero trip is the third trial trip → go live at Bronze (P
     d = autoDecideCommercial(d, 'P-DECCAN', 'trial', now)
     expect(d.partners['P-DECCAN']).toMatchObject({ status: 'live', tier: 'bronze', score: 89 })
     expect(d.applications[DECCAN].status).toBe('live')
+  })
+
+  it('demo action: a trip on the road arrives for real and counts; a second press does nothing', () => {
+    let d = buildSeed()
+    d = { ...d, trips: { ...d.trips, 'TRP-2026-0931': { ...d.trips['TRP-2026-0931'], status: 'inTransit', startedAt: '2026-11-23T23:05:00+05:30' } } }
+    d = completeTrialTrip(d, 'TRP-2026-0931', '2026-11-26T04:30:00+05:30')
+    expect(d.trips['TRP-2026-0931']).toMatchObject({ status: 'arrived', arrivedAt: '2026-11-26T04:30:00+05:30' })
+    expect(d.partners['P-DECCAN'].trial!.jobs!.at(-1)).toMatchObject({ ref: 'TRP-2026-0931', onTime: true, score: 100 })
+    expect(d.partners['P-DECCAN'].trial!.jobs!.at(-1)!.simulated).toBeUndefined()
+    expect(completeTrialTrip(d, 'TRP-2026-0931', now)).toBe(d)
   })
 
   it('go live needs a complete trial at or above the pass mark; extend raises the requirement', () => {
