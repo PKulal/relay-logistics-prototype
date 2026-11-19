@@ -18,6 +18,9 @@ import CP20WeightDiscrepancy from './CP20WeightDiscrepancy'
 import CP21Ndr from './CP21Ndr'
 import CP22Claims, { CP22ClaimDetail, CP22RaiseClaim } from './CP22Claims'
 import CP17Shipment from './CP17Shipment'
+import CP23Wallet from './CP23Wallet'
+import CP24Invoices from './CP24Invoices'
+import CP25Cod from './CP25Cod'
 import CP05Qualification from './onboarding/CP05Qualification'
 import CP06Kyc from './onboarding/CP06Kyc'
 import CP07Credit from './onboarding/CP07Credit'
@@ -29,7 +32,7 @@ import CP10Tracker from './onboarding/CP10Tracker'
 import { customerNav, type CustomerCtx } from './nav'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'CP-11': CP11Dashboard, 'CP-12': CP12GetQuote, 'CP-13': CP13BookShipment, 'CP-16': CP16Shipments, 'CP-19': CP19Exceptions, 'CP-22': CP22Claims }
+const SCREENS = { 'CP-11': CP11Dashboard, 'CP-12': CP12GetQuote, 'CP-13': CP13BookShipment, 'CP-16': CP16Shipments, 'CP-19': CP19Exceptions, 'CP-22': CP22Claims, 'CP-23': CP23Wallet, 'CP-24': CP24Invoices, 'CP-25': CP25Cod }
 
 /** Customer Portal (/customer) — B2B shippers. Spec: docs/01-customer-portal.md */
 export default function CustomerApp() {

@@ -22,6 +22,7 @@ import {
   type DateRange,
   type TileKey,
 } from '@shared/engines/customerDashboard'
+import { codSummary } from '@shared/engines/receivables'
 import { useData, useDemoNow } from '@shared/hooks/useDemo'
 import { formatDate, formatINR } from '@shared/lib/format'
 import { useSimulatedLoading } from '@shared/sim/latency'
@@ -69,6 +70,7 @@ export default function CP11Dashboard() {
   // Role rules (CP-11): Dispatch → status, SLA, exceptions · Finance → spend, COD, invoices · Admin → all
   const ops = user.role !== 'finance'
   const money = user.role !== 'dispatch'
+  const cod = codSummary(data, customer.id, demoNow)
   const canBook = user.role !== 'finance'
   const slaDelta = view.sla.pct !== null && view.slaBefore.pct !== null ? view.sla.pct - view.slaBefore.pct : null
 
@@ -280,11 +282,11 @@ export default function CP11Dashboard() {
         )}
 
         {/* COD due */}
-        {money && customer.cod && (
+        {money && cod.nextRemittance && (
           <KpiTile
             label={t('cp11.codDue')}
-            value={formatINR(customer.cod.pending)}
-            hint={t('cp11.codNext', { date: formatDate(customer.cod.nextRemittance) })}
+            value={formatINR(cod.pending)}
+            hint={t('cp11.codNext', { date: formatDate(cod.nextRemittance) })}
             loading={loading}
             onClick={() => navigate('/customer/billing/cod')}
             className="p-5"

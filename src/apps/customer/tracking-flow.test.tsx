@@ -49,10 +49,10 @@ function open(path: string) {
 describe('Customer tracking (CP-16 to CP-18)', () => {
   beforeEach(bookHero)
 
-  it('CP-16: 41 shipments; search by invoice number finds the hero', () => {
+  it('CP-16: 42 shipments; search by invoice number finds the hero', () => {
     open('/customer/shipments')
     expect(screen.getByRole('heading', { name: 'Shipments' })).toBeInTheDocument()
-    expect(screen.getByText('41 shipments')).toBeInTheDocument()
+    expect(screen.getByText('42 shipments')).toBeInTheDocument()
     fireEvent.change(screen.getByRole('textbox', { name: 'Search shipments' }), { target: { value: 'SE/25-26/1187' } })
     const rows = screen.getAllByRole('row').slice(1)
     expect(rows).toHaveLength(1)

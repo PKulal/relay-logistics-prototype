@@ -58,7 +58,7 @@ describe('Weight revision: CP-19 → CP-20 → ERP-31', () => {
 
     // ERP-31: Lakshmi reverses with a note (confirm step)
     useSession.getState().login('erp', 'LS-LAKSHMI')
-    app('/erp/finance/invoicing')
+    app('/erp/finance/invoicing?tab=weight')
     expect(screen.getByTestId('customer-dispute')).toHaveTextContent('SKU weight is frozen')
     fireEvent.click(screen.getByRole('radio', { name: /Accept the customer's booked weight/ }))
     expect(screen.getByRole('button', { name: 'Save decision' })).toBeDisabled()

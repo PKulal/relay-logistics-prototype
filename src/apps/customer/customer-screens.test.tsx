@@ -87,7 +87,7 @@ describe('CP-11 Dashboard', () => {
     expect(screen.getByRole('region', { name: 'Spend this month' })).toHaveTextContent('₹1,02,400.00')
     expect(screen.getByRole('region', { name: 'Spend this month' })).toHaveTextContent('Credit used ₹3,44,200.00 of ₹5,00,000.00')
     expect(screen.getByText('₹38,400.00')).toBeInTheDocument()
-    expect(screen.getByText('Next remittance 25-Nov-2026')).toBeInTheDocument()
+    expect(screen.getByText('Next remittance 24-Nov-2026')).toBeInTheDocument()
   })
 
   it('Dispatch sees operations widgets but not money', async () => {

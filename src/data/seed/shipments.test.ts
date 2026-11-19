@@ -120,12 +120,12 @@ describe('the hero shipment can be booked live', () => {
 
 describe('background shipments', () => {
   it('has the key shipments plus ~120 generated ones', () => {
-    expect(shipments.length).toBe(125)
+    expect(shipments.length).toBe(126)
   })
 
   it('gives Sharma ~40 and Kaveri ~8 shipments (CP spec §11.2)', () => {
     const count = (c: string) => shipments.filter((s) => s.customerId === c).length
-    expect(count('C-SHARMA')).toBe(40)
+    expect(count('C-SHARMA')).toBe(41)
     expect(count('C-KAVERI')).toBe(8)
   })
 

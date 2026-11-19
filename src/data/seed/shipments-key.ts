@@ -214,6 +214,27 @@ export function addKeyShipments(seed: DemoData, until: IsoDateTime): DemoData {
   // Doesn't move on its own: the demo reassigns this pickup to QuickLink by hand (ERP-08).
   data = runJourney(data, 'LGS-DEL-000790', { until, assignees: { 1: 'FS-RAVI' }, continues: false })
 
+  // ── LGS-DEL-000786: COD ₹4,200 (PA-34 sample), out for delivery with Manju R. in Hubballi this morning. INVENTED.
+  book(
+    sharma({
+      lr: 'LGS-DEL-000786',
+      bookedByUserId: 'CU-RAMESH',
+      consigneeId: 'CN-SKE',
+      serviceKind: 'parcel',
+      service: 'standard',
+      paymentMode: 'cod',
+      codAmount: 4200,
+      addOns: noAddOns,
+      invoice: { no: 'SE/25-26/1170', date: '2026-11-18', value: 4200 },
+      hsn: '8536',
+      goodsDescription: 'MCB distribution boards',
+      pieces: [{ l: 40, b: 30, h: 25, weight: 8 }],
+      pickupSlot: { date: '2026-11-18', from: '14:00', to: '16:00' },
+    }),
+    '2026-11-18T10:30:00+05:30',
+  )
+  data = runJourney(data, 'LGS-DEL-000786', { until, assignees: { 5: 'FS-MANJU' }, continues: false })
+
   return data
 }
 

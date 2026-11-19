@@ -1191,7 +1191,8 @@
     "departs": "departs {{time}}",
     "inbound": "Expected inbound",
     "atHub": "At the hub now",
-    "cod": "COD in hand"
+    "cod": "COD in hand",
+    "codDeposit": "Deposit within 24 hours"
   },
   "pa06": {
     "title": "Tasks",
@@ -1695,7 +1696,6 @@
     "grnHint": "If the consignee issues a goods received note",
     "podPhoto": "Goods at the delivery point",
     "geo": "{{lat}}°N {{lng}}°E · {{time}}",
-    "codLater": "COD collection (PA-34) comes in Phase 4.",
     "withException_one": "{{count}} piece short or damaged: Delivered with Exception",
     "withException_other": "{{count}} pieces short or damaged: Delivered with Exception",
     "complete": "Complete delivery",
@@ -3492,10 +3492,10 @@
   },
   "erp31": {
     "title": "Customer invoicing and collections",
-    "subtitle_one": "{{count}} weight dispute to decide",
-    "subtitle_other": "{{count}} weight disputes to decide",
     "tab": {
-      "weight": "Weight disputes"
+      "weight": "Weight disputes",
+      "runs": "Invoice runs",
+      "collections": "Collections"
     },
     "empty": "No weight disputes.",
     "billing": {
@@ -3521,6 +3521,61 @@
     "decided": {
       "upheld": "Upheld by {{name}}, {{at}}:",
       "reversed": "Booked weight accepted by {{name}}, {{at}}:"
+    },
+    "lead": "Invoice runs, collections and weight disputes",
+    "run": {
+      "period": "Billing period",
+      "customers_one": "{{count}} monthly customer with delivered, unbilled shipments",
+      "customers_other": "{{count}} monthly customers with delivered, unbilled shipments",
+      "empty": "Nothing to invoice for this period.",
+      "include": "Include",
+      "includeX": "Include {{name}}",
+      "customer": "Customer",
+      "shipments": "Shipments",
+      "taxable": "Taxable",
+      "gst": "GST",
+      "total": "Total",
+      "pods": "e-PODs",
+      "missing_one": "{{count}} missing",
+      "missing_other": "{{count}} missing",
+      "allPods": "All attached",
+      "einvoice": "E-invoice",
+      "irn": "IRN on generate",
+      "selected_one": "{{count}} customer · {{amount}}",
+      "selected_other": "{{count}} customers · {{amount}}",
+      "generate": "Generate invoices",
+      "confirm_one": "Generate {{count}} invoice?",
+      "confirm_other": "Generate {{count}} invoices?",
+      "confirmBody": "{{amount}} in total. Each invoice gets an IRN and appears in the Customer Portal with its e-PODs.",
+      "done_one": "{{count}} invoice generated: {{first}}",
+      "done_other": "{{count}} invoices generated: {{first}} to {{last}}",
+      "recent": "Recent invoices"
+    },
+    "col": {
+      "priority": "Collections priority (AI)",
+      "none": "Nothing outstanding",
+      "overdueDays_one": "{{count}} day overdue",
+      "overdueDays_other": "{{count}} days overdue",
+      "dueIn_zero": "Due today",
+      "dueIn_one": "Due in {{count}} day",
+      "dueIn_other": "Due in {{count}} days",
+      "lastReminder": "last reminder {{at}}",
+      "noReminder": "no reminder sent",
+      "reason": {
+        "overdue": "Overdue",
+        "dueSoon": "Due within 7 days",
+        "noReminder": "Not chased yet",
+        "nearLimit": "Near credit limit"
+      },
+      "remindEmail": "Email reminder",
+      "remindWhatsapp": "WhatsApp reminder",
+      "ch": {
+        "email": "email",
+        "whatsapp": "WhatsApp"
+      },
+      "sent": "Reminder sent to {{name}} by {{channel}}",
+      "ageing": "Receivables ageing",
+      "days": "{{range}} days"
     }
   },
   "ndr": {
@@ -4006,6 +4061,263 @@
       "accept": "Accepted; the deduction is scheduled",
       "contest": "Sent to the Logisco claims desk",
       "insurance": "Insurance details sent; deduction held"
+    }
+  },
+  "pay": {
+    "title": "Payment gateway",
+    "body": "Paying for {{purpose}}. The money goes into Logisco's nodal account.",
+    "method": "Payment method",
+    "m": {
+      "upi": "UPI",
+      "netBanking": "Net banking",
+      "card": "Card"
+    },
+    "nodal": "Demo: choose the outcome. No real payment is made.",
+    "success": "Pay {{amount}}",
+    "failure": "Simulate failure",
+    "failed": "Payment failed; nothing was charged. Try again."
+  },
+  "cp23": {
+    "title": "Wallet",
+    "subtitle": "Prepaid balance for bookings. Every booking, weight revision and RTO charge is debited here.",
+    "balance": "Current balance",
+    "recharge": "Recharge",
+    "amount": "Recharge amount (₹)",
+    "min": "At least {{min}}",
+    "rechargeBtn": "Recharge {{amount}}",
+    "purpose": "a wallet recharge",
+    "done": "{{amount}} added to the wallet · {{ref}}",
+    "txns": "Transactions",
+    "empty": "No transactions yet",
+    "col": {
+      "at": "Date and time",
+      "type": "Type",
+      "ref": "Reference",
+      "amount": "Amount",
+      "balance": "Balance after"
+    },
+    "kind": {
+      "recharge": "Recharge",
+      "bookingDebit": "Booking debit",
+      "weightRevision": "Weight revision",
+      "rtoCharge": "RTO charge",
+      "refund": "Refund",
+      "claimCredit": "Claim credit"
+    }
+  },
+  "cp24": {
+    "title": "Invoices",
+    "subtitle": "GST invoices with e-PODs, credit notes and your account ledger. Pay online in one step.",
+    "credit": "Credit",
+    "limitUsedAvailable": "Credit limit / used / available",
+    "terms": "Payment terms",
+    "termsDays_one": "{{count}} day",
+    "termsDays_other": "{{count}} days",
+    "overdue": "Overdue amount",
+    "overdueBanner": "{{amount}} is overdue. Please pay now to keep your credit line open.",
+    "tab": {
+      "invoices": "Invoices",
+      "creditNotes": "Credit notes",
+      "ledger": "Ledger"
+    },
+    "empty": "No invoices yet",
+    "select": "Select",
+    "selectInvoice": "Select {{id}}",
+    "col": {
+      "no": "Invoice no.",
+      "date": "Date / period",
+      "shipments": "Shipments",
+      "amounts": "Taxable / GST / total",
+      "due": "Due date",
+      "status": "Status",
+      "irn": "E-invoice"
+    },
+    "status": {
+      "unpaid": "Unpaid",
+      "partlyPaid": "Partly paid",
+      "paid": "Paid",
+      "overdue": "Overdue"
+    },
+    "irnYes": "IRN generated",
+    "selected_one": "{{count}} invoice · {{amount}}",
+    "selected_other": "{{count}} invoices · {{amount}}",
+    "payNow": "Pay now",
+    "paid": "{{amount}} paid · {{ref}}",
+    "cn": {
+      "no": "Credit note",
+      "date": "Date",
+      "reason": "Reason",
+      "amount": "Amount",
+      "claim": "Claim"
+    },
+    "noCreditNotes": "No credit notes",
+    "lg": {
+      "date": "Date",
+      "type": "Document",
+      "no": "Number",
+      "debit": "Debit",
+      "credit": "Credit",
+      "balance": "Balance",
+      "kind": {
+        "invoice": "Invoice",
+        "payment": "Payment",
+        "creditNote": "Credit note"
+      }
+    },
+    "noLedger": "No entries",
+    "back": "All invoices",
+    "detailSub": "{{period}} · issued {{date}} · due {{due}}",
+    "linesExcel": "Line items (Excel)",
+    "taxableGst": "Taxable + GST",
+    "total": "Total",
+    "irn": "IRN",
+    "paidOn": "Paid",
+    "line": {
+      "lr": "LR",
+      "date": "Booked",
+      "lane": "Lane",
+      "weight": "Chargeable weight",
+      "taxable": "Charges",
+      "gst": "GST",
+      "total": "Total",
+      "pod": "e-POD",
+      "podLink": "View e-POD"
+    },
+    "noLines_one": "This invoice was issued before the demo data starts; its {{count}} line is in the archived PDF.",
+    "noLines_other": "This invoice was issued before the demo data starts; its {{count}} lines are in the archived PDF."
+  },
+  "cp25": {
+    "title": "COD remittance",
+    "subtitle": "Cash collected on delivery and paid back to you. Partners deposit within 24 hours; Logisco remits at T+2.",
+    "report": "Remittance report (Excel)",
+    "pending": "COD pending remittance",
+    "next": "Next remittance",
+    "rule": "T+2 from delivery",
+    "remitted": "Remitted this month",
+    "empty": "No remittances yet",
+    "col": {
+      "id": "Remittance",
+      "date": "Date",
+      "shipments": "Shipments",
+      "amounts": "Gross / deductions / net",
+      "utr": "UTR",
+      "status": "Status",
+      "lr": "LR",
+      "delivered": "Delivered on",
+      "cod": "COD amount",
+      "remittance": "Remittance",
+      "remitDate": "Remitted / due"
+    },
+    "status": {
+      "pendingApproval": "Scheduled",
+      "remitted": "Remitted",
+      "onHold": "On hold"
+    },
+    "rec": {
+      "pending": "Pending",
+      "collected": "Collected",
+      "deposited": "Deposited",
+      "remitted": "Remitted"
+    },
+    "shortageRule": "A cash shortage is recovered from the delivery partner, not from you.",
+    "back": "All remittances",
+    "detailSub": "{{date}} · net {{net}} · UTR {{utr}}"
+  },
+  "pa34": {
+    "title": "COD collection",
+    "due": "Collect COD",
+    "mode": "Payment mode",
+    "m": {
+      "cash": "Cash",
+      "upi": "UPI"
+    },
+    "qr": "UPI QR code",
+    "qrHint": "Consignee scans and pays",
+    "checkUpi": "Check payment",
+    "upiRef": "Paid · UPI ref {{ref}}",
+    "received": "Amount received (₹)",
+    "mustEqual": "Must be exactly {{amount}}",
+    "confirm": "Confirm collected",
+    "partial": "No partial COD. If the money isn't ready, use Cannot deliver → COD amount not ready.",
+    "collected": "COD {{amount}} collected",
+    "cashDone": "Cash · receipt sent to the consignee by SMS",
+    "upiDone": "UPI {{ref}} · receipt sent by SMS",
+    "undo": "Change",
+    "todo": "Check every piece, confirm with OTP or signature, take the photo and collect the COD"
+  },
+  "pa36": {
+    "title": "COD in hand",
+    "none": "No cash in hand.",
+    "inHand_one": "Cash in hand · {{count}} LR",
+    "inHand_other": "Cash in hand · {{count}} LRs",
+    "since": "Collected {{time}} · {{hours}} h ago",
+    "total": "Total",
+    "rule": "Deposit within {{hours}} hours of collection.",
+    "to": "Deposit to",
+    "office": "Partner office cashier",
+    "bank": "Bank (slip photo)",
+    "amount": "Amount (₹)",
+    "mustEqual": "Deposit all cash in hand: {{amount}}",
+    "otp": "Cashier OTP",
+    "otpHint": "The cashier reads out the OTP on their phone (demo: 1234).",
+    "slip": "Deposit slip",
+    "slipCaption": "Bank deposit slip {{amount}}",
+    "submit": "Submit deposit",
+    "done": "{{amount}} deposited"
+  },
+  "erp34": {
+    "title": "COD reconciliation",
+    "subtitle": "Rider collection → partner deposit within {{hours}} h → remittance to the shipper at T+2",
+    "held": "Collected, not deposited",
+    "heldEmpty": "All collected COD has been deposited.",
+    "deposited": "Deposited, not remitted",
+    "depositedEmpty": "Nothing waiting for a remittance batch.",
+    "batches": "Remittance batches",
+    "batchesEmpty": "No remittance batches",
+    "shortages": "Shortages",
+    "shortagesEmpty": "No shortages",
+    "col": {
+      "partner": "Partner",
+      "lrs": "LRs",
+      "amount": "Amount",
+      "hours": "Since collection",
+      "customer": "Customer",
+      "shipments": "Shipments",
+      "remitBy": "Remit by",
+      "batch": "Batch",
+      "date": "Date",
+      "utr": "UTR",
+      "makerChecker": "Maker / checker",
+      "status": "Status",
+      "lr": "LR",
+      "evidence": "Evidence",
+      "deduction": "Deduction"
+    },
+    "hours_one": "{{count}} h",
+    "hours_other": "{{count}} h",
+    "raiseShortage": "Raise shortage",
+    "createBatch": "Create remittance batch",
+    "batchCreated": "{{id}} created; waiting for the checker",
+    "approve": "Approve and remit",
+    "hold": "Hold",
+    "waitingChecker": "Waiting for Leadership approval",
+    "status": {
+      "pendingApproval": "Waiting for approval",
+      "remitted": "Remitted",
+      "onHold": "On hold"
+    },
+    "confirmApprove": "Remit {{amount}}?",
+    "confirmBody_one": "{{customer}} · {{count}} shipment · created by {{maker}}. Paid from the nodal account by NEFT.",
+    "confirmBody_other": "{{customer}} · {{count}} shipments · created by {{maker}}. Paid from the nodal account by NEFT.",
+    "remitted": "{{id}} remitted",
+    "shortAmount": "Shortage amount (₹)",
+    "atMost": "At most {{amount}}",
+    "evidenceHint": "What shows the cash is short: deposit slip, call log, cashier count",
+    "shortRule": "Deducted from the partner's next payout. The shipper is still remitted in full.",
+    "shortRaised": "Shortage raised on {{lr}}; the partner has been notified",
+    "deduction": {
+      "raised": "In the next payout",
+      "deducted": "Deducted"
     }
   }
 }

@@ -4,6 +4,8 @@
  */
 import { raiseAutoTickets } from '@shared/store/controlTowerActions'
 import { addInvestigatingClaim } from './claims'
+import { addMoneySeed } from './money'
+import { codFromDeliveries } from '@shared/store/moneyActions'
 import type { DemoData, IsoDateTime } from '@shared/types'
 import { consignees, customers, customerUsers, pickupLocations, skus } from './customers'
 import { extraConsignees, extraCustomers, extraCustomerUsers, extraPickupLocations, extraSkus } from './customers-extra'
@@ -67,6 +69,7 @@ export function buildBaseSeed(): DemoData {
     creditNotes: {},
     walletTxns: {},
     codRecords: {},
+    codRemittances: {},
     partnerInvoices: byId(partnerInvoices),
     payouts: byId(payouts),
     tickets: {},
@@ -88,5 +91,5 @@ export function buildBaseSeed(): DemoData {
 export function buildSeed(): DemoData {
   const data = generateShipments(addKeyShipments(buildBaseSeed(), DEMO_START), DEMO_START)
   // Exceptions already present at 10:00 are auto-ticketed (source §10 Steps 1–2)
-  return raiseAutoTickets(addInvestigatingClaim(joinTrips(data, Object.keys(data.legs))), DEMO_START)
+  return raiseAutoTickets(codFromDeliveries(addMoneySeed(addInvestigatingClaim(joinTrips(data, Object.keys(data.legs))))), DEMO_START)
 }

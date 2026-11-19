@@ -4,6 +4,7 @@
  * (ERP-36/37); the liable partner accepts, contests or claims on its insurance
  * (PP-22). AI never closes a claim; a person approves (§12).
  */
+import { creditWallet } from './moneyActions'
 import { claimableShipments, claimCap, liableLeg, nextPayoutDate, REOPEN_DAYS } from '@shared/engines/claims'
 import { addDaysToDate, addHours, istDate } from '@shared/lib/time'
 import type { Claim, ClaimType, DemoData, Id, IsoDateTime, Notification } from '@shared/types'
@@ -103,6 +104,8 @@ export function settleClaim(data: DemoData, id: Id, x: Settle, by: Id, at: IsoDa
     creditNoteId = nextNo(Object.keys(data.creditNotes), 'CN', at.slice(0, 4))
     ref = creditNoteId
     next = { ...next, creditNotes: { ...next.creditNotes, [creditNoteId]: { id: creditNoteId, customerId: c.customerId, claimId: id, date: istDate(at), amount: x.amount, reason: `${c.type} claim ${id}` } } }
+    // A prepaid customer gets the credit in the wallet (CP-23 "Claim credit")
+    next = creditWallet(next, c.customerId, x.amount, creditNoteId, at)
   } else {
     // SIMULATED bank transfer reference
     ref = `UTR${at.replace(/\D/g, '').slice(2, 12)}${id.slice(-4)}`

@@ -1191,7 +1191,8 @@
     "departs": "{{time}} बजे रवाना",
     "inbound": "आने वाला माल",
     "atHub": "अभी हब पर",
-    "cod": "हाथ में COD"
+    "cod": "हाथ में COD",
+    "codDeposit": "24 घंटे में जमा करें"
   },
   "pa06": {
     "title": "काम",
@@ -1695,7 +1696,6 @@
     "grnHint": "अगर माल लेने वाला GRN देता है",
     "podPhoto": "डिलीवरी की जगह पर माल",
     "geo": "{{lat}}°N {{lng}}°E · {{time}}",
-    "codLater": "COD लेना (PA-34) फ़ेज़ 4 में आएगा।",
     "withException_one": "{{count}} पीस कम या खराब: समस्या के साथ डिलीवर",
     "withException_other": "{{count}} पीस कम या खराब: समस्या के साथ डिलीवर",
     "complete": "डिलीवरी पूरी करें",
@@ -3492,10 +3492,10 @@
   },
   "erp31": {
     "title": "ग्राहक इनवॉइसिंग और वसूली",
-    "subtitle_one": "{{count}} वज़न विवाद पर निर्णय बाकी",
-    "subtitle_other": "{{count}} वज़न विवादों पर निर्णय बाकी",
     "tab": {
-      "weight": "वज़न विवाद"
+      "weight": "वज़न विवाद",
+      "runs": "इनवॉइस रन",
+      "collections": "वसूली"
     },
     "empty": "कोई वज़न विवाद नहीं।",
     "billing": {
@@ -3521,6 +3521,61 @@
     "decided": {
       "upheld": "{{name}} ने बरकरार रखा, {{at}}:",
       "reversed": "{{name}} ने बुक किया वज़न माना, {{at}}:"
+    },
+    "lead": "इनवॉइस रन, वसूली और वज़न विवाद",
+    "run": {
+      "period": "बिलिंग अवधि",
+      "customers_one": "डिलीवर हुए, बिना बिल शिपमेंट वाला {{count}} मासिक ग्राहक",
+      "customers_other": "डिलीवर हुए, बिना बिल शिपमेंट वाले {{count}} मासिक ग्राहक",
+      "empty": "इस अवधि में बिल करने को कुछ नहीं।",
+      "include": "शामिल करें",
+      "includeX": "{{name}} शामिल करें",
+      "customer": "ग्राहक",
+      "shipments": "शिपमेंट",
+      "taxable": "कर योग्य",
+      "gst": "GST",
+      "total": "कुल",
+      "pods": "e-POD",
+      "missing_one": "{{count}} नहीं है",
+      "missing_other": "{{count}} नहीं हैं",
+      "allPods": "सब जुड़े",
+      "einvoice": "ई-इनवॉइस",
+      "irn": "बनाते समय IRN",
+      "selected_one": "{{count}} ग्राहक · {{amount}}",
+      "selected_other": "{{count}} ग्राहक · {{amount}}",
+      "generate": "इनवॉइस बनाएँ",
+      "confirm_one": "{{count}} इनवॉइस बनाएँ?",
+      "confirm_other": "{{count}} इनवॉइस बनाएँ?",
+      "confirmBody": "कुल {{amount}}। हर इनवॉइस को IRN मिलता है और वह e-POD सहित ग्राहक पोर्टल में दिखता है।",
+      "done_one": "{{count}} इनवॉइस बना: {{first}}",
+      "done_other": "{{count}} इनवॉइस बने: {{first}} से {{last}}",
+      "recent": "हाल के इनवॉइस"
+    },
+    "col": {
+      "priority": "वसूली प्राथमिकता (AI)",
+      "none": "कुछ बकाया नहीं",
+      "overdueDays_one": "{{count}} दिन से बकाया",
+      "overdueDays_other": "{{count}} दिन से बकाया",
+      "dueIn_zero": "आज देय",
+      "dueIn_one": "{{count}} दिन में देय",
+      "dueIn_other": "{{count}} दिन में देय",
+      "lastReminder": "पिछला रिमाइंडर {{at}}",
+      "noReminder": "कोई रिमाइंडर नहीं भेजा",
+      "reason": {
+        "overdue": "देय तिथि पार",
+        "dueSoon": "7 दिन में देय",
+        "noReminder": "अभी तक संपर्क नहीं",
+        "nearLimit": "क्रेडिट सीमा के पास"
+      },
+      "remindEmail": "ईमेल रिमाइंडर",
+      "remindWhatsapp": "WhatsApp रिमाइंडर",
+      "ch": {
+        "email": "ईमेल",
+        "whatsapp": "WhatsApp"
+      },
+      "sent": "{{name}} को {{channel}} से रिमाइंडर भेजा गया",
+      "ageing": "प्राप्य राशि की आयु",
+      "days": "{{range}} दिन"
     }
   },
   "ndr": {
@@ -4006,6 +4061,263 @@
       "accept": "स्वीकार किया; कटौती तय",
       "contest": "Logisco क्लेम डेस्क को भेजा गया",
       "insurance": "बीमा विवरण भेजा; कटौती रोकी गई"
+    }
+  },
+  "pay": {
+    "title": "पेमेंट गेटवे",
+    "body": "{{purpose}} के लिए भुगतान। पैसा Logisco के नोडल खाते में जाता है।",
+    "method": "भुगतान का तरीका",
+    "m": {
+      "upi": "UPI",
+      "netBanking": "नेट बैंकिंग",
+      "card": "कार्ड"
+    },
+    "nodal": "डेमो: नतीजा चुनें। कोई असली भुगतान नहीं होता।",
+    "success": "{{amount}} भुगतान करें",
+    "failure": "विफलता दिखाएँ",
+    "failed": "भुगतान विफल; कोई राशि नहीं कटी। फिर कोशिश करें।"
+  },
+  "cp23": {
+    "title": "वॉलेट",
+    "subtitle": "बुकिंग के लिए प्रीपेड बैलेंस। हर बुकिंग, वज़न संशोधन और RTO शुल्क यहीं से कटता है।",
+    "balance": "मौजूदा बैलेंस",
+    "recharge": "रिचार्ज",
+    "amount": "रिचार्ज राशि (₹)",
+    "min": "कम से कम {{min}}",
+    "rechargeBtn": "{{amount}} रिचार्ज करें",
+    "purpose": "वॉलेट रिचार्ज",
+    "done": "वॉलेट में {{amount}} जोड़े गए · {{ref}}",
+    "txns": "लेन-देन",
+    "empty": "अभी कोई लेन-देन नहीं",
+    "col": {
+      "at": "तिथि और समय",
+      "type": "प्रकार",
+      "ref": "संदर्भ",
+      "amount": "राशि",
+      "balance": "बाद का बैलेंस"
+    },
+    "kind": {
+      "recharge": "रिचार्ज",
+      "bookingDebit": "बुकिंग कटौती",
+      "weightRevision": "वज़न संशोधन",
+      "rtoCharge": "RTO शुल्क",
+      "refund": "रिफ़ंड",
+      "claimCredit": "क्लेम क्रेडिट"
+    }
+  },
+  "cp24": {
+    "title": "इनवॉइस",
+    "subtitle": "e-POD सहित GST इनवॉइस, क्रेडिट नोट और आपका खाता बही। एक कदम में ऑनलाइन भुगतान करें।",
+    "credit": "क्रेडिट",
+    "limitUsedAvailable": "क्रेडिट सीमा / उपयोग / उपलब्ध",
+    "terms": "भुगतान शर्तें",
+    "termsDays_one": "{{count}} दिन",
+    "termsDays_other": "{{count}} दिन",
+    "overdue": "बकाया राशि",
+    "overdueBanner": "{{amount}} बकाया है। अपनी क्रेडिट लाइन चालू रखने के लिए अभी भुगतान करें।",
+    "tab": {
+      "invoices": "इनवॉइस",
+      "creditNotes": "क्रेडिट नोट",
+      "ledger": "बही"
+    },
+    "empty": "अभी कोई इनवॉइस नहीं",
+    "select": "चुनें",
+    "selectInvoice": "{{id}} चुनें",
+    "col": {
+      "no": "इनवॉइस नंबर",
+      "date": "तिथि / अवधि",
+      "shipments": "शिपमेंट",
+      "amounts": "कर योग्य / GST / कुल",
+      "due": "देय तिथि",
+      "status": "स्थिति",
+      "irn": "ई-इनवॉइस"
+    },
+    "status": {
+      "unpaid": "बकाया",
+      "partlyPaid": "आंशिक भुगतान",
+      "paid": "भुगतान हुआ",
+      "overdue": "देय तिथि पार"
+    },
+    "irnYes": "IRN बना",
+    "selected_one": "{{count}} इनवॉइस · {{amount}}",
+    "selected_other": "{{count}} इनवॉइस · {{amount}}",
+    "payNow": "अभी भुगतान करें",
+    "paid": "{{amount}} का भुगतान हुआ · {{ref}}",
+    "cn": {
+      "no": "क्रेडिट नोट",
+      "date": "तिथि",
+      "reason": "कारण",
+      "amount": "राशि",
+      "claim": "क्लेम"
+    },
+    "noCreditNotes": "कोई क्रेडिट नोट नहीं",
+    "lg": {
+      "date": "तिथि",
+      "type": "दस्तावेज़",
+      "no": "नंबर",
+      "debit": "डेबिट",
+      "credit": "क्रेडिट",
+      "balance": "बैलेंस",
+      "kind": {
+        "invoice": "इनवॉइस",
+        "payment": "भुगतान",
+        "creditNote": "क्रेडिट नोट"
+      }
+    },
+    "noLedger": "कोई प्रविष्टि नहीं",
+    "back": "सभी इनवॉइस",
+    "detailSub": "{{period}} · जारी {{date}} · देय {{due}}",
+    "linesExcel": "लाइन आइटम (Excel)",
+    "taxableGst": "कर योग्य + GST",
+    "total": "कुल",
+    "irn": "IRN",
+    "paidOn": "भुगतान",
+    "line": {
+      "lr": "LR",
+      "date": "बुकिंग",
+      "lane": "लेन",
+      "weight": "चार्ज योग्य वज़न",
+      "taxable": "शुल्क",
+      "gst": "GST",
+      "total": "कुल",
+      "pod": "e-POD",
+      "podLink": "e-POD देखें"
+    },
+    "noLines_one": "यह इनवॉइस डेमो डेटा शुरू होने से पहले जारी हुआ था; इसकी {{count}} लाइन संग्रहीत PDF में है।",
+    "noLines_other": "यह इनवॉइस डेमो डेटा शुरू होने से पहले जारी हुआ था; इसकी {{count}} लाइनें संग्रहीत PDF में हैं।"
+  },
+  "cp25": {
+    "title": "COD रेमिटेंस",
+    "subtitle": "डिलीवरी पर लिया गया नकद, आपको वापस भेजा गया। पार्टनर 24 घंटे में जमा करते हैं; Logisco T+2 पर भेजता है।",
+    "report": "रेमिटेंस रिपोर्ट (Excel)",
+    "pending": "भेजा जाना बाकी COD",
+    "next": "अगला रेमिटेंस",
+    "rule": "डिलीवरी से T+2",
+    "remitted": "इस महीने भेजा गया",
+    "empty": "अभी कोई रेमिटेंस नहीं",
+    "col": {
+      "id": "रेमिटेंस",
+      "date": "तिथि",
+      "shipments": "शिपमेंट",
+      "amounts": "सकल / कटौती / शुद्ध",
+      "utr": "UTR",
+      "status": "स्थिति",
+      "lr": "LR",
+      "delivered": "डिलीवरी तिथि",
+      "cod": "COD राशि",
+      "remittance": "रेमिटेंस",
+      "remitDate": "भेजा / देय"
+    },
+    "status": {
+      "pendingApproval": "निर्धारित",
+      "remitted": "भेजा गया",
+      "onHold": "रोका गया"
+    },
+    "rec": {
+      "pending": "बाकी",
+      "collected": "लिया गया",
+      "deposited": "जमा",
+      "remitted": "भेजा गया"
+    },
+    "shortageRule": "नकद की कमी डिलीवरी पार्टनर से वसूली जाती है, आपसे नहीं।",
+    "back": "सभी रेमिटेंस",
+    "detailSub": "{{date}} · शुद्ध {{net}} · UTR {{utr}}"
+  },
+  "pa34": {
+    "title": "COD वसूली",
+    "due": "COD लें",
+    "mode": "भुगतान का तरीका",
+    "m": {
+      "cash": "नकद",
+      "upi": "UPI"
+    },
+    "qr": "UPI QR कोड",
+    "qrHint": "प्राप्तकर्ता स्कैन करके भुगतान करे",
+    "checkUpi": "भुगतान जाँचें",
+    "upiRef": "भुगतान हुआ · UPI संदर्भ {{ref}}",
+    "received": "प्राप्त राशि (₹)",
+    "mustEqual": "ठीक {{amount}} होनी चाहिए",
+    "confirm": "वसूली की पुष्टि करें",
+    "partial": "आंशिक COD नहीं। पैसा तैयार न हो तो डिलीवर नहीं कर सकते → COD राशि तैयार नहीं चुनें।",
+    "collected": "COD {{amount}} लिया गया",
+    "cashDone": "नकद · प्राप्तकर्ता को SMS रसीद भेजी गई",
+    "upiDone": "UPI {{ref}} · SMS रसीद भेजी गई",
+    "undo": "बदलें",
+    "todo": "हर पीस जाँचें, OTP या हस्ताक्षर से पुष्टि करें, फ़ोटो लें और COD लें"
+  },
+  "pa36": {
+    "title": "हाथ में COD",
+    "none": "हाथ में कोई नकद नहीं।",
+    "inHand_one": "हाथ में नकद · {{count}} LR",
+    "inHand_other": "हाथ में नकद · {{count}} LR",
+    "since": "{{time}} को लिया · {{hours}} घंटे पहले",
+    "total": "कुल",
+    "rule": "वसूली के {{hours}} घंटे के अंदर जमा करें।",
+    "to": "कहाँ जमा करें",
+    "office": "पार्टनर ऑफ़िस कैशियर",
+    "bank": "बैंक (स्लिप की फ़ोटो)",
+    "amount": "राशि (₹)",
+    "mustEqual": "हाथ का सारा नकद जमा करें: {{amount}}",
+    "otp": "कैशियर OTP",
+    "otpHint": "कैशियर अपने फ़ोन पर आया OTP बताएँ (डेमो: 1234)।",
+    "slip": "जमा स्लिप",
+    "slipCaption": "बैंक जमा स्लिप {{amount}}",
+    "submit": "जमा दर्ज करें",
+    "done": "{{amount}} जमा हुए"
+  },
+  "erp34": {
+    "title": "COD मिलान",
+    "subtitle": "राइडर की वसूली → {{hours}} घंटे में पार्टनर का जमा → T+2 पर शिपर को रेमिटेंस",
+    "held": "लिया गया, जमा नहीं",
+    "heldEmpty": "लिया गया सारा COD जमा हो चुका है।",
+    "deposited": "जमा, भेजा नहीं",
+    "depositedEmpty": "रेमिटेंस बैच के लिए कुछ बाकी नहीं।",
+    "batches": "रेमिटेंस बैच",
+    "batchesEmpty": "कोई रेमिटेंस बैच नहीं",
+    "shortages": "कमी",
+    "shortagesEmpty": "कोई कमी नहीं",
+    "col": {
+      "partner": "पार्टनर",
+      "lrs": "LR",
+      "amount": "राशि",
+      "hours": "वसूली से",
+      "customer": "ग्राहक",
+      "shipments": "शिपमेंट",
+      "remitBy": "भेजने की तिथि",
+      "batch": "बैच",
+      "date": "तिथि",
+      "utr": "UTR",
+      "makerChecker": "मेकर / चेकर",
+      "status": "स्थिति",
+      "lr": "LR",
+      "evidence": "सबूत",
+      "deduction": "कटौती"
+    },
+    "hours_one": "{{count}} घंटा",
+    "hours_other": "{{count}} घंटे",
+    "raiseShortage": "कमी दर्ज करें",
+    "createBatch": "रेमिटेंस बैच बनाएँ",
+    "batchCreated": "{{id}} बना; चेकर का इंतज़ार",
+    "approve": "स्वीकृत करें और भेजें",
+    "hold": "रोकें",
+    "waitingChecker": "लीडरशिप की स्वीकृति का इंतज़ार",
+    "status": {
+      "pendingApproval": "स्वीकृति का इंतज़ार",
+      "remitted": "भेजा गया",
+      "onHold": "रोका गया"
+    },
+    "confirmApprove": "{{amount}} भेजें?",
+    "confirmBody_one": "{{customer}} · {{count}} शिपमेंट · {{maker}} ने बनाया। नोडल खाते से NEFT द्वारा भुगतान।",
+    "confirmBody_other": "{{customer}} · {{count}} शिपमेंट · {{maker}} ने बनाया। नोडल खाते से NEFT द्वारा भुगतान।",
+    "remitted": "{{id}} भेजा गया",
+    "shortAmount": "कमी की राशि (₹)",
+    "atMost": "अधिकतम {{amount}}",
+    "evidenceHint": "नकद कम होने का सबूत: जमा स्लिप, कॉल लॉग, कैशियर की गिनती",
+    "shortRule": "पार्टनर के अगले भुगतान से कटेगा। शिपर को फिर भी पूरी राशि भेजी जाती है।",
+    "shortRaised": "{{lr}} पर कमी दर्ज; पार्टनर को सूचित किया गया",
+    "deduction": {
+      "raised": "अगले भुगतान में",
+      "deducted": "कटौती हुई"
     }
   }
 }

@@ -257,8 +257,6 @@ export interface Customer {
    * snapshot that covers unmodelled shipments too; every booking adds its total.
    */
   spendMonthToDate: number
-  /** COD collected and not yet remitted (CP-11 "COD due", CP-25) */
-  cod?: { pending: number; nextRemittance: IsoDate; remittedThisMonth: number }
   kamId?: Id
   rateCardId: Id
   bank?: { name: string; branch: string; ifsc: string; account: string }
@@ -1084,9 +1082,11 @@ export interface Claim {
   }
 }
 
+/** GST invoice to a credit customer (CP-24, ERP-31; source §9 "GST invoice per shipment or monthly consolidated; e-POD attached; e-invoice where applicable"). */
 export interface Invoice {
   id: Id
   customerId: Id
+  /** "2026-10" for a monthly invoice */
   period: string
   date: IsoDate
   shipmentCount: number
@@ -1095,7 +1095,13 @@ export interface Invoice {
   total: number
   dueDate: IsoDate
   status: 'unpaid' | 'paid' | 'overdue' | 'partlyPaid'
+  /** SIMULATED e-invoice IRN (NIC) */
   irn?: string
+  /** Line items (generated invoices). Seeded older invoices predate the demo data and have none. */
+  lrs?: Id[]
+  payment?: { at: IsoDateTime; ref: string; method: 'upi' | 'netBanking' | 'card'; by: Id }
+  /** Collections reminders sent (ERP-31) */
+  reminders?: { at: IsoDateTime; by: Id; channel: 'email' | 'whatsapp' }[]
 }
 
 export interface CreditNote {
@@ -1110,22 +1116,53 @@ export interface CreditNote {
 export interface WalletTxn {
   id: Id
   customerId: Id
-  type: 'topUp' | 'debit' | 'refund' | 'adjustment'
+  type: 'topUp' | 'debit' | 'refund' | 'adjustment' | 'claimCredit'
   ref: string
   amount: number
   balanceAfter: number
   at: IsoDateTime
 }
 
+/**
+ * Cash on delivery for one shipment (source §9: partner deposits within 24 h →
+ * remitted to the shipper at T+2, T+1 for top tier; shortages deducted from the
+ * partner with evidence). Older records may refer to LRs before the demo data.
+ */
 export interface CodRecord {
   id: Id
   shipmentId: Id
+  customerId: Id
+  /** Last-mile partner holding the cash */
+  partnerId?: Id
   amount: number
+  mode?: 'cash' | 'upi'
+  upiRef?: string
+  deliveredAt?: IsoDateTime
   collectedBy?: Id
   collectedAt?: IsoDateTime
   depositedAt?: IsoDateTime
+  /** office: cashier OTP; bank: deposit slip photo; nodal: UPI straight into Logisco's account */
+  deposit?: { to: 'office' | 'bank' | 'nodal'; ref: string; by?: Id }
+  remittanceId?: Id
   remittedAt?: IsoDateTime
   status: 'pending' | 'collected' | 'deposited' | 'remitted'
+  /** Cash short against the amount due (ERP-34): deducted from the partner, never the shipper */
+  shortage?: { amount: number; evidence: string; by: Id; at: IsoDateTime; status: 'raised' | 'deducted' }
+}
+
+/** COD remittance batch to a shipper (CP-25, ERP-34): maker-checker as for payouts. */
+export interface CodRemittance {
+  id: Id
+  customerId: Id
+  date: IsoDate
+  recordIds: Id[]
+  gross: number
+  deductions: number
+  net: number
+  utr?: string
+  status: 'pendingApproval' | 'remitted' | 'onHold'
+  makerId?: Id
+  checkerId?: Id
 }
 
 export interface PartnerInvoice {
@@ -1279,6 +1316,7 @@ export interface DemoData {
   creditNotes: Record<Id, CreditNote>
   walletTxns: Record<Id, WalletTxn>
   codRecords: Record<Id, CodRecord>
+  codRemittances: Record<Id, CodRemittance>
   partnerInvoices: Record<Id, PartnerInvoice>
   payouts: Record<Id, Payout>
   tickets: Record<Id, Ticket>

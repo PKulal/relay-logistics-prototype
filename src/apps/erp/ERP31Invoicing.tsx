@@ -1,8 +1,8 @@
 /**
  * ERP-31 Customer invoicing and collections — docs/04-erp-control-tower.md.
- * Built so far: the Weight disputes tab (source §7 Step 4: the customer raises a
- * dispute on a weight revision; Logisco reviews and responds). Invoice runs and
- * collections come with the "Customer money" build-plan item.
+ * Tabs: invoice runs and collections (ERP31Receivables.tsx), and weight
+ * disputes (source §7 Step 4: the customer disputes a weight revision; Logisco
+ * reviews and responds).
  */
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -20,9 +20,38 @@ import { PageHeader } from '@shared/ui/Page'
 import { RadioGroup, RadioGroupItem } from '@shared/ui/radio-group'
 import { Chip } from '@shared/ui/StatusChip'
 import { WeightEvidence } from '@shared/ui/WeightEvidence'
+import { Collections, InvoiceRuns } from './ERP31Receivables'
 import { useErpSession } from './useErpSession'
 
+type Tab = 'runs' | 'collections' | 'weight'
+const TABS: Tab[] = ['runs', 'collections', 'weight']
+
 export default function ERP31Invoicing() {
+  const { t } = useTranslation()
+  const [params, setParams] = useSearchParams()
+  const open = useData((d) => Object.values(d.weightRevisions).filter((w) => w.status === 'disputed').length)
+  const asked = params.get('tab') as Tab | null
+  const tab: Tab = asked && TABS.includes(asked) ? asked : params.get('wr') ? 'weight' : 'runs'
+  return (
+    <div className="flex flex-col gap-4">
+      <PageHeader title={t('erp31.title')} subtitle={t('erp31.lead')} className="mb-0" />
+      <div role="tablist" aria-label={t('erp31.title')} className="flex gap-2 border-b">
+        {TABS.map((k) => (
+          <button key={k} type="button" role="tab" aria-selected={tab === k} onClick={() => setParams(k === 'runs' ? {} : { tab: k })} className={cn('px-3 pb-2 font-medium text-muted-foreground', tab === k && 'border-b-2 border-primary font-semibold text-foreground')}>
+            {t(`erp31.tab.${k}`)}
+            {k === 'weight' && <span className="tabular ml-1 text-caption text-muted-foreground">{open}</span>}
+          </button>
+        ))}
+      </div>
+      {tab === 'runs' && <InvoiceRuns />}
+      {tab === 'collections' && <Collections />}
+      {tab === 'weight' && <WeightDisputes />}
+    </div>
+  )
+}
+
+/** Weight disputes (source §7 Step 4): the customer disputes a revision; Finance decides. */
+function WeightDisputes() {
   const { t } = useTranslation()
   const data = useData((d) => d)
   const [params, setParams] = useSearchParams()
@@ -31,15 +60,8 @@ export default function ERP31Invoicing() {
     .filter((w) => w.dispute)
     .sort((a, b) => Number(b.status === 'disputed') - Number(a.status === 'disputed') || b.dispute!.at.localeCompare(a.dispute!.at))
   const selected = data.weightRevisions[params.get('wr') ?? ''] ?? list[0]
-  const open = list.filter((w) => w.status === 'disputed').length
   return (
-    <div className="flex flex-col gap-4">
-      <PageHeader title={t('erp31.title')} subtitle={t('erp31.subtitle', { count: open })} className="mb-0" />
-      <div role="tablist" aria-label={t('erp31.title')} className="flex gap-2 border-b">
-        <span role="tab" aria-selected className="border-b-2 border-primary px-3 pb-2 font-semibold">
-          {t('erp31.tab.weight')} <span className="tabular text-caption text-muted-foreground">{open}</span>
-        </span>
-      </div>
+    <>
       {list.length === 0 ? (
         <p className="rounded-xl border bg-card p-6 text-muted-foreground">{t('erp31.empty')}</p>
       ) : (
@@ -49,7 +71,7 @@ export default function ERP31Invoicing() {
               <li key={w.id}>
                 <button
                   type="button"
-                  onClick={() => setParams({ wr: w.id })}
+                  onClick={() => setParams({ tab: 'weight', wr: w.id })}
                   aria-current={selected?.id === w.id ? 'true' : undefined}
                   className={cn('flex w-full flex-col gap-1 rounded-lg border bg-card p-3 text-left hover:border-primary', selected?.id === w.id && 'border-primary bg-primary-soft')}
                 >
@@ -67,7 +89,7 @@ export default function ERP31Invoicing() {
           {selected && <Dispute key={selected.id} revision={selected} />}
         </div>
       )}
-    </div>
+    </>
   )
 }
 

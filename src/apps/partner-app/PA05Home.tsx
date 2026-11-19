@@ -2,9 +2,12 @@
  * PA-05 Home (today) — docs/03-partner-app.md §6.1.
  * Today's work at a glance and the next task. Content by role.
  */
+import { Banknote, ChevronRight } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { cn } from '@/shared/lib/utils'
+import { cashInHand } from '@shared/engines/receivables'
 import { nextTask, riderCounts, tasksFor } from '@shared/engines/fieldTasks'
 import { useData, useDemoNow } from '@shared/hooks/useDemo'
 import { formatINR } from '@shared/lib/format'
@@ -18,7 +21,7 @@ export default function PA05Home() {
   const now = useDemoNow()
   const tasks = useMemo(() => tasksFor(data, staff.id, now), [data, staff.id, now])
   const next = nextTask(tasks)
-  const codInHand = Object.values(data.codRecords).filter((c) => c.collectedBy === staff.id && c.status === 'collected').reduce((s, c) => s + c.amount, 0)
+  const codInHand = cashInHand(data, staff.id).reduce((s, c) => s + c.amount, 0)
 
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -69,12 +72,24 @@ export default function PA05Home() {
         )}
       </section>
 
-      {staff.role === 'rider' && (
-        <div className="flex items-center justify-between rounded-2xl border bg-card p-4">
-          <span className="font-semibold">{t('pa05.cod')}</span>
-          <span className="tabular text-[18px] font-bold">{formatINR(codInHand)}</span>
-        </div>
-      )}
+      {staff.role === 'rider' &&
+        (codInHand > 0 ? (
+          // PA-36 opened from the Home banner: deposit within 24 h (source §9)
+          <Link to="/app/cod" className="flex items-center gap-3 rounded-2xl border-2 border-status-warning bg-status-warning-bg p-4" data-testid="cod-banner">
+            <Banknote className="size-7 shrink-0 text-status-warning" aria-hidden />
+            <span className="flex-1">
+              <span className="block font-semibold">{t('pa05.cod')}</span>
+              <span className="text-[13px]">{t('pa05.codDeposit')}</span>
+            </span>
+            <span className="tabular text-[18px] font-bold">{formatINR(codInHand)}</span>
+            <ChevronRight className="size-5" aria-hidden />
+          </Link>
+        ) : (
+          <div className="flex items-center justify-between rounded-2xl border bg-card p-4">
+            <span className="font-semibold">{t('pa05.cod')}</span>
+            <span className="tabular text-[18px] font-bold">{formatINR(0)}</span>
+          </div>
+        ))}
 
     </div>
   )

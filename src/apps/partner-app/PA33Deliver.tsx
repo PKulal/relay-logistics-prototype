@@ -1,25 +1,27 @@
 /**
  * PA-33 Deliver and capture e-POD — docs/03-partner-app.md §6.6.
  * Piece scan, piece-level short / damage with photos, received by, OTP or
- * e-signature, GRN, photo, geo-tag (source §7 Step 9) → Delivered, or
+ * e-signature, GRN, photo, geo-tag (source §7 Step 9), COD (PA-34) → Delivered, or
  * Delivered with Exception. SIMULATED: OTP (1234), camera, GPS.
  */
-import { AlertTriangle, ArrowLeft, Banknote, Check, MapPin } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, Check, MapPin } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { cn } from '@/shared/lib/utils'
 import { useData, useDemoNow } from '@shared/hooks/useDemo'
-import { formatINR, formatTime } from '@shared/lib/format'
+import { formatTime } from '@shared/lib/format'
 import { DEMO_DELIVERY_OTP, sendOtp, verifyDeliveryOtp } from '@shared/sim/otp'
 import { useDemoStore } from '@shared/store'
 import type { PieceCondition } from '@shared/store/deliveryActions'
+import type { CodCollection } from '@shared/store/moneyActions'
 import { PhotoCapture } from '@shared/ui/PhotoCapture'
 import { Scanner } from '@shared/ui/Scanner'
 import { SignaturePad } from '@shared/ui/SignaturePad'
 import { SimulatedTag } from '@shared/ui/SimulatedTag'
 import { Card } from './FieldUi'
+import { PA34CodCollect } from './PA34CodCollect'
 import { useFieldSession } from './useFieldSession'
 
 type Mark = { state: 'ok' | 'short' | 'damaged'; photo: string; remark: string }
@@ -50,6 +52,7 @@ export default function PA33Deliver() {
   const [signed, setSigned] = useState(false)
   const [grn, setGrn] = useState('')
   const [photo, setPhoto] = useState('')
+  const [codCollected, setCodCollected] = useState<CodCollection>()
 
   if (!leg || !s || !c || leg.staffId !== staff.id || leg.status !== 'inProgress') return <Navigate to="/app/run" replace />
   const pin = data.pincodes[s.destPincode]
@@ -64,7 +67,7 @@ export default function PA33Deliver() {
     return st === 'ok' || (!!marks[p]?.photo && !!marks[p]?.remark.trim())
   })
   const verified = method === 'otp' ? verifyDeliveryOtp(otp) : signed
-  const ready = piecesOk && !!receivedBy.trim() && verified && !!photo
+  const ready = piecesOk && !!receivedBy.trim() && verified && !!photo && (!cod || !!codCollected)
   const exceptions = onBoard.filter((p) => stateOf(p) === 'short' || stateOf(p) === 'damaged').length
 
   const complete = () => {
@@ -75,7 +78,7 @@ export default function PA33Deliver() {
       }),
     )
     navigate('/app/run')
-    useDemoStore.getState().completeDelivery({ legId, staffId: staff.id, pieces, receivedBy: receivedBy.trim(), verification: method, grn: grn.trim() || undefined, photo })
+    useDemoStore.getState().completeDelivery({ legId, staffId: staff.id, pieces, receivedBy: receivedBy.trim(), verification: method, grn: grn.trim() || undefined, photo, cod: cod ? codCollected : undefined })
     if (exceptions) toast.warning(t('pa33.doneException', { lr: s.id }))
     else toast.success(t('pa33.doneToast', { lr: s.id }))
   }
@@ -185,15 +188,7 @@ export default function PA33Deliver() {
         </p>
       </Card>
 
-      {cod ? (
-        <section className="flex items-center gap-3 rounded-2xl border-2 border-status-warning bg-status-warning-bg p-4">
-          <Banknote className="size-8 shrink-0 text-status-warning" aria-hidden />
-          <div>
-            <p className="tabular font-bold">{t('pa31.cod', { amount: formatINR(cod) })}</p>
-            <p className="text-[13px]">{t('pa33.codLater')}</p>
-          </div>
-        </section>
-      ) : null}
+      {cod ? <PA34CodCollect lr={s.id} due={cod} at={now} value={codCollected} onChange={setCodCollected} /> : null}
 
       {exceptions > 0 && (
         <p className="flex items-start gap-2 text-[13px] font-semibold text-status-warning" role="status">
@@ -205,7 +200,7 @@ export default function PA33Deliver() {
         <button type="button" disabled={!ready} onClick={complete} className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-[18px] font-bold text-primary-foreground disabled:opacity-40">
           <Check className="size-5" aria-hidden /> {t('pa33.complete')}
         </button>
-        {!ready && <p className="mt-1 text-center text-[13px] text-muted-foreground">{t('pa33.todo')}</p>}
+        {!ready && <p className="mt-1 text-center text-[13px] text-muted-foreground">{cod && !codCollected ? t('pa34.todo') : t('pa33.todo')}</p>}
       </div>
     </div>
   )

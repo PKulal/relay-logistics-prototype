@@ -2,6 +2,7 @@
  * Last mile (Partner App PA-31 to PA-33, and the hub → rider hand-over before it).
  * Every step is a chain-of-custody event; e-POD is the delivered event itself.
  */
+import { codRecordFor, type CodCollection } from './moneyActions'
 import { nextLegOf, prevLegOf } from '@shared/engines/fieldTasks'
 import { addHours } from '@shared/lib/time'
 import { makeHandoverCode } from '@shared/sim/handover'
@@ -114,6 +115,8 @@ export interface CompleteDelivery {
   verification: 'otp' | 'signature'
   grn?: string
   photo: string
+  /** PA-34: required for a COD shipment, the full amount (no partial COD) */
+  cod?: CodCollection
 }
 
 /**
@@ -125,6 +128,8 @@ export function completeDelivery(data: DemoData, x: CompleteDelivery, at: IsoDat
   const leg = data.legs[x.legId]
   if (!leg || leg.type !== 'lastMile' || leg.status !== 'inProgress') return data
   const s = data.shipments[leg.shipmentId]
+  const codRecord = s.paymentMode === 'cod' ? (x.cod ? codRecordFor(data, s.id, x.staffId, x.cod, at) : undefined) : undefined
+  if (s.paymentMode === 'cod' && !codRecord) return data
   const dest = data.pincodes[s.destPincode] // SIMULATED GPS: the consignee's pincode
   const events: ShipmentEvent[] = []
   const exceptions: Record<Id, ShipmentException> = {}
@@ -151,10 +156,12 @@ export function completeDelivery(data: DemoData, x: CompleteDelivery, at: IsoDat
     photos: [x.photo],
     receivedBy: x.receivedBy,
     grn: x.grn || undefined,
-    note: x.verification === 'otp' ? 'OTP verified' : 'e-signature',
+    // SIMULATED: SMS receipt to the consignee for COD
+    note: [x.verification === 'otp' ? 'OTP verified' : 'e-signature', codRecord && `COD ₹${codRecord.amount} ${codRecord.mode === 'upi' ? `UPI ${codRecord.upiRef}` : 'cash'} · SMS receipt sent`].filter(Boolean).join(' · '),
   })
   let next = applyEvents(dropSim(data, [s.id]), events, at)
   next = { ...next, exceptions: { ...next.exceptions, ...exceptions } }
+  if (codRecord) next = { ...next, codRecords: { ...next.codRecords, [codRecord.id]: codRecord } }
   // SIMULATED: e-POD to the shipper (WhatsApp / email); lands in their notifications
   const id = `NTF-${String(Object.keys(next.notifications).length + 1).padStart(5, '0')}`
   next = {

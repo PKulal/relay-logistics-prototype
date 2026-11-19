@@ -26,7 +26,6 @@ export const customers: Customer[] = [
     spendMonthToDate: 102400, // "Nov unbilled to date ₹1,02,400" (seed-data.md §5)
     // ₹38,400 pending; seed-data.md says "next remittance 20-Nov", which is before the
     // demo opens (23-Nov). Shown as the next T+2 remittance instead (agreed).
-    cod: { pending: 38400, nextRemittance: '2026-11-25', remittedThisMonth: 212600 },
     kamId: 'LS-ARJUN',
     rateCardId: 'RC-SHARMA-2026',
     bank: { name: 'HDFC Bank', branch: 'Okhla', ifsc: 'HDFC0001234', account: '50200012345678' },

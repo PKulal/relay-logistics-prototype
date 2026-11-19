@@ -19,3 +19,8 @@ export function verifyLoginOtp(code: string): boolean {
 export function verifyDeliveryOtp(code: string): boolean {
   return code === DEMO_DELIVERY_OTP
 }
+
+/** Partner office cashier confirms a COD hand-over with an OTP on their phone (PA-36); 1234 in the demo. */
+export function verifyCashierOtp(code: string): boolean {
+  return code === DEMO_DELIVERY_OTP
+}

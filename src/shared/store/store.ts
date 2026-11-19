@@ -35,6 +35,9 @@ import * as wt from './weightActions'
 import * as ndr from './ndrActions'
 import * as ct from './controlTowerActions'
 import * as clm from './claimActions'
+import * as money from './moneyActions'
+import type { CodDeposit } from './moneyActions'
+import type { PayMethod } from '@shared/sim/payment'
 import type { PartnerClaimResponse, RaiseClaim, Settle } from './claimActions'
 import type { Reassign, TicketAction } from './controlTowerActions'
 import type { NdrChoice, ReportNdr } from './ndrActions'
@@ -48,7 +51,7 @@ import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 19
+export const STORE_VERSION = 20
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -196,6 +199,15 @@ export interface DemoState {
   reopenClaim: (id: Id, reason: string, by: Id) => void
   respondToClaim: (id: Id, r: PartnerClaimResponse, by: Id) => void
   decidePartnerClaim: (id: Id, d: 'upheld' | 'waived' | 'recoveredFromInsurer', note: string, by: Id) => void
+  /** Customer money (CP-23/24/25, PA-36, ERP-31/34) */
+  rechargeWallet: (customerId: Id, amount: number, method: PayMethod, by: Id) => string | undefined
+  payInvoices: (invoiceIds: Id[], method: PayMethod, by: Id) => string | undefined
+  generateInvoices: (period: string, customerIds: Id[], by: Id) => Id[]
+  sendReminder: (customerId: Id, channel: 'email' | 'whatsapp', by: Id) => void
+  depositCod: (staffId: Id, x: CodDeposit) => void
+  createRemittanceBatch: (customerId: Id, by: Id) => Id | undefined
+  decideRemittanceBatch: (id: Id, decision: 'approve' | 'hold', by: Id) => void
+  raiseCodShortage: (recordId: Id, amount: number, evidence: string, by: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -224,7 +236,7 @@ export const useDemoStore = create<DemoState>()(
           // … and weight revisions left unanswered for 48 hours are accepted (CP-20 rule)
           // … and failed deliveries with no response get their reattempt (CP-21 rule)
           // … and new exceptions are auto-ticketed (source §10 Steps 1–2)
-          return { demoNow, data: ct.raiseAutoTickets(ndr.autoReattempt(wt.autoAcceptRevisions(advanceJourneys(s.data, s.demoNow, demoNow), demoNow), demoNow), demoNow) }
+          return { demoNow, data: ct.raiseAutoTickets(money.codFromDeliveries(ndr.autoReattempt(wt.autoAcceptRevisions(advanceJourneys(s.data, s.demoNow, demoNow), demoNow), demoNow)), demoNow) }
         })
       },
 
@@ -368,6 +380,30 @@ export const useDemoStore = create<DemoState>()(
       reopenClaim: (id, reason, by) => set((s) => ({ data: clm.reopenClaim(s.data, id, reason, by, s.demoNow) })),
       respondToClaim: (id, r, by) => set((s) => ({ data: clm.respondToClaim(s.data, id, r, by, s.demoNow) })),
       decidePartnerClaim: (id, d, note, by) => set((s) => ({ data: clm.decidePartnerClaim(s.data, id, d, note, by, s.demoNow) })),
+      rechargeWallet: (customerId, amount, method, by) => {
+        const r = money.rechargeWallet(get().data, customerId, amount, method, by, get().demoNow)
+        set({ data: r.data })
+        return r.ref
+      },
+      payInvoices: (ids, method, by) => {
+        const r = money.payInvoices(get().data, ids, method, by, get().demoNow)
+        set({ data: r.data })
+        return r.ref
+      },
+      generateInvoices: (period, customerIds, by) => {
+        const r = money.generateInvoices(get().data, period, customerIds, by, get().demoNow)
+        set({ data: r.data })
+        return r.ids
+      },
+      sendReminder: (customerId, channel, by) => set((s) => ({ data: money.sendReminder(s.data, customerId, channel, by, s.demoNow) })),
+      depositCod: (staffId, x) => set((s) => ({ data: money.depositCod(s.data, staffId, x, s.demoNow) })),
+      createRemittanceBatch: (customerId, by) => {
+        const r = money.createRemittanceBatch(get().data, customerId, by, get().demoNow)
+        set({ data: r.data })
+        return r.id
+      },
+      decideRemittanceBatch: (id, decision, by) => set((s) => ({ data: money.decideRemittanceBatch(s.data, id, decision, by, s.demoNow) })),
+      raiseCodShortage: (recordId, amount, evidence, by) => set((s) => ({ data: money.raiseCodShortage(s.data, recordId, amount, evidence, by, s.demoNow) })),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),
 
 
