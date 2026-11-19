@@ -230,7 +230,7 @@ export default function CP11Dashboard() {
                       <p className="font-medium">{t(`cp11.action.${a.kind}`)}</p>
                       <p className="tabular text-caption text-muted-foreground">
                         {a.shipmentId}
-                        {a.reason ? ` · ${a.reason}` : ''}
+                        {a.reason ? ` · ${t(`ndr.reason.${a.reason}`, { defaultValue: a.reason })}` : ''}
                       </p>
                     </div>
                     <SlaTimer dueAt={a.dueAt} totalMinutes={a.kind === 'weightRevision' ? 48 * 60 : 24 * 60} />

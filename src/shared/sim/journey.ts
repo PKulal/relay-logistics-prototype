@@ -10,7 +10,7 @@ import { addHours, addMinutes, isBefore } from '@shared/lib/time'
 import { applyEvents } from '@shared/store/actions'
 import { eventIdFactory } from '@shared/store/booking'
 import { defaultAssignee, partnerOpsUser } from '@shared/store/staffing'
-import type { AppKey, DemoData, Id, IsoDateTime, Leg, Shipment, ShipmentEvent } from '@shared/types'
+import type { AppKey, DemoData, Id, IsoDateTime, Leg, NdrReason, Shipment, ShipmentEvent } from '@shared/types'
 
 export type Outcome = 'normal' | 'ndr' | 'short' | 'cancel' | 'pickupFailed' | 'rto'
 
@@ -23,7 +23,7 @@ export interface JourneyOptions {
   /** Override who gets each leg, by leg seq (e.g. { 1: 'FS-RAVI' }) */
   assignees?: Partial<Record<number, Id>>
   /** Reason codes */
-  ndrReason?: string
+  ndrReason?: NdrReason
   pickupFailReason?: string
   /** Pieces found missing (outcome "short"); defaults to the last piece */
   shortPieceIds?: Id[]
@@ -120,7 +120,7 @@ export function journeyEvents(data: DemoData, shipmentId: Id, opts: JourneyOptio
     act(last, 'handoverReceived', handedAt, { pieceIds, counterpartStaffId: staffOf(giver) })
     act(last, 'runStarted', last.window.from)
     if (outcome === 'ndr' || outcome === 'rto') {
-      act(last, 'deliveryFailed', addMinutes(last.window.from, 120), { reason: opts.ndrReason ?? 'Consignee not available' })
+      act(last, 'deliveryFailed', addMinutes(last.window.from, 120), { reason: opts.ndrReason ?? 'notAvailable' })
       if (outcome === 'rto') steps.push({ legId: last.id, type: 'rtoInitiated', at: addHours(last.window.from, 26), by: s.bookedByUserId, app: 'customer' })
       return finish(steps)
     }

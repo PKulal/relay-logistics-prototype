@@ -91,7 +91,7 @@ describe('exceptions needing action', () => {
     expect(items.find((i) => i.shipmentId === 'LGS-DEL-000776')).toMatchObject({
       kind: 'ndr',
       screenId: 'CP-21',
-      reason: 'Premises closed',
+      reason: 'premisesClosed',
       dueAt: '2026-11-24T18:00:00+05:30',
     })
   })

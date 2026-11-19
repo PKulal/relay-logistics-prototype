@@ -51,7 +51,7 @@ export function exceptionQueue(data: DemoData, customerId: Id, now: IsoDateTime)
   for (const a of actionsNeeded(data, customerId)) {
     if (a.kind === 'ndr') {
       const failed = Object.values(data.events).filter((e) => e.shipmentId === a.shipmentId && e.type === 'deliveryFailed').at(-1)
-      rows.push({ key: `ndr-${a.shipmentId}`, tab: 'ndr', shipmentId: a.shipmentId, type: 'ndr', raisedAt: failed?.at ?? a.dueAt, details: a.reason, dueAt: a.dueAt, totalMinutes: 24 * 60, to: `/customer/shipments/${a.shipmentId}` })
+      rows.push({ key: `ndr-${a.shipmentId}`, tab: 'ndr', shipmentId: a.shipmentId, type: 'ndr', raisedAt: failed?.at ?? a.dueAt, details: a.reason, dueAt: a.dueAt, totalMinutes: 24 * 60, to: `/customer/exceptions/ndr/${a.shipmentId}` })
     }
     if (a.kind === 'claim') {
       const delivered = Object.values(data.events).filter((e) => e.shipmentId === a.shipmentId && e.type === 'delivered').at(-1)

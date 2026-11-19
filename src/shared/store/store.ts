@@ -32,6 +32,8 @@ import * as ctr from './contractActions'
 import * as pon from './partnerOnboardingActions'
 import * as pag from './partnerAgreementActions'
 import * as wt from './weightActions'
+import * as ndr from './ndrActions'
+import type { NdrChoice, ReportNdr } from './ndrActions'
 import type { DisputeInput } from './weightActions'
 import type { CommercialDecisionKind, LineEdit, NewStaff } from './partnerAgreementActions'
 import type { AuditItems, CheckInput, PartnerApplyInput, PartnerDecisionKind, VerificationDecision } from './partnerOnboardingActions'
@@ -42,7 +44,7 @@ import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 16
+export const STORE_VERSION = 17
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -169,6 +171,10 @@ export interface DemoState {
   acceptRevision: (wrId: Id, by: Id) => void
   disputeRevision: (wrId: Id, d: DisputeInput, by: Id) => void
   resolveDispute: (wrId: Id, decision: 'upheld' | 'reversed', note: string, by: Id) => void
+  /** Failed delivery (PA-35, CP-21, CP-18) */
+  reportNdr: (x: ReportNdr) => void
+  /** `by`: customer user id or 'consignee' */
+  respondNdr: (lr: Id, c: NdrChoice, by: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -195,7 +201,8 @@ export const useDemoStore = create<DemoState>()(
           const demoNow = addMinutes(s.demoNow, minutes)
           // Background shipments move along their simulated journeys (ERP spec §11.1).
           // … and weight revisions left unanswered for 48 hours are accepted (CP-20 rule)
-          return { demoNow, data: wt.autoAcceptRevisions(advanceJourneys(s.data, s.demoNow, demoNow), demoNow) }
+          // … and failed deliveries with no response get their reattempt (CP-21 rule)
+          return { demoNow, data: ndr.autoReattempt(wt.autoAcceptRevisions(advanceJourneys(s.data, s.demoNow, demoNow), demoNow), demoNow) }
         })
       },
 
@@ -318,6 +325,8 @@ export const useDemoStore = create<DemoState>()(
       acceptRevision: (wrId, by) => set((s) => ({ data: wt.acceptRevision(s.data, wrId, by, s.demoNow) })),
       disputeRevision: (wrId, d, by) => set((s) => ({ data: wt.disputeRevision(s.data, wrId, d, by, s.demoNow) })),
       resolveDispute: (wrId, decision, note, by) => set((s) => ({ data: wt.resolveDispute(s.data, wrId, decision, note, by, s.demoNow) })),
+      reportNdr: (x) => set((s) => ({ data: ndr.reportNdr(s.data, x, s.demoNow) })),
+      respondNdr: (lr, c, by) => set((s) => ({ data: ndr.respondNdr(s.data, lr, c, by, s.demoNow) })),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),
 
 

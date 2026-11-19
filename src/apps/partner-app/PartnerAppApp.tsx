@@ -21,6 +21,7 @@ import PA21Trip from './PA21Trip'
 import PA22StartTrip from './PA22StartTrip'
 import PA31DeliveryRun from './PA31DeliveryRun'
 import PA32Stop from './PA32Stop'
+import PA35Ndr from './PA35Ndr'
 import PA33Deliver from './PA33Deliver'
 import RiderHandover from './RiderHandover'
 import PA25HubHome from './PA25HubHome'
@@ -91,7 +92,7 @@ export default function PartnerAppApp() {
                 <Route path="run" element={<PA31DeliveryRun />} />
                 <Route path="run/:legId" element={<PA32Stop />} />
                 <Route path="run/:legId/deliver" element={<PA33Deliver />} />
-                <Route path="run/:legId/ndr" element={screen({ screenId: 'PA-35', labelKey: 'pa.ndr', phase: 4 })} />
+                <Route path="run/:legId/ndr" element={<PA35Ndr />} />
               </>
             )}
             {staff.role === 'driver' && (

@@ -129,6 +129,11 @@ export default function CP17Shipment() {
             {openExceptions.map((x) => (
               <p key={x.id} className="flex items-center gap-2 font-medium">
                 <TriangleAlert className="size-4 shrink-0 text-status-warning" aria-hidden /> {t(`cp17.exception.${x.type}`)}
+                {x.type === 'ndr' && (
+                  <Link to={`/customer/exceptions/ndr/${s.id}`} className="ml-auto text-primary hover:underline">
+                    {t('cp17.chooseNdr')}
+                  </Link>
+                )}
               </p>
             ))}
           </div>

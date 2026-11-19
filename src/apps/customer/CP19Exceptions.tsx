@@ -34,6 +34,7 @@ export default function CP19Exceptions() {
   // From the dashboard / notifications: ?lr=…&screen=CP-20 opens the matching screen
   const lr = params.get('lr')
   if (lr && params.get('screen') === 'CP-20') return <Navigate to={`/customer/exceptions/weight/${lr}`} replace />
+  if (lr && params.get('screen') === 'CP-21') return <Navigate to={`/customer/exceptions/ndr/${lr}`} replace />
 
   const shown = inTab(rows, tab)
   return (
@@ -73,7 +74,7 @@ export default function CP19Exceptions() {
                     <Chip tone={r.type === 'weightDisputed' ? 'info' : r.tab === 'hold' ? 'neutral' : 'warning'}>{t(`cp19.type.${r.type}`)}</Chip>
                   </td>
                   <td className="tabular">{formatDateTime(r.raisedAt)}</td>
-                  <td>{r.amount !== undefined ? t('cp19.amount', { amount: formatINR(r.amount) }) : (r.details ?? '—')}</td>
+                  <td>{r.amount !== undefined ? t('cp19.amount', { amount: formatINR(r.amount) }) : r.type === 'ndr' && r.details ? t(`ndr.reason.${r.details}`, { defaultValue: r.details }) : (r.details ?? '—')}</td>
                   <td>{r.dueAt ? <SlaTimer dueAt={r.dueAt} totalMinutes={r.totalMinutes} amberPct={Math.round((120 / (r.totalMinutes ?? 120)) * 100)} /> : <span className="text-muted-foreground">—</span>}</td>
                   <td className="pr-4 text-right">
                     <Button size="sm" variant={r.dueAt ? 'default' : 'outline'} onClick={() => navigate(r.to)}>

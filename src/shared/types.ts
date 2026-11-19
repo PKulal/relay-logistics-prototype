@@ -798,7 +798,7 @@ export interface Shipment {
    * demo clock advances (see sim/journey.ts). Absent for shipments that only
    * move through live demo actions (the hero, LGS-DEL-000790, new bookings).
    */
-  sim?: { outcome: 'normal' | 'ndr' | 'short' | 'cancel' | 'pickupFailed' | 'rto'; assignees?: Record<number, Id>; closeAfterDays?: number; ndrReason?: string; shortPieceIds?: Id[] }
+  sim?: { outcome: 'normal' | 'ndr' | 'short' | 'cancel' | 'pickupFailed' | 'rto'; assignees?: Record<number, Id>; closeAfterDays?: number; ndrReason?: NdrReason; shortPieceIds?: Id[] }
   updatedAt: IsoDateTime
 }
 
@@ -989,16 +989,36 @@ export interface WeightRevision {
   chargedTo?: 'wallet' | 'invoice'
 }
 
+/** PA-35 reason codes (source §5.1 "NDR: reason code + photo of location") */
+export const NDR_REASONS = ['notAvailable', 'premisesClosed', 'refused', 'addressIncomplete', 'appointmentUnavailable', 'codNotReady', 'other'] as const
+export type NdrReason = (typeof NDR_REASONS)[number]
+
+/**
+ * A failed delivery attempt (PA-35) and the response to it (CP-21 shipper, CP-18
+ * consignee; source §10: "WhatsApp buttons for consignee and shipper:
+ * Reattempt · Change Slot / Address · RTO"). The first response applies.
+ */
 export interface Ndr {
   id: Id
   shipmentId: Id
+  legId?: Id
   attempt: number
-  reason: string
+  reason: NdrReason
   photo?: string
+  note?: string
+  /** Masked call to the consignee before giving up (PA-35 check) */
+  calledAt?: IsoDateTime
   at: IsoDateTime
-  customerChoice?: 'reattempt' | 'changeSlot' | 'changeAddress' | 'rto'
+  customerChoice?: 'reattempt' | 'changeSlot' | 'rto'
+  /** Customer user id, 'consignee', or 'system' (no response / max attempts) */
   choiceBy?: Id
+  choiceAt?: IsoDateTime
   newSlot?: { date: IsoDate; from: string; to: string }
+  updatedContact?: string
+  /** Within the same pincode (assumed) */
+  updatedAddress?: string
+  instructions?: string
+  rtoCharge?: number
 }
 
 export interface Claim {

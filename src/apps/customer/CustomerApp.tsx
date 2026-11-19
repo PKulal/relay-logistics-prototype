@@ -15,6 +15,7 @@ import CP14Confirmation from './CP14Confirmation'
 import CP16Shipments from './CP16Shipments'
 import CP19Exceptions from './CP19Exceptions'
 import CP20WeightDiscrepancy from './CP20WeightDiscrepancy'
+import CP21Ndr from './CP21Ndr'
 import CP17Shipment from './CP17Shipment'
 import CP05Qualification from './onboarding/CP05Qualification'
 import CP06Kyc from './onboarding/CP06Kyc'
@@ -70,6 +71,7 @@ export default function CustomerApp() {
         <Route path="book/done/:lr" element={canBook ? <CP14Confirmation /> : <AccessDenied />} />
         <Route path="shipments/:lr" element={<CP17Shipment />} />
         <Route path="exceptions/weight/:lr" element={<CP20WeightDiscrepancy />} />
+        <Route path="exceptions/ndr/:lr" element={<CP21Ndr />} />
         <Route path="onboarding" element={<CP10Tracker />} />
         <Route path="onboarding/qualification" element={<CP05Qualification />} />
         <Route path="onboarding/kyc" element={<CP06Kyc />} />

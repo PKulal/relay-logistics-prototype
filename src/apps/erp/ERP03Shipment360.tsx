@@ -297,7 +297,7 @@ function Timeline({ data, s, events }: { data: DemoData; s: Shipment; events: Sh
             </p>
             {(e.reason || e.note || e.sealNos?.length || e.receivedBy) && (
               <p className="text-caption">
-                {[e.reason, e.note, e.sealNos?.length ? `${t('erp03.seal')} ${e.sealNos.join(', ')}` : '', e.receivedBy ? t('erp03.receivedBy', { name: e.receivedBy }) : '']
+                {[e.reason && (e.type === 'deliveryFailed' ? t(`ndr.reason.${e.reason}`, { defaultValue: e.reason }) : e.reason), e.note, e.sealNos?.length ? `${t('erp03.seal')} ${e.sealNos.join(', ')}` : '', e.receivedBy ? t('erp03.receivedBy', { name: e.receivedBy }) : '']
                   .filter(Boolean)
                   .join(' · ')}
               </p>

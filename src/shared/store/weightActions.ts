@@ -6,9 +6,9 @@
 import { WEIGHT_REVISION_RESPONSE_HOURS } from '@shared/engines/customerDashboard'
 import { addMinutes } from '@shared/lib/time'
 import type { DemoData, Id, IsoDateTime, Notification, WeightDisputeReason, WeightRevision } from '@shared/types'
+import { chargeCustomer } from './billing'
 import { audit } from './erpActions'
 
-const round2 = (n: number) => Math.round(n * 100) / 100
 const notify = (data: DemoData, audience: Notification['audience'], title: string, body: string, link: string, at: IsoDateTime): DemoData => {
   const id = `NTF-${String(Object.keys(data.notifications).length + 1).padStart(5, '0')}`
   return { ...data, notifications: { ...data.notifications, [id]: { id, audience, title, body, link, at, read: false } } }
@@ -16,29 +16,8 @@ const notify = (data: DemoData, audience: Notification['audience'], title: strin
 const setWr = (data: DemoData, w: WeightRevision): DemoData => ({ ...data, weightRevisions: { ...data.weightRevisions, [w.id]: w } })
 const cp20 = (w: WeightRevision) => `/customer/exceptions/weight/${w.shipmentId}`
 
-/**
- * Charge the difference: a prepaid customer's wallet is debited; a credit
- * customer has it added to the invoice (credit used goes up). Either way it
- * counts towards this month's spend.
- */
-function charge(data: DemoData, w: WeightRevision, at: IsoDateTime): { data: DemoData; chargedTo: 'wallet' | 'invoice' } {
-  const s = data.shipments[w.shipmentId]
-  const c = data.customers[s.customerId]
-  const spend = round2(c.spendMonthToDate + w.amountDiff)
-  if (c.billing === 'prepaid') {
-    const balanceAfter = round2(c.walletBalance - w.amountDiff)
-    const txnId = `WT-${String(Object.keys(data.walletTxns).length + 1).padStart(5, '0')}`
-    return {
-      data: {
-        ...data,
-        customers: { ...data.customers, [c.id]: { ...c, walletBalance: balanceAfter, spendMonthToDate: spend } },
-        walletTxns: { ...data.walletTxns, [txnId]: { id: txnId, customerId: c.id, type: 'adjustment', ref: w.id, amount: -w.amountDiff, balanceAfter, at } },
-      },
-      chargedTo: 'wallet',
-    }
-  }
-  return { data: { ...data, customers: { ...data.customers, [c.id]: { ...c, creditUsed: round2(c.creditUsed + w.amountDiff), spendMonthToDate: spend } } }, chargedTo: 'invoice' }
-}
+/** Charge the difference (wallet debit or added to the invoice). */
+const charge = (data: DemoData, w: WeightRevision, at: IsoDateTime) => chargeCustomer(data, data.shipments[w.shipmentId].customerId, w.amountDiff, w.id, at)
 
 /** CP-20 Accept revised rate (or the 48-hour rule, by 'system'). */
 export function acceptRevision(data: DemoData, wrId: Id, by: Id, at: IsoDateTime): DemoData {

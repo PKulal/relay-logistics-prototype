@@ -92,6 +92,8 @@ function makeTab() {
     acceptRevision: () => {},
     disputeRevision: () => {},
     resolveDispute: () => {},
+    reportNdr: () => {},
+    respondNdr: () => {},
     createNegotiatedCard: () => '',
     editRateCard: () => {},
     submitRateCard: () => {},

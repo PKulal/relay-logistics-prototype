@@ -36,7 +36,7 @@ describe('key shipments (seed-data.md §4)', () => {
     const s = seed.shipments['LGS-DEL-000776']
     expect(s.status).toBe('undelivered')
     expect(seed.legs['JOB-000776-L5']).toMatchObject({ partnerId: 'P-NKEXP', staffId: 'FS-MANJU', status: 'failedAttempt' })
-    expect(seed.ndrs['NDR-000776-1']).toMatchObject({ reason: 'Premises closed', attempt: 1 })
+    expect(seed.ndrs['NDR-000776-1']).toMatchObject({ reason: 'premisesClosed', attempt: 1 })
     expect(seed.ndrs['NDR-000776-1'].customerChoice).toBeUndefined()
   })
 

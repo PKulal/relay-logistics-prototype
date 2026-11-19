@@ -1660,7 +1660,11 @@
     "pieces": "Pieces",
     "cod": "Collect on delivery",
     "cannot": "Cannot deliver",
-    "startFirst": "Start the run first"
+    "startFirst": "Start the run first",
+    "reattempt": "Attempt {{n}}: reattempt",
+    "lastReason": "Last time: {{reason}}",
+    "newAddress": "Deliver to: {{address}}",
+    "newContact": "Call: {{contact}}"
   },
   "pa33": {
     "title": "Deliver",
@@ -1860,7 +1864,8 @@
     "issues": "Short / damaged pieces",
     "noIssues": "None",
     "cod": "COD collected",
-    "reviewRevision": "Review"
+    "reviewRevision": "Review",
+    "chooseNdr": "Choose what to do"
   },
   "cp18": {
     "trackingPage": "Tracking page (no login)",
@@ -1898,7 +1903,24 @@
     "waTrack": "Track shipment",
     "waBook": "Book delivery slot",
     "waConfirmed": "Delivery slot confirmed: {{date}} {{from}}–{{to}}",
-    "waOut": "Your shipment is out for delivery today. Tap to call the agent (masked number)."
+    "waOut": "Your shipment is out for delivery today. Tap to call the agent (masked number).",
+    "waNdr": "We couldn't deliver {{lr}} today: {{reason}}. What should we do?",
+    "ndr": {
+      "reattempt": "Reattempt",
+      "changeSlot": "Change slot",
+      "rto": "Return to sender"
+    },
+    "ndrTitle": "Delivery attempt {{n}} failed",
+    "ndrChoose": "What should we do?",
+    "ndrConfirm": "Confirm",
+    "ndrSlot": "delivery on {{date}}, {{from}}–{{to}}",
+    "ndrYou": "You chose: {{what}}.",
+    "ndrShipper": "{{shipper}} chose: {{what}}.",
+    "ndrAuto": "Logisco scheduled: {{what}}.",
+    "ndrSent": "Thank you. We'll deliver on {{date}}, {{from}}–{{to}}.",
+    "ndrSentRto": "Thank you. The shipment goes back to the sender.",
+    "ndrRtoTitle": "Send the shipment back to the sender?",
+    "ndrRtoBody": "It won't be delivered to you."
   },
   "customerType": {
     "sme": "SME shipper",
@@ -3499,5 +3521,63 @@
       "upheld": "Upheld by {{name}}, {{at}}:",
       "reversed": "Booked weight accepted by {{name}}, {{at}}:"
     }
+  },
+  "ndr": {
+    "reason": {
+      "notAvailable": "Consignee not available",
+      "premisesClosed": "Premises closed",
+      "refused": "Refused",
+      "addressIncomplete": "Address incomplete",
+      "appointmentUnavailable": "Appointment not available",
+      "codNotReady": "COD amount not ready",
+      "other": "Other"
+    }
+  },
+  "pa35": {
+    "title": "Cannot deliver",
+    "reason": "Why couldn't you deliver?",
+    "call": "Call the consignee first",
+    "callNow": "Call {{name}} (masked)",
+    "called": "Called at {{time}}",
+    "callRule": "A call in the last 15 minutes is needed before a failed attempt.",
+    "photo": "Photo of the location",
+    "note": "Note (optional)",
+    "submit": "Submit failed attempt",
+    "todo": "Choose a reason, call the consignee and take a photo.",
+    "done": "Failed attempt recorded; the customer will choose what happens next"
+  },
+  "cp21": {
+    "title": "Failed delivery",
+    "attempts": "Delivery attempts",
+    "attempt": "Attempt {{n}}",
+    "photo": "Photo of the location",
+    "choice": {
+      "reattempt": "Reattempt",
+      "changeSlot": "Change slot / address",
+      "rto": "Return to origin (RTO)"
+    },
+    "chosenBy": "Chosen by {{name}}, {{at}}",
+    "byConsignee": "the consignee",
+    "bySystem": "Logisco automatically",
+    "rtoCharged": "RTO charge {{amount}}",
+    "dispatchOnly": "Admin or Dispatch users choose what happens next.",
+    "yourAction": "Your action",
+    "firstWins": "The consignee gets the same choice on WhatsApp. The first response applies. No response within 24 hours: we reattempt on the next working day.",
+    "date": "Reattempt date",
+    "dateHint": "Next 3 working days",
+    "slot": "Time slot",
+    "contact": "Updated contact number",
+    "address": "Updated address",
+    "addressHint": "Within pincode {{pincode}}. Now: {{current}}",
+    "instructions": "Instructions for the rider",
+    "instructionsPh": "e.g. Call before arriving",
+    "rtoCharge": "RTO charge: {{amount}} (equal to the forward freight).",
+    "fromWallet": "Debited from your wallet.",
+    "toInvoice": "Added to your invoice.",
+    "submit": "Submit",
+    "confirmRto": "Return the shipment to origin for {{amount}}?",
+    "confirmRtoBody": "The shipment comes back to your pickup location. This can't be undone.",
+    "done": "Reattempt booked for {{date}}, {{from}}–{{to}}; the rider has been told",
+    "doneRto": "Return to origin started"
   }
 }

@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useData, useDemoNow } from '@shared/hooks/useDemo'
+import { ndrsOf } from '@shared/engines/ndr'
 import { formatDate, formatINR } from '@shared/lib/format'
 import { istDate } from '@shared/lib/time'
 import { MapView } from '@shared/ui/MapView'
@@ -38,6 +39,8 @@ export default function PA32Stop() {
   const cod = s.paymentMode === 'cod' ? s.codAmount : undefined
   const onRun = leg.status === 'inProgress'
   const done = leg.status === 'delivered'
+  // A reattempt after a failed delivery: what the customer / consignee asked for (CP-21, CP-18)
+  const reattempt = ndrsOf(data, s.id).filter((n) => n.newSlot).at(-1)
 
   return (
     <div className="flex flex-col gap-4 p-4 pb-28">
@@ -66,6 +69,16 @@ export default function PA32Stop() {
           <PhoneCall className="size-4" aria-hidden /> {t('pa.call')}
         </button>
       </div>
+
+      {reattempt && (
+        <section className="rounded-2xl border-2 border-status-info bg-status-info-bg p-4" data-testid="reattempt">
+          <p className="font-semibold">{t('pa32.reattempt', { n: reattempt.attempt + 1 })}</p>
+          <p className="text-[13px]">{t('pa32.lastReason', { reason: t(`ndr.reason.${reattempt.reason}`) })}</p>
+          {reattempt.updatedAddress && <p className="mt-1 font-semibold">{t('pa32.newAddress', { address: reattempt.updatedAddress })}</p>}
+          {reattempt.updatedContact && <p className="font-semibold">{t('pa32.newContact', { contact: reattempt.updatedContact })}</p>}
+          {reattempt.instructions && <p className="mt-1">“{reattempt.instructions}”</p>}
+        </section>
+      )}
 
       <Card title={t('pa32.contact')}>
         <p className="text-[18px] font-semibold">{c.contact}</p>

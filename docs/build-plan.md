@@ -47,7 +47,7 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 
 ## Phase 4 — Exceptions and money
 - [x] Weight revision: PA-16 “Measure larger” → CP-19 / CP-20 → ERP Finance (CP-19 exception queue, CP-20 accept / dispute with evidence and AI check, ERP-31 Weight disputes tab; 48-hour auto-accept on the demo clock)
-- [ ] NDR: PA-35 → CP-21 + WhatsApp preview (CP-18) → reattempt task back to PA
+- [x] NDR: PA-35 → CP-21 + WhatsApp preview (CP-18) → reattempt task back to PA (first response applies; 24 h no response → reattempt next working day; 3rd failed attempt → RTO with RTO charge)
 - [ ] Control Tower: ERP-06 at-risk list, ERP-07 exceptions, ERP-08 reassign (000790 → QuickLink), ERP-09, ERP-10
 - [ ] Claims: CP-22 → ERP-36 / ERP-37 (liability engine) → PP-22 deduction
 - [ ] Customer money: CP-23 wallet, CP-24 invoices, CP-25 COD, PA-34 COD collection, ERP-31, ERP-34

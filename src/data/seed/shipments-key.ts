@@ -110,11 +110,11 @@ export function addKeyShipments(seed: DemoData, until: IsoDateTime): DemoData {
     }),
     '2026-11-16T10:15:00+05:30',
   )
-  data = runJourney(data, 'LGS-DEL-000776', { until, outcome: 'ndr', ndrReason: 'Premises closed', assignees: { 5: 'FS-MANJU' } })
+  data = runJourney(data, 'LGS-DEL-000776', { until, outcome: 'ndr', ndrReason: 'premisesClosed', assignees: { 5: 'FS-MANJU' } })
   const ndrAt = findEvent(data, 'LGS-DEL-000776', 'deliveryFailed')
   data = {
     ...data,
-    ndrs: { ...data.ndrs, 'NDR-000776-1': { id: 'NDR-000776-1', shipmentId: 'LGS-DEL-000776', attempt: 1, reason: 'Premises closed', at: ndrAt } },
+    ndrs: { ...data.ndrs, 'NDR-000776-1': { id: 'NDR-000776-1', shipmentId: 'LGS-DEL-000776', legId: 'JOB-000776-L5', attempt: 1, reason: 'premisesClosed', note: 'Shutter down', photo: 'JOB-000776-L5-ndr:Shutter down, Amargol', calledAt: ndrAt, at: ndrAt } },
     exceptions: {
       ...data.exceptions,
       'EXC-000776-1': {
