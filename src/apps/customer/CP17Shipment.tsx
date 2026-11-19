@@ -7,7 +7,8 @@
 import { ArrowLeft, CalendarClock, Check, Copy, Download, MessageCircle, Printer, ShieldAlert, TriangleAlert } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { claimableShipments } from '@shared/engines/claims'
 import { toast } from 'sonner'
 import { cn } from '@/shared/lib/utils'
 import { routeStops, shipmentPosition } from '@shared/engines/position'
@@ -36,6 +37,7 @@ export default function CP17Shipment() {
   const { user, customer } = useCustomerSession()
   const data = useData((d) => d)
   const now = useDemoNow()
+  const navigate = useNavigate()
   const [slotOpen, setSlotOpen] = useState(false)
   const printer = usePrintShipments(data)
   const s = data.shipments[lr]
@@ -43,6 +45,7 @@ export default function CP17Shipment() {
 
   const step = trackStep(s.status)
   const delivered = s.status === 'delivered' || s.status === 'deliveredWithException'
+  const claimable = claimableShipments(data, s.customerId, now).some((x) => x.id === s.id)
   const openExceptions = Object.values(data.exceptions).filter((x) => x.shipmentId === s.id && x.status !== 'resolved')
   const pendingRevision = Object.values(data.weightRevisions).find((w) => w.shipmentId === s.id && w.status === 'pending')
   const pod = proofOfDelivery(data, s)
@@ -107,7 +110,7 @@ export default function CP17Shipment() {
               <Download /> {t('cp17.downloadAll')}
             </Button>
             {delivered && (
-              <Button variant="outline" size="sm" disabled title={t('cp17.claimLater')}>
+              <Button variant="outline" size="sm" disabled={!claimable} title={claimable ? undefined : t('cp17.claimClosed')} onClick={() => navigate(`/customer/claims/new?lr=${s.id}`)}>
                 <ShieldAlert /> {t('cp16.raiseClaim')}
               </Button>
             )}

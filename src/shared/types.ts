@@ -1036,21 +1036,52 @@ export interface Ndr {
   rtoCharge?: number
 }
 
+export type ClaimType = 'damage' | 'shortage' | 'loss' | 'pilferage'
+
+/** Partner side of a claim (PP-22) */
+export type ClaimPartnerStatus = 'notified' | 'accepted' | 'contested' | 'insuranceClaim' | 'decided' | 'deducted' | 'recoveredFromInsurer'
+
+/**
+ * Customer claim (source §10 Step 4: chain-of-custody evidence, liability engine,
+ * settled within 7 days, then recovered from the partner payout or insurer).
+ */
 export interface Claim {
   id: Id
   shipmentId: Id
   customerId: Id
-  type: 'shortage' | 'damage' | 'loss'
+  type: ClaimType
   pieceIds: Id[]
   amountClaimed: number
   amountApproved?: number
+  description?: string
+  files?: string[]
+  raisedBy?: Id
   liableLegId?: Id
   liablePartnerId?: Id
-  recovery: { partner: number; insurer: number; insurerRef?: string }
+  /** Who pays Logisco back: partner payout (up to its liability cap), partner's insurer, Logisco's insurer */
+  recovery: { partner: number; partnerInsurer?: number; insurer: number; insurerRef?: string }
   creditNoteId?: Id
+  decision?: { amount: number; reason: string; by: Id; at: IsoDateTime }
+  settlement?: { method: 'creditNote' | 'bank'; ref: string; by: Id; at: IsoDateTime }
+  /** "Add information" from the customer (CP-22) */
+  info?: { at: IsoDateTime; by: Id; text: string; files: string[] }[]
   raisedAt: IsoDateTime
   settleBy: IsoDate
-  status: 'raised' | 'investigating' | 'approved' | 'settled' | 'rejected'
+  status: 'raised' | 'investigating' | 'approved' | 'partlyApproved' | 'rejected' | 'settled' | 'closed'
+  confirmationRequestedAt?: IsoDateTime
+  confirmedAt?: IsoDateTime
+  reopenedAt?: IsoDateTime
+  partner?: {
+    status: ClaimPartnerStatus
+    reason?: string
+    files?: string[]
+    insurer?: string
+    policy?: string
+    respondedAt?: IsoDateTime
+    /** Claims desk outcome of a contest */
+    decision?: 'upheld' | 'waived'
+    payoutDate?: IsoDate
+  }
 }
 
 export interface Invoice {

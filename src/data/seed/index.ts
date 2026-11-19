@@ -3,6 +3,7 @@
  * so every reset produces identical data.
  */
 import { raiseAutoTickets } from '@shared/store/controlTowerActions'
+import { addInvestigatingClaim } from './claims'
 import type { DemoData, IsoDateTime } from '@shared/types'
 import { consignees, customers, customerUsers, pickupLocations, skus } from './customers'
 import { extraConsignees, extraCustomers, extraCustomerUsers, extraPickupLocations, extraSkus } from './customers-extra'
@@ -87,5 +88,5 @@ export function buildBaseSeed(): DemoData {
 export function buildSeed(): DemoData {
   const data = generateShipments(addKeyShipments(buildBaseSeed(), DEMO_START), DEMO_START)
   // Exceptions already present at 10:00 are auto-ticketed (source §10 Steps 1–2)
-  return raiseAutoTickets(joinTrips(data, Object.keys(data.legs)), DEMO_START)
+  return raiseAutoTickets(addInvestigatingClaim(joinTrips(data, Object.keys(data.legs))), DEMO_START)
 }

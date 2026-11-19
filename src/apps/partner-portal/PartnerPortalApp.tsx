@@ -14,6 +14,7 @@ import PP11Dashboard from './PP11Dashboard'
 import PP12JobInbox from './PP12JobInbox'
 import PP13JobDetail from './PP13JobDetail'
 import PP14Assign from './PP14Assign'
+import PP22Claims, { PP22ClaimDetail } from './PP22Claims'
 import PP05Status from './onboarding/PP05Status'
 import PP06Documents from './onboarding/PP06Documents'
 import PP07Verification from './onboarding/PP07Verification'
@@ -22,7 +23,7 @@ import PP09Setup from './onboarding/PP09Setup'
 import PP10Tracker from './onboarding/PP10Tracker'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'PP-10': PP10Tracker, 'PP-11': PP11Dashboard, 'PP-12': PP12JobInbox }
+const SCREENS = { 'PP-10': PP10Tracker, 'PP-11': PP11Dashboard, 'PP-12': PP12JobInbox, 'PP-22': PP22Claims }
 
 /** Before the monitored trial the partner sees only its onboarding (no jobs yet). */
 const PRE_TRIAL: PartnerStatus[] = ['applied', 'kyc', 'agreement', 'integration']
@@ -78,6 +79,7 @@ export default function PartnerPortalApp() {
         {/* Screens outside the menu (PP spec §4.3): job detail and assignment, for Admin and Operations */}
         <Route path="jobs/assign" element={user.role === 'finance' ? <AccessDenied /> : <PP14Assign />} />
         <Route path="jobs/:jobId" element={<PP13JobDetail />} />
+        <Route path="claims/:id" element={<PP22ClaimDetail />} />
         {!preTrial && <Route path="*" element={<NotFound />} />}
       </Route>
     </Routes>

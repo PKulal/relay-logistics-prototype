@@ -49,7 +49,9 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 - [x] Weight revision: PA-16 “Measure larger” → CP-19 / CP-20 → ERP Finance (CP-19 exception queue, CP-20 accept / dispute with evidence and AI check, ERP-31 Weight disputes tab; 48-hour auto-accept on the demo clock)
 - [x] NDR: PA-35 → CP-21 + WhatsApp preview (CP-18) → reattempt task back to PA (first response applies; 24 h no response → reattempt next working day; 3rd failed attempt → RTO with RTO charge)
 - [x] Control Tower: ERP-06 at-risk list, ERP-07 exceptions, ERP-08 reassign (000790 → QuickLink), ERP-09, ERP-10 (auto-tickets for pickup missed, delay and e-way bill expiry; SOS panel fills with PA-12)
-- [ ] Claims: CP-22 → ERP-36 / ERP-37 (liability engine) → PP-22 deduction
+- [x] Claims: CP-22 → ERP-36 / ERP-37 (liability engine) → PP-22 deduction (CLM-2026-0142 settled / deducted, CLM-2026-0151 under investigation)
+  - [ ] Maker-checker on claim settlement: ERP-37 spec has Claims Officer (maker) and Claims Head (approver); seed-data.md has only Farhan Ali, so he decides and approves for now
+  - [ ] Claim outcome feeds the partner's damage / on-time / responsiveness KPIs (source §10 Step 5) — with the Phase 5 scoring item
 - [ ] Customer money: CP-23 wallet, CP-24 invoices, CP-25 COD, PA-34 COD collection, ERP-31, ERP-34
 - [ ] Partner money: PP-25 to PP-28; ERP-32 3-way match (₹72), ERP-33 payout batch with maker-checker
 - [ ] PP-20 escalations, PP-21 delivery exceptions, PA-18 pickup failed, PA-30 short / excess, PA-12 SOS

@@ -16,6 +16,7 @@ import CP16Shipments from './CP16Shipments'
 import CP19Exceptions from './CP19Exceptions'
 import CP20WeightDiscrepancy from './CP20WeightDiscrepancy'
 import CP21Ndr from './CP21Ndr'
+import CP22Claims, { CP22ClaimDetail, CP22RaiseClaim } from './CP22Claims'
 import CP17Shipment from './CP17Shipment'
 import CP05Qualification from './onboarding/CP05Qualification'
 import CP06Kyc from './onboarding/CP06Kyc'
@@ -28,7 +29,7 @@ import CP10Tracker from './onboarding/CP10Tracker'
 import { customerNav, type CustomerCtx } from './nav'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'CP-11': CP11Dashboard, 'CP-12': CP12GetQuote, 'CP-13': CP13BookShipment, 'CP-16': CP16Shipments, 'CP-19': CP19Exceptions }
+const SCREENS = { 'CP-11': CP11Dashboard, 'CP-12': CP12GetQuote, 'CP-13': CP13BookShipment, 'CP-16': CP16Shipments, 'CP-19': CP19Exceptions, 'CP-22': CP22Claims }
 
 /** Customer Portal (/customer) — B2B shippers. Spec: docs/01-customer-portal.md */
 export default function CustomerApp() {
@@ -72,6 +73,8 @@ export default function CustomerApp() {
         <Route path="shipments/:lr" element={<CP17Shipment />} />
         <Route path="exceptions/weight/:lr" element={<CP20WeightDiscrepancy />} />
         <Route path="exceptions/ndr/:lr" element={<CP21Ndr />} />
+        <Route path="claims/new" element={<CP22RaiseClaim />} />
+        <Route path="claims/:id" element={<CP22ClaimDetail />} />
         <Route path="onboarding" element={<CP10Tracker />} />
         <Route path="onboarding/qualification" element={<CP05Qualification />} />
         <Route path="onboarding/kyc" element={<CP06Kyc />} />

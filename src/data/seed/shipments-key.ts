@@ -78,6 +78,13 @@ export function addKeyShipments(seed: DemoData, until: IsoDateTime): DemoData {
         liablePartnerId: 'P-NCRXD',
         recovery: { partner: 10000, insurer: 20000, insurerRef: 'INS-88213' },
         creditNoteId: 'CN-2026-0088',
+        // INVENTED details around the seed-data.md facts (settled 19-Nov, credit note, recovery split)
+        description: 'Box 4 missing at delivery; GRN signed with remark "5 of 6 received"',
+        files: ['grn_remark.jpg', 'invoice_SE-25-26-1102.pdf'],
+        raisedBy: 'CU-PRIYA',
+        decision: { amount: 30000, reason: 'Approved in full: piece 4 scanned in at the origin hub, not sealed out. Insured (FOV).', by: 'LS-FARHAN', at: '2026-11-19T15:30:00+05:30' },
+        settlement: { method: 'creditNote', ref: 'CN-2026-0088', by: 'LS-FARHAN', at: '2026-11-19T15:30:00+05:30' },
+        partner: { status: 'deducted', respondedAt: '2026-11-19T18:10:00+05:30', payoutDate: '2026-11-20' },
         raisedAt: '2026-11-14T10:20:00+05:30',
         settleBy: '2026-11-21',
         status: 'settled',

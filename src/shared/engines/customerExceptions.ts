@@ -52,7 +52,7 @@ export function exceptionQueue(data: DemoData, customerId: Id, _now: IsoDateTime
     }
     if (a.kind === 'claim') {
       const delivered = Object.values(data.events).filter((e) => e.shipmentId === a.shipmentId && e.type === 'delivered').at(-1)
-      rows.push({ key: `claim-${a.shipmentId}`, tab: 'claims', shipmentId: a.shipmentId, type: 'claim', raisedAt: delivered?.at ?? a.dueAt, dueAt: a.dueAt, totalMinutes: data.settings.claimWindowDays * 24 * 60, to: '/customer/claims' })
+      rows.push({ key: `claim-${a.shipmentId}`, tab: 'claims', shipmentId: a.shipmentId, type: 'claim', raisedAt: delivered?.at ?? a.dueAt, dueAt: a.dueAt, totalMinutes: data.settings.claimWindowDays * 24 * 60, to: `/customer/claims/new?lr=${a.shipmentId}` })
     }
   }
 
@@ -63,7 +63,7 @@ export function exceptionQueue(data: DemoData, customerId: Id, _now: IsoDateTime
   }
   for (const c of Object.values(data.claims)) {
     if (c.customerId !== customerId || c.status === 'settled' || c.status === 'rejected') continue
-    rows.push({ key: c.id, tab: 'claims', shipmentId: c.shipmentId, type: 'claim', raisedAt: c.raisedAt, to: '/customer/claims' })
+    rows.push({ key: c.id, tab: 'claims', shipmentId: c.shipmentId, type: 'claim', raisedAt: c.raisedAt, to: `/customer/claims/${c.id}` })
   }
 
   return rows.sort((a, b) => (a.dueAt && b.dueAt ? Date.parse(a.dueAt) - Date.parse(b.dueAt) : a.dueAt ? -1 : b.dueAt ? 1 : Date.parse(b.raisedAt) - Date.parse(a.raisedAt)))

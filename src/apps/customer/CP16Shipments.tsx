@@ -11,6 +11,7 @@ import { hasException } from '@shared/engines/customerDashboard'
 import { shipmentPosition } from '@shared/engines/position'
 import { shipmentSla, type SlaState } from '@shared/engines/sla'
 import { matchesSearch } from '@shared/engines/tracking'
+import { claimableShipments } from '@shared/engines/claims'
 import { useData, useDemoNow } from '@shared/hooks/useDemo'
 import { formatDate, formatINR, formatKg } from '@shared/lib/format'
 import { addDays, istDate } from '@shared/lib/time'
@@ -59,6 +60,7 @@ export default function CP16Shipments() {
   const { user, customer } = useCustomerSession()
   const data = useData((d) => d)
   const now = useDemoNow()
+  const claimableIds = useMemo(() => new Set(claimableShipments(data, customer.id, now).map((x) => x.id)), [data, customer.id, now])
   const canBook = user.role === 'admin' || user.role === 'dispatch'
   const [f, setF] = useState<Filters>({ q: params.get('q') ?? '', status: params.get('status') === 'exceptions' ? '' : (params.get('status') ?? ''), range: 'all', service: '', location: '', state: '', payment: '', sla: '', exceptions: params.get('exceptions') === '1' || params.get('status') === 'exceptions' })
   const set = <K extends keyof Filters>(k: K, v: Filters[K]) => setF((x) => ({ ...x, [k]: v }))
@@ -174,7 +176,7 @@ export default function CP16Shipments() {
                 </DropdownMenuItem>
               )}
               {done && (
-                <DropdownMenuItem disabled>
+                <DropdownMenuItem disabled={!claimableIds.has(s.id)} onSelect={() => navigate(`/customer/claims/new?lr=${s.id}`)}>
                   <ShieldAlert /> {t('cp16.raiseClaim')}
                 </DropdownMenuItem>
               )}

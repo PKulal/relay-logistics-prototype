@@ -34,6 +34,8 @@ import * as pag from './partnerAgreementActions'
 import * as wt from './weightActions'
 import * as ndr from './ndrActions'
 import * as ct from './controlTowerActions'
+import * as clm from './claimActions'
+import type { PartnerClaimResponse, RaiseClaim, Settle } from './claimActions'
 import type { Reassign, TicketAction } from './controlTowerActions'
 import type { NdrChoice, ReportNdr } from './ndrActions'
 import type { DisputeInput } from './weightActions'
@@ -46,7 +48,7 @@ import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 18
+export const STORE_VERSION = 19
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -184,6 +186,16 @@ export interface DemoState {
   ticketAction: (id: Id, action: TicketAction, note: string, by: Id) => void
   closeTicket: (id: Id, note: string, by: Id) => void
   contactPartner: (partnerId: Id, kind: 'call' | 'message', by: Id) => void
+  /** Claims (CP-22, ERP-36/37, PP-22) */
+  raiseClaim: (x: RaiseClaim, by: Id) => Id | undefined
+  addClaimInfo: (id: Id, text: string, files: string[], by: Id) => void
+  startInvestigation: (id: Id, by: Id) => void
+  settleClaim: (id: Id, x: Settle, by: Id) => void
+  requestClaimConfirmation: (id: Id, by: Id) => void
+  confirmClaim: (id: Id, by: Id) => void
+  reopenClaim: (id: Id, reason: string, by: Id) => void
+  respondToClaim: (id: Id, r: PartnerClaimResponse, by: Id) => void
+  decidePartnerClaim: (id: Id, d: 'upheld' | 'waived' | 'recoveredFromInsurer', note: string, by: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -343,6 +355,19 @@ export const useDemoStore = create<DemoState>()(
       ticketAction: (id, action, note, by) => set((s) => ({ data: ct.ticketAction(s.data, id, action, note, by, s.demoNow) })),
       closeTicket: (id, note, by) => set((s) => ({ data: ct.closeTicket(s.data, id, note, by, s.demoNow) })),
       contactPartner: (partnerId, kind, by) => set((s) => ({ data: ct.contactPartner(s.data, partnerId, kind, by, s.demoNow) })),
+      raiseClaim: (x, by) => {
+        const r = clm.raiseClaim(get().data, x, by, get().demoNow)
+        set({ data: r.data })
+        return r.claimId
+      },
+      addClaimInfo: (id, text, files, by) => set((s) => ({ data: clm.addClaimInfo(s.data, id, text, files, by, s.demoNow) })),
+      startInvestigation: (id, by) => set((s) => ({ data: clm.startInvestigation(s.data, id, by, s.demoNow) })),
+      settleClaim: (id, x, by) => set((s) => ({ data: clm.settleClaim(s.data, id, x, by, s.demoNow) })),
+      requestClaimConfirmation: (id, by) => set((s) => ({ data: clm.requestClaimConfirmation(s.data, id, by, s.demoNow) })),
+      confirmClaim: (id, by) => set((s) => ({ data: clm.confirmClaim(s.data, id, by, s.demoNow) })),
+      reopenClaim: (id, reason, by) => set((s) => ({ data: clm.reopenClaim(s.data, id, reason, by, s.demoNow) })),
+      respondToClaim: (id, r, by) => set((s) => ({ data: clm.respondToClaim(s.data, id, r, by, s.demoNow) })),
+      decidePartnerClaim: (id, d, note, by) => set((s) => ({ data: clm.decidePartnerClaim(s.data, id, d, note, by, s.demoNow) })),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),
 
 

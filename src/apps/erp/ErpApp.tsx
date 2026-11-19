@@ -24,10 +24,11 @@ import ERP26Leads from './ERP26Leads'
 import ERP27OnboardingReview from './ERP27OnboardingReview'
 import ERP30CreditReview from './ERP30CreditReview'
 import ERP31Invoicing from './ERP31Invoicing'
+import ERP36ClaimsDesk, { ERP37Claim } from './ERP36Claims'
 import { erpNav, type ErpCtx } from './nav'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'ERP-05': ERP05JobBoard, 'ERP-06': ERP06AtRisk, 'ERP-07': ERP07Exceptions, 'ERP-09': ERP09PartnerHealth, 'ERP-10': ERP10DailyPack, 'ERP-11': ERP11Applications, 'ERP-12': ERP12KycDesk, 'ERP-13': ERP13Commercials, 'ERP-14': ERP14Trials, 'ERP-22': ERP22RateCards, 'ERP-23': ERP23Approvals, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-30': ERP30CreditReview, 'ERP-31': ERP31Invoicing }
+const SCREENS = { 'ERP-05': ERP05JobBoard, 'ERP-06': ERP06AtRisk, 'ERP-07': ERP07Exceptions, 'ERP-09': ERP09PartnerHealth, 'ERP-10': ERP10DailyPack, 'ERP-11': ERP11Applications, 'ERP-12': ERP12KycDesk, 'ERP-13': ERP13Commercials, 'ERP-14': ERP14Trials, 'ERP-22': ERP22RateCards, 'ERP-23': ERP23Approvals, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-30': ERP30CreditReview, 'ERP-31': ERP31Invoicing, 'ERP-36': ERP36ClaimsDesk }
 
 /** Logisco ERP + Control Tower (/erp) — Logisco staff. Spec: docs/04-erp-control-tower.md */
 export default function ErpApp() {
@@ -72,6 +73,7 @@ export default function ErpApp() {
         {/* ERP-03 Shipment 360 is opened from search and lists, not the menu; every role can open it */}
         <Route path="shipments/:lr" element={<ERP03Shipment360 />} />
         <Route path="control-tower/reassign/:legId" element={<ERP08Reassign />} />
+        <Route path="claims/:id" element={<ERP37Claim />} />
         <Route path="sales/onboarding/:customerId" element={<ERP27OnboardingReview />} />
         <Route path="pricing/rate-cards/:cardId" element={<ERP22RateCards />} />
         {navRoutes(erpNav, ctx, SCREENS)}

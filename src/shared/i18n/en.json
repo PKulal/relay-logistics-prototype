@@ -1865,7 +1865,8 @@
     "noIssues": "None",
     "cod": "COD collected",
     "reviewRevision": "Review",
-    "chooseNdr": "Choose what to do"
+    "chooseNdr": "Choose what to do",
+    "claimClosed": "Claims can be raised within 7 days of delivery, once per shipment"
   },
   "cp18": {
     "trackingPage": "Tracking page (no login)",
@@ -3796,5 +3797,215 @@
     "carried": "Carried-over tickets",
     "stopped": "Stopped trucks",
     "dwell": "Hubs over dwell"
+  },
+  "claims": {
+    "type": {
+      "damage": "Damage",
+      "shortage": "Short delivery",
+      "loss": "Loss",
+      "pilferage": "Pilferage"
+    },
+    "status": {
+      "raised": "Submitted",
+      "investigating": "Under investigation",
+      "approved": "Approved",
+      "partlyApproved": "Partly approved",
+      "rejected": "Rejected",
+      "settled": "Settled",
+      "closed": "Closed"
+    },
+    "partnerStatus": {
+      "notified": "Notified",
+      "accepted": "Accepted",
+      "contested": "Contested",
+      "insuranceClaim": "Claim on insurance",
+      "decided": "Decided",
+      "deducted": "Deducted",
+      "recoveredFromInsurer": "Recovered from insurer"
+    },
+    "inOut": "{{in}} in · {{out}} out",
+    "seals": "Seal {{seals}}",
+    "photos_one": "{{count}} photo",
+    "photos_other": "{{count}} photos",
+    "why": {
+      "notPassedOn": "{{in}} in, {{out}} handed on: the piece was received but not passed on",
+      "damagedOnArrival": "Found damaged when the next leg received it",
+      "damagedInCustody": "Damaged while this leg held it",
+      "deliveredShort": "{{in}} received, {{out}} delivered"
+    }
+  },
+  "cp22": {
+    "title": "Claims",
+    "subtitle": "Damage, short delivery, loss or pilferage. Logisco settles within 7 days.",
+    "raise": "Raise a claim",
+    "empty": "No claims",
+    "col": {
+      "claim": "Claim",
+      "lr": "LR",
+      "type": "Type",
+      "amount": "Claimed / approved",
+      "status": "Status",
+      "dates": "Raised / settled"
+    },
+    "raiseTitle": "Raise a claim",
+    "window": "For shipments delivered in the last {{days}} days. Delivery photos and scans are attached automatically.",
+    "lr": "LR number",
+    "noneEligible": "No delivered shipment is inside the claim window.",
+    "type": "Claim type",
+    "pieces": "Affected pieces",
+    "piece": "Piece {{n}} of {{total}}",
+    "cond": {
+      "missing": "missing",
+      "damaged": "damaged",
+      "ok": ""
+    },
+    "amount": "Claim amount (₹)",
+    "cap": "Up to {{share}} (invoice value of these pieces), capped at {{liability}} carrier liability (not insured)",
+    "capInsured": "Up to {{share}} (invoice value of these pieces; insured)",
+    "settlement": "Settlement",
+    "creditNote": "Credit note against your invoices",
+    "description": "Description",
+    "evidence": "Evidence",
+    "evidenceHint": "Photos, invoice, GRN with remarks",
+    "submit": "Submit claim",
+    "submitted": "Claim {{id}} submitted to the Logisco claims desk",
+    "failed": "The claim couldn't be submitted; check the form",
+    "err": {
+      "amount": "At most {{max}}",
+      "files": "Add at least one file"
+    },
+    "evidenceTimeline": "Evidence timeline",
+    "decision": "Decision and settlement",
+    "settled": {
+      "creditNote": "Credit note {{ref}}, {{date}}",
+      "bank": "Bank transfer {{ref}}, {{date}}"
+    },
+    "pending": "Logisco settles by {{date}}.",
+    "confirmedOn": "You confirmed the resolution {{at}}",
+    "info": "Information added",
+    "confirm": "Confirm resolution",
+    "confirmed": "Claim closed. Thank you.",
+    "addInfo": "Add information or reply",
+    "addFiles": "Add files",
+    "send": "Send",
+    "infoSent": "Sent to the claims desk",
+    "reopenReason": "Reopen with a reason",
+    "reopenHint": "Within 7 days of the decision",
+    "reopen": "Reopen claim",
+    "reopened": "Claim reopened"
+  },
+  "erp36": {
+    "title": "Claims desk",
+    "subtitle_one": "{{count}} open claim · settle within {{days}} days",
+    "subtitle_other": "{{count}} open claims · settle within {{days}} days",
+    "empty": "No claims",
+    "col": {
+      "claim": "Claim · LR · customer · type",
+      "amount": "Amount",
+      "settleBy": "Settle by",
+      "liable": "Liable leg (AI)",
+      "fraud": "Fraud signal (AI)",
+      "status": "Status"
+    },
+    "none": "None",
+    "fraud": {
+      "aboveInvoiceShare": "Above invoice value",
+      "repeatClaims": "Repeated claims",
+      "deliveredScanned": "Pieces scanned as delivered"
+    }
+  },
+  "erp37": {
+    "customerSays": "Customer's claim",
+    "pieces": "Pieces {{pieces}}",
+    "evidence": "Chain of custody",
+    "col": {
+      "leg": "Leg",
+      "partner": "Partner",
+      "in": "In",
+      "out": "Out",
+      "seals": "Seals ↓in ↑out",
+      "photos": "Photos",
+      "staff": "Staff"
+    },
+    "liable": "Liable: L{{seq}} · {{partner}}",
+    "noLiability": "No custody gap found in the scans; check the delivery evidence.",
+    "fraud": "Fraud signal",
+    "decision": "Decision",
+    "investigate": "Start investigation",
+    "approved": "Approved amount (₹; 0 to reject)",
+    "reason": "Reason",
+    "reasonHint": "Shown to the customer",
+    "settleBy": "Settle customer by",
+    "method": {
+      "creditNote": "Credit note",
+      "bank": "Bank transfer"
+    },
+    "recover": "Recover from",
+    "fromPartner": "Partner payout (cap {{cap}})",
+    "fromPartnerInsurer": "Partner's insurer",
+    "fromInsurer": "Logisco insurer",
+    "overCap": "Above the partner's liability cap",
+    "splitMismatch": "The split adds up to {{sum}}, not {{amount}}",
+    "approve": "Approve settlement",
+    "reject": "Reject claim",
+    "claimsOnly": "Only the claims desk approves settlements.",
+    "confirmApprove": "Settle {{amount}} with the customer?",
+    "confirmBody": "{{method}} now; {{partner}} scheduled as a deduction from the partner's payout.",
+    "confirmReject": "Reject this claim?",
+    "settled": "Settled; the partner has been notified",
+    "rejected": "Claim rejected; the customer has been told",
+    "by": "{{name}}, {{at}}",
+    "recovery": "Recovery: partner {{partner}} · partner's insurer {{partnerInsurer}} · Logisco insurer {{insurer}}",
+    "customerConfirmed": "Customer confirmed {{at}}",
+    "confirmationRequested": "Confirmation requested {{at}}",
+    "requestConfirmation": "Request customer confirmation",
+    "requested": "Confirmation requested",
+    "partnerSide": "Partner: {{partner}}",
+    "partnerInsurer": "Insurer {{insurer}}, policy {{policy}}",
+    "contested": "Contested by the partner",
+    "contestNote": "Note to the partner",
+    "uphold": "Uphold deduction",
+    "waive": "Waive (Logisco insurer)",
+    "markRecovered": "Mark recovered from insurer",
+    "upheld": "Deduction upheld",
+    "waived": "Deduction waived",
+    "recovered": "Marked recovered from the partner's insurer"
+  },
+  "pp22": {
+    "title": "Claims and deductions",
+    "subtitle": "Claims attributed to your legs, with the evidence. Logisco settles the customer, then recovers from your payout or your insurer.",
+    "empty": "No claims on your legs",
+    "col": {
+      "claim": "Claim",
+      "leg": "LR · your leg",
+      "type": "Type",
+      "amount": "Amount attributed",
+      "status": "Status"
+    },
+    "legN": "Leg {{n}} ({{type}})",
+    "evidence": "Evidence before, during and after your leg",
+    "yourLeg": "your leg",
+    "decision": "Decision and deduction",
+    "amount": "Attributed to you: {{amount}} (within the liability cap in your agreement)",
+    "waived": "Waived: Logisco's insurer covers it",
+    "payout": "Deducted in the payout of {{date}}",
+    "deducted": "Deducted in the payout of {{date}}",
+    "held": "Deduction held while you claim on your insurance",
+    "response": "Your response",
+    "r": {
+      "accept": "Accept liability",
+      "contest": "Contest",
+      "insurance": "Claim on my insurance"
+    },
+    "reason": "Reason",
+    "files": "Evidence (CCTV, photos, manifest)",
+    "insurer": "Insurer",
+    "policy": "Policy number",
+    "send": "Send response",
+    "done": {
+      "accept": "Accepted; the deduction is scheduled",
+      "contest": "Sent to the Logisco claims desk",
+      "insurance": "Insurance details sent; deduction held"
+    }
   }
 }
