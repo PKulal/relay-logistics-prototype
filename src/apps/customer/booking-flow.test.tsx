@@ -50,7 +50,6 @@ describe('CP-13 → CP-14 booking flow', () => {
     expect(screen.getByTestId('price-total')).toHaveTextContent('₹3,628.26')
     expect(screen.getByTestId('review-eta')).toHaveTextContent('Thu, 26-Nov-2026')
 
-    fireEvent.click(screen.getByRole('checkbox', { name: /I accept the booking terms/ }))
     fireEvent.click(screen.getByRole('button', { name: /Confirm booking/ }))
 
     expect(await screen.findByTestId('lr', {}, { timeout: 3000 })).toHaveTextContent('LGS-DEL-000781')
@@ -84,14 +83,5 @@ describe('CP-13 → CP-14 booking flow', () => {
     fireEvent.click(within(screen.getByRole('listbox')).getByRole('button', { name: /Belgaum Power Controls/ }))
     expect(screen.getByLabelText(/Pincode/)).toHaveValue('590001')
     expect(screen.getByLabelText(/Contact person/)).toHaveValue('Sunil Desai')
-  })
-
-  it('saves a draft into the shared store', () => {
-    renderBooking()
-    fireEvent.click(screen.getByRole('button', { name: /Fill sample/ }))
-    fireEvent.click(screen.getByRole('button', { name: /Save as draft/ }))
-    const drafts = Object.values(useDemoStore.getState().data.drafts)
-    expect(drafts).toHaveLength(1)
-    expect(drafts[0]).toMatchObject({ customerId: 'C-SHARMA', userId: 'CU-PRIYA', label: 'Hubballi 580030 · 6 pieces' })
   })
 })

@@ -33,12 +33,12 @@ export function flagLeg(data: DemoData, legId: Id, reason: FlagReason, remark: s
  * Assign accepted (or reassign assigned) jobs to a staff member. The staff member
  * gets a Partner App notification for each job.
  */
-export function assignLegs(data: DemoData, legIds: Id[], staffId: Id, vehicleId: Id | undefined, note: string, userId: Id, now: IsoDateTime): DemoData {
+export function assignLegs(data: DemoData, legIds: Id[], staffId: Id, vehicleId: Id | undefined, userId: Id, now: IsoDateTime): DemoData {
   const ok = legIds.filter((id) => ['accepted', 'assigned'].includes(data.legs[id]?.status))
   if (ok.length === 0) return data
   let next = applyEvents(
     data,
-    legEvents(data, ok, () => ({ type: 'legAssigned', at: now, by: userId, app: 'partnerPortal', assigneeStaffId: staffId, assigneeVehicleId: vehicleId, note: note || undefined })),
+    legEvents(data, ok, () => ({ type: 'legAssigned', at: now, by: userId, app: 'partnerPortal', assigneeStaffId: staffId, assigneeVehicleId: vehicleId })),
     now,
   )
   const notifications = { ...next.notifications }
@@ -49,7 +49,7 @@ export function assignLegs(data: DemoData, legIds: Id[], staffId: Id, vehicleId:
       id: nid,
       audience: { app: 'partnerApp', userId: staffId },
       title: id,
-      body: note || data.legs[id].shipmentId,
+      body: data.legs[id].shipmentId,
       link: `/app/tasks/${id}`,
       at: now,
       read: false,

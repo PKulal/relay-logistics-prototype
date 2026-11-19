@@ -105,7 +105,7 @@ export default function PP11Dashboard() {
               <div className="mt-2 h-2 overflow-hidden rounded-full bg-gray-100" role="meter" aria-valuemin={0} aria-valuemax={view.capacity.capacity} aria-valuenow={view.capacity.used} aria-label={t('pp11.capacity')}>
                 <div className={cn('h-full rounded-full', usedPct > 90 ? 'bg-status-danger' : usedPct > 75 ? 'bg-status-warning' : 'bg-primary')} style={{ width: `${usedPct}%` }} />
               </div>
-              {partner.tier === 'bronze' && <p className="mt-1 text-caption text-muted-foreground">{t('pp11.bronzeCap')}</p>}
+              {(partner.tier === 'bronze' || partner.tier === 'probation') && <p className="mt-1 text-caption text-muted-foreground">{t(`pp11.tierCap.${partner.tier}`)}</p>}
             </section>
           </div>
         </div>

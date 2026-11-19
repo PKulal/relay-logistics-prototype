@@ -8,7 +8,6 @@ import { Link, Navigate, NavLink, Outlet, Route, Routes, useNavigate, useParams 
 import { cn } from '@/shared/lib/utils'
 import { useData, useFlags } from '@shared/hooks/useDemo'
 import { useSessionUser } from '@shared/store/session'
-import type { FieldStaff } from '@shared/types'
 import { LanguageToggle } from '@shared/ui/LanguageToggle'
 import { AccessDenied, ScreenPlaceholder } from '@shared/ui/Page'
 import { PhoneFrame } from '@shared/ui/PhoneFrame'
@@ -66,7 +65,7 @@ export default function PartnerAppApp() {
       </div>
       <PhoneFrame>
         <Routes>
-          <Route element={<PhoneShell staff={staff} tabs={tabs} />}>
+          <Route element={<PhoneShell tabs={tabs} />}>
             {tabs.map((tab) =>
               tab.path === '' ? <Route key="home" index element={BUILT[tab.screenId] ?? screen(tab)} /> : <Route key={tab.path} path={tab.path} element={BUILT[tab.screenId] ?? screen(tab)} />,
             )}
@@ -99,19 +98,15 @@ export default function PartnerAppApp() {
   )
 }
 
-function PhoneShell({ staff, tabs }: { staff: FieldStaff; tabs: Tab[] }) {
+function PhoneShell({ tabs }: { tabs: Tab[] }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { offline } = useFlags()
 
   return (
     <>
-      {/* Top bar: duty status · sync · language · SOS (PA-04) */}
+      {/* Top bar: sync · language · SOS (PA-04) */}
       <header className="flex h-14 shrink-0 items-center gap-2 bg-primary px-3 pt-2 text-primary-foreground sm:pt-3">
-        <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-caption font-semibold', staff.onDuty ? 'bg-white/20' : 'bg-black/20')}>
-          <span className={cn('size-2 rounded-full', staff.onDuty ? 'bg-brand-amber' : 'bg-gray-500')} aria-hidden />
-          {staff.onDuty ? t('pa.onDuty') : t('pa.offDuty')}
-        </span>
         <button
           type="button"
           onClick={() => navigate('/app/sync')}

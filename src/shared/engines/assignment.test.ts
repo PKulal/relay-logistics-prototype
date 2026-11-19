@@ -54,12 +54,14 @@ describe('assignment rules', () => {
     expect(planAssignment(d, hero)[0].partnerId).toBe('P-QUICKLINK')
   })
 
-  it('caps Bronze partners at 50% of capacity', () => {
+  it('Bronze is capped at declared capacity; falling to Probation cuts volume by 50% (source §5.3)', () => {
     const d: DemoData = structuredClone(data)
-    const ft = d.partners['P-FASTTRACK'] // capacity 200 → 100 while Bronze
+    const ft = d.partners['P-FASTTRACK'] // Bronze, capacity 200
     ft.baseLoadToday = 100
     const input = { ...hero, origin: d.pincodes['570001'], dest: d.pincodes['411001'], lane: d.lanes['LN-BLR-BOM'], serviceKind: 'parcel' as const, service: 'standard' as const }
-    expect(rankCandidates(d, 'firstMile', input)[0]).toMatchObject({ partnerId: 'P-FASTTRACK', eligible: false, reason: 'atCapacity' })
+    expect(rankCandidates(d, 'firstMile', input).find((c) => c.partnerId === 'P-FASTTRACK')).toMatchObject({ eligible: true })
+    ft.tier = 'probation' // capacity 200 → 100
+    expect(rankCandidates(d, 'firstMile', input).find((c) => c.partnerId === 'P-FASTTRACK')).toMatchObject({ eligible: false, reason: 'atCapacity' })
   })
 
   it('skips suspended partners', () => {

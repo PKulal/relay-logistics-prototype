@@ -2,7 +2,7 @@ import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { bookShipment, type BookingInput } from '@shared/store/booking'
 import { acceptLegs, assignLegs, flagLeg, reportProblem, unassignLeg } from '@shared/store/partnerActions'
-import { acceptBy, capacityToday, jobEnds, jobSpecials, jobTab, neighbours, partnerAlerts, scoreTrend, staffOptions, suggestedStaff, todayTiles, vehicleRequired } from './partnerJobs'
+import { acceptBy, capacityToday, jobEnds, jobSpecials, jobTab, neighbours, partnerAlerts, scoreTrend, staffOptions, todayTiles, vehicleRequired } from './partnerJobs'
 
 const hero: BookingInput = {
   customerId: 'C-SHARMA',
@@ -68,12 +68,11 @@ describe('PP-12 / PP-13 job view', () => {
 })
 
 describe('PP-14 assign', () => {
-  it('lists SwiftCity riders with the day load and suggests the lightest', () => {
+  it('lists SwiftCity riders with the day load', () => {
     const opts = staffOptions(data, 'P-SWIFTCITY', 'firstMile', DEMO_START)
     expect(opts.map((o) => o.staff.id).sort()).toEqual(['FS-RAVI', 'FS-SWC-AJAY', 'FS-SWC-DEEPAK'])
     // 7 pickups still to do, plus the ones already done today
     expect(opts.find((o) => o.staff.id === 'FS-RAVI')!.jobsToday).toBeGreaterThanOrEqual(7)
-    expect(suggestedStaff(opts)[0].staff.id).not.toBe('FS-RAVI')
   })
 
   it('blocks staff with an expired licence or pending police verification', () => {
@@ -92,18 +91,18 @@ describe('PP-14 assign', () => {
 })
 
 describe('partner actions', () => {
-  it('accept, assign Ravi (with vehicle and note), unassign', () => {
+  it('accept, assign Ravi (with vehicle), unassign', () => {
     const accepted = acceptLegs(data, ['JOB-000781-L1'], 'PU-NEHA', DEMO_START)
     expect(accepted.legs['JOB-000781-L1'].status).toBe('accepted')
-    const assigned = assignLegs(accepted, ['JOB-000781-L1'], 'FS-RAVI', 'V-DL01LT4521', 'Use Gate 2', 'PU-NEHA', DEMO_START)
+    const assigned = assignLegs(accepted, ['JOB-000781-L1'], 'FS-RAVI', 'V-DL01LT4521', 'PU-NEHA', DEMO_START)
     expect(assigned.legs['JOB-000781-L1']).toMatchObject({ status: 'assigned', staffId: 'FS-RAVI', vehicleId: 'V-DL01LT4521' })
-    expect(Object.values(assigned.notifications).at(-1)).toMatchObject({ audience: { app: 'partnerApp', userId: 'FS-RAVI' }, body: 'Use Gate 2' })
+    expect(Object.values(assigned.notifications).at(-1)).toMatchObject({ audience: { app: 'partnerApp', userId: 'FS-RAVI' }, body: 'LGS-DEL-000781' })
     const back = unassignLeg(assigned, 'JOB-000781-L1', 'PU-NEHA', DEMO_START)
     expect(back.legs['JOB-000781-L1']).toMatchObject({ status: 'accepted', staffId: undefined })
   })
 
   it('cannot assign a job that has not been accepted', () => {
-    expect(assignLegs(data, ['JOB-000781-L1'], 'FS-RAVI', undefined, '', 'PU-NEHA', DEMO_START)).toBe(data)
+    expect(assignLegs(data, ['JOB-000781-L1'], 'FS-RAVI', undefined, 'PU-NEHA', DEMO_START)).toBe(data)
   })
 
   it('flag not serviceable records the reason and returns the job to Logisco', () => {

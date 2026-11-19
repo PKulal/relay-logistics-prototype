@@ -150,7 +150,7 @@ export function todayTiles(data: DemoData, partnerId: Id, now: IsoDateTime): Tod
 
 export function capacityToday(data: DemoData, partnerId: Id, now: IsoDateTime): { used: number; capacity: number } {
   const p = data.partners[partnerId]
-  return { used: partnerLoad(data, partnerId, istDate(now)), capacity: effectiveCapacity(p, data.settings.bronzeVolumeCapPct) }
+  return { used: partnerLoad(data, partnerId, istDate(now)), capacity: effectiveCapacity(p, data.settings.probationVolumeCutPct) }
 }
 
 /** Latest weekly score and the change from the week before. */
@@ -209,14 +209,6 @@ export function staffOptions(data: DemoData, partnerId: Id, legType: LegType, no
       const block: StaffBlock | undefined = staff.licenceValidTill && staff.licenceValidTill < today ? 'licenceExpired' : !staff.policeVerified ? 'policeVerificationPending' : undefined
       return { staff, jobsToday, block }
     })
-}
-
-/** Suggested staff: on duty, not blocked, lightest load first (assumed helper). */
-export function suggestedStaff(options: StaffOption[], count = 2): StaffOption[] {
-  return options
-    .filter((o) => !o.block && o.staff.onDuty)
-    .sort((a, b) => a.jobsToday - b.jobsToday || a.staff.name.localeCompare(b.staff.name))
-    .slice(0, count)
 }
 
 /** Vehicle needed for pickups over 30 kg and for line-haul (PP-14, assumed). */

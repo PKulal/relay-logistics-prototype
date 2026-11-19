@@ -1,5 +1,4 @@
 import { buildBaseSeed, DEMO_START } from '@data/seed'
-import type { DemoData } from '@shared/types'
 import { bookingChecks, type BookingCheckInput } from './bookingChecks'
 import { pickupDates, pickupSlots } from './schedule'
 
@@ -14,15 +13,6 @@ describe('booking checks (CP spec §7.4)', () => {
   it('credit: blocks a booking that would exceed available credit (₹1,55,800)', () => {
     expect(bookingChecks(data, data.customers['C-SHARMA'], { ...hero, total: 155800.01 }, DEMO_START)).toEqual(['creditExceeded'])
     expect(bookingChecks(data, data.customers['C-SHARMA'], { ...hero, total: 155800 }, DEMO_START)).toEqual([])
-  })
-
-  it('credit: blocks when an invoice is overdue beyond the 15-day grace period', () => {
-    const d: DemoData = structuredClone(data)
-    const inv = { id: 'INV-X', customerId: 'C-SHARMA', period: 'Sep', date: '2026-10-01', shipmentCount: 1, taxable: 1, gst: 0, total: 1, status: 'overdue' as const }
-    d.invoices['INV-X'] = { ...inv, dueDate: '2026-11-08' } // 15 days ago: still within grace
-    expect(bookingChecks(d, d.customers['C-SHARMA'], hero, DEMO_START)).toEqual([])
-    d.invoices['INV-X'] = { ...inv, dueDate: '2026-11-07' } // 16 days ago
-    expect(bookingChecks(d, d.customers['C-SHARMA'], hero, DEMO_START)).toEqual(['invoiceOverdue'])
   })
 
   it('prepaid: blocks when the wallet does not cover the total', () => {

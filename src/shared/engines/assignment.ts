@@ -105,9 +105,13 @@ export function partnerLoad(data: DemoData, partnerId: Id, date: IsoDate): numbe
   return load
 }
 
-/** Capacity after tier caps (Bronze: 50% of declared capacity). */
-export function effectiveCapacity(p: Partner, bronzeCapPct: number): number {
-  return p.tier === 'bronze' ? Math.floor((p.capacityPerDay * bronzeCapPct) / 100) : p.capacityPerDay
+/**
+ * Capacity after tier consequences (source §5.3): Bronze is capped at its
+ * declared capacity; a partner whose score falls below Bronze (Probation) has
+ * its volume cut by 50%.
+ */
+export function effectiveCapacity(p: Partner, probationCutPct: number): number {
+  return p.tier === 'probation' ? Math.floor((p.capacityPerDay * (100 - probationCutPct)) / 100) : p.capacityPerDay
 }
 
 export function rankCandidates(data: DemoData, type: LegType, i: AssignmentInput): Candidate[] {
@@ -129,7 +133,7 @@ export function rankCandidates(data: DemoData, type: LegType, i: AssignmentInput
       if (!ACTIVE.includes(p.status)) return skip('notActive')
       if (!p.services.includes(i.service)) return skip('serviceNotOffered')
       if (!rate) return skip('noRate')
-      if (partnerLoad(data, p.id, i.date) >= effectiveCapacity(p, data.settings.bronzeVolumeCapPct)) return skip('atCapacity')
+      if (partnerLoad(data, p.id, i.date) >= effectiveCapacity(p, data.settings.probationVolumeCutPct)) return skip('atCapacity')
       return { ...base, cost, eligible: true, rateLineId: rate.id }
     })
     // Partners that don't cover this place are noise for the "why" list.

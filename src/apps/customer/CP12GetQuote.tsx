@@ -3,16 +3,15 @@
  * All-in price and ETA before booking. Everything is calculated live by the
  * quote engine from the seeded rate cards, so the result follows every input.
  */
-import { CircleAlert, FileDown, MapPin, PackagePlus, Plus, RotateCcw, Sparkles, Trash2 } from 'lucide-react'
+import { CircleAlert, MapPin, PackagePlus, Plus, RotateCcw, Sparkles, Trash2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/shared/lib/utils'
 import { ewayBillCheck } from '@shared/engines/ewayBill'
-import type { QuoteInput } from '@shared/engines/quote'
 import { computeEta, earliestPickupDate } from '@shared/engines/schedule'
 import { useData, useDemoNow } from '@shared/hooks/useDemo'
-import { addDaysToDate, istDate } from '@shared/lib/time'
+import { istDate } from '@shared/lib/time'
 import { formatDate, formatDateLong, formatINR } from '@shared/lib/format'
 import type { ParcelTier, PaymentMode } from '@shared/types'
 import { Button } from '@shared/ui/button'
@@ -23,7 +22,6 @@ import { Input } from '@shared/ui/input'
 import { NativeSelect } from '@shared/ui/NativeSelect'
 import { PageHeader } from '@shared/ui/Page'
 import { PriceBreakdown, WeightBreakdown } from '@shared/ui/PriceBreakdown'
-import { PrintArea } from '@shared/ui/PrintArea'
 import { RadioGroup, RadioGroupItem } from '@shared/ui/radio-group'
 import { ToggleGroup, ToggleGroupItem } from '@shared/ui/toggle-group'
 import {
@@ -41,14 +39,6 @@ import {
   type ServiceChoice,
 } from './quoteForm'
 import { useCustomerSession } from './useCustomerSession'
-
-/** Short stable quote id from the request, e.g. "Q-261123-4F7K2". */
-function quoteId(input: QuoteInput, today: string): string {
-  const text = JSON.stringify(input)
-  let h = 0
-  for (let i = 0; i < text.length; i++) h = (Math.imul(31, h) + text.charCodeAt(i)) >>> 0
-  return `Q-${today.slice(2).replaceAll('-', '')}-${h.toString(36).toUpperCase().slice(0, 5)}`
-}
 
 // ─── Screen ────────────────────────────────────────────────────────────────────
 
@@ -101,8 +91,6 @@ export default function CP12GetQuote() {
   }, [data, customer.id, form])
 
   const blocked = !q || codTooHigh || codMissing
-  const id = input ? quoteId(input, istDate(demoNow)) : ''
-  const validTill = addDaysToDate(istDate(demoNow), data.settings.quoteValidityDays)
 
   return (
     <div>
@@ -327,29 +315,10 @@ export default function CP12GetQuote() {
               </Button>
             )}
             {(dest === 'unknown' || dest === 'notServiceable') && <p className="text-center text-caption font-medium text-status-danger">{t('cp12.notServed')}</p>}
-            <Button variant="outline" disabled={!q} onClick={() => window.print()}>
-              <FileDown /> {t('cp12.download')}
-            </Button>
-            {q && <p className="text-center text-caption text-muted-foreground">{t('cp12.validity', { id, date: formatDate(validTill) })}</p>}
           </div>
         </aside>
       </div>
 
-      {/* Printable quote (Download quote → browser print / Save as PDF) */}
-      {q && input && (
-        <PrintArea>
-          <img src="/brand/logisco-logo.png" alt={t('common.brand')} className="mb-4 h-10" />
-          <h1 className="text-page-title">{t('cp12.printTitle')}</h1>
-          <p className="mb-4">
-            {id} · {customer.legalName} · {t('cp12.validity', { id, date: formatDate(validTill) })}
-          </p>
-          <p className="mb-2">
-            {q.origin.city} ({q.origin.code}) → {q.dest.city} ({q.dest.code}) · {t(`service.${input.service}`)} · {t('cp12.eta')}: {formatDateLong(eta!)}
-          </p>
-          <WeightBreakdown weights={q.weights} serviceKind={input.serviceKind} minKg={ptlLine?.minKg} />
-          <PriceBreakdown price={q.price} gstPct={data.settings.gstPct} className="mt-4" />
-        </PrintArea>
-      )}
     </div>
   )
 }

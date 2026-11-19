@@ -303,8 +303,6 @@
     "notFoundBody": "Check the address, or use the menu to find your way."
   },
   "pa": {
-    "onDuty": "On duty",
-    "offDuty": "Off duty",
     "syncQueue": "Sync queue",
     "offline": "Offline",
     "synced": "Synced",
@@ -510,10 +508,7 @@
     "ewbNote": "An e-way bill will be generated automatically (valid {{days}} days).",
     "tierComparison": "Compare tiers",
     "bookThis": "Book this",
-    "notServed": "We don’t serve this pincode yet.",
-    "download": "Download quote",
-    "validity": "Quote {{id}} · valid till {{date}}",
-    "printTitle": "Logisco quote"
+    "notServed": "We don’t serve this pincode yet."
   },
   "leg": {
     "firstMile": "first mile",
@@ -525,10 +520,6 @@
   "cp13": {
     "title": "Book shipment",
     "subtitle": "Six short steps. Each step is checked before you move on.",
-    "editingDraft": "Editing draft {{id}}",
-    "saveDraft": "Save as draft",
-    "draftSaved": "Draft {{id}} saved. Find it under Shipments → Drafts.",
-    "noDestination": "No destination yet",
     "pieces_one": "{{count}} piece",
     "pieces_other": "{{count}} pieces",
     "step": {
@@ -559,8 +550,6 @@
     "noSlots": "No slots left on this date",
     "contactName": "Pickup contact",
     "contactMobile": "Contact mobile",
-    "instructions": "Instructions for pickup",
-    "charsLeft": "{{n}} characters left",
     "searchBook": "Search address book",
     "searchBookPlaceholder": "Company, contact, city or pincode",
     "category": "Consignee type",
@@ -586,15 +575,6 @@
     "appointmentRequired": "Appointment required",
     "saveToBook": "Save to address book",
     "description": "Description",
-    "packaging": "Packaging type",
-    "packagingTypes": {
-      "carton": "Carton box",
-      "bag": "Bag",
-      "pallet": "Pallet",
-      "crate": "Crate",
-      "drum": "Drum",
-      "other": "Other"
-    },
     "fragile": "Fragile (adds special handling)",
     "totals_one": "Totals · {{count}} piece",
     "totals_other": "Totals · {{count}} pieces",
@@ -606,7 +586,6 @@
     "po": "PO number",
     "goods": "Goods description",
     "hsn": "HSN code",
-    "customerRef": "Your reference",
     "invoiceCopy": "Invoice copy",
     "invoiceCopyHint": "PDF or image, up to 5 MB",
     "chooseFile": "Choose file",
@@ -641,7 +620,6 @@
       "invoiceDateFuture": "The invoice date can’t be in the future."
     },
     "recharge": "Recharge wallet",
-    "terms": "I accept the booking terms: the price shown is final except for a weight revision verified at pickup.",
     "err": {
       "required": "This field is required.",
       "slot": "Choose an available pickup slot.",
@@ -1003,7 +981,6 @@
     "toAssign": "Jobs to assign",
     "capacity": "Capacity today",
     "capacityValue": "{{used}} of {{capacity}}",
-    "bronzeCap": "Bronze tier: capped at 50% of declared capacity",
     "today": "Today’s jobs",
     "tiles": {
       "assigned": "Assigned",
@@ -1029,6 +1006,10 @@
       "licence": "{{name}}’s licence expires on {{date}}",
       "vehicle": "Documents for {{reg}} expire on {{date}}",
       "claim": "Claim {{claim}} on {{lr}} is attributed to you"
+    },
+    "tierCap": {
+      "bronze": "Bronze tier: capped at your declared capacity",
+      "probation": "Probation: volume cut by 50%"
     }
   },
   "pp12": {
@@ -1126,7 +1107,6 @@
     "selected_other": "{{count}} jobs selected",
     "staff": "Staff",
     "driver": "Driver",
-    "suggested": "Suggested:",
     "jobsToday_one": "{{count}} job today",
     "jobsToday_other": "{{count}} jobs today",
     "details": "Vehicle and note",
@@ -1134,16 +1114,11 @@
     "truck": "Truck",
     "noVehicle": "No vehicle",
     "vehicleRule": "Needed for pickups over 30 kg and for line-haul",
-    "coDriver": "Co-driver",
-    "none": "None",
-    "coDriverNote": "Co-driver: {{name}}",
     "fastag": "FASTag {{id}}",
     "noFastag": "No FASTag",
     "gps": "GPS {{id}}",
     "noGps": "No GPS device",
     "docsValid": "documents valid till {{date}}",
-    "note": "Note to staff",
-    "noteHint": "Shown in the Partner App with the job",
     "assign": "Assign",
     "done_one": "Job assigned to {{name}}",
     "done_other": "{{count}} jobs assigned to {{name}}",
@@ -1198,11 +1173,6 @@
   },
   "pa05": {
     "hello": "Hello, {{name}}",
-    "duty": "Duty",
-    "since": "On duty since {{time}}",
-    "nowOn": "You are on duty",
-    "nowOff": "You are off duty",
-    "cannotGoOff": "Finish the task in progress (and deposit any COD) before going off duty.",
     "next": "Next task",
     "nothing": "No tasks right now",
     "today": "Today",
@@ -1212,8 +1182,7 @@
     "departs": "departs {{time}}",
     "inbound": "Expected inbound",
     "atHub": "At the hub now",
-    "cod": "COD in hand",
-    "messages": "Messages from the office"
+    "cod": "COD in hand"
   },
   "pa06": {
     "title": "Tasks",
@@ -1243,7 +1212,6 @@
     "handToValue": "{{place}} by {{time}}",
     "shipments_one": "{{count}} shipment here",
     "shipments_other": "{{count}} shipments here",
-    "instructions": "Instructions",
     "requirements": "Bring back",
     "req": {
       "invoice": "Invoice copy",

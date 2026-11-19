@@ -4,10 +4,10 @@
  * the shared store (legs, events, credit / wallet), so it appears at once in the
  * ERP and in the partners' job inboxes. Then CP-14.
  */
-import { ArrowLeft, ArrowRight, BookUser, CircleAlert, FileCheck2, Loader2, MapPin, Pencil, Plus, Save, Sparkles, Trash2, Upload } from 'lucide-react'
+import { ArrowLeft, ArrowRight, BookUser, CircleAlert, FileCheck2, Loader2, MapPin, Pencil, Plus, Sparkles, Trash2, Upload } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { cn } from '@/shared/lib/utils'
 import { NoPartnerError } from '@shared/engines/assignment'
@@ -16,7 +16,7 @@ import { useData, useDemoNow } from '@shared/hooks/useDemo'
 import { formatDate, formatDateLong, formatINR, formatKg } from '@shared/lib/format'
 import { simulateLatency } from '@shared/sim/latency'
 import { useDemoStore } from '@shared/store'
-import type { BookingDraft, ParcelTier } from '@shared/types'
+import type { ParcelTier } from '@shared/types'
 import { Button } from '@shared/ui/button'
 import { Checkbox } from '@shared/ui/checkbox'
 import { Field, NumField } from '@shared/ui/FormField'
@@ -40,7 +40,6 @@ import {
   fromQuote,
   fromShipment,
   heroSample,
-  PACKAGING,
   quoteFor,
   STEPS,
   toBookingInput,
@@ -60,17 +59,14 @@ export default function CP13BookShipment() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
-  const [params] = useSearchParams()
   const { user, customer } = useCustomerSession()
   const data = useData((d) => d)
   const demoNow = useDemoNow()
   const store = useDemoStore
 
-  const draftId = params.get('draft') ?? undefined
   const [form, setForm] = useState<BookingForm>(() => {
     const base = emptyBooking(data, customer, demoNow)
     const state = location.state as { quote?: QuoteForm; repeat?: string } | null
-    if (draftId && data.drafts[draftId]) return withDefaultSlot(data, data.drafts[draftId].form as BookingForm, demoNow)
     if (state?.quote) return fromQuote(data, customer.id, base, state.quote, demoNow)
     if (state?.repeat && data.shipments[state.repeat]) return fromShipment(data, base, data.shipments[state.repeat], demoNow)
     return base
@@ -110,23 +106,6 @@ export default function CP13BookShipment() {
     goTo(stepIndex + 1)
   }
 
-  const saveDraft = () => {
-    const id = draftId ?? `DRF-${String(Object.keys(data.drafts).length + 1).padStart(3, '0')}`
-    const pin = data.pincodes[form.consignee.pincode]
-    const pieces = form.rows.reduce((s, r) => s + (positive(r.qty) ? Math.floor(num(r.qty)) : 0), 0)
-    const draft: BookingDraft = {
-      id,
-      customerId: customer.id,
-      userId: user.id,
-      savedAt: demoNow,
-      label: `${pin ? `${pin.city} ${pin.code}` : t('cp13.noDestination')} · ${t('cp13.pieces', { count: pieces })}`,
-      form,
-    }
-    store.getState().saveDraft(draft)
-    toast.success(t('cp13.draftSaved', { id }))
-    if (!draftId) navigate(`/customer/book?draft=${id}`, { replace: true })
-  }
-
   const confirm = async () => {
     // Re-check every step, then the business blocks
     for (let i = 0; i < STEPS.length; i++) {
@@ -145,7 +124,6 @@ export default function CP13BookShipment() {
       const { consignee, isNew } = consigneeFor(data, customer.id, form)
       if (isNew || consignee.saved !== data.consignees[consignee.id]?.saved) store.getState().saveConsignee(consignee)
       const lr = store.getState().bookShipment(toBookingInput(form, customer.id, user, consignee.id))
-      if (draftId) store.getState().deleteDraft(draftId)
       toast.success(t('cp13.booked', { lr }))
       navigate(`/customer/book/done/${lr}`)
     } catch (e) {
@@ -159,18 +137,13 @@ export default function CP13BookShipment() {
     <div>
       <PageHeader
         title={t('cp13.title')}
-        subtitle={draftId ? t('cp13.editingDraft', { id: draftId }) : t('cp13.subtitle')}
+        subtitle={t('cp13.subtitle')}
         actions={
-          <>
-            {customer.id === 'C-SHARMA' && (
-              <Button variant="outline" size="sm" onClick={() => setForm((f) => heroSample(data, f))}>
-                <Sparkles /> {t('cp12.fillSample')}
-              </Button>
-            )}
-            <Button variant="outline" size="sm" onClick={saveDraft}>
-              <Save /> {t('cp13.saveDraft')}
+          customer.id === 'C-SHARMA' && (
+            <Button variant="outline" size="sm" onClick={() => setForm((f) => heroSample(data, f))}>
+              <Sparkles /> {t('cp12.fillSample')}
             </Button>
-          </>
+          )
         }
       />
 
@@ -187,7 +160,7 @@ export default function CP13BookShipment() {
           {step === 'shipment' && <ShipmentStep form={form} setForm={setForm} set={set} err={fieldError} />}
           {step === 'invoice' && <InvoiceStep form={form} set={set} err={fieldError} ewb={ewbRequired(data, form, quote)} />}
           {step === 'payment' && <PaymentStep form={form} set={set} err={fieldError} />}
-          {step === 'review' && <ReviewStep form={form} set={set} err={fieldError} onEdit={goTo} eta={eta} blocks={blocks} />}
+          {step === 'review' && <ReviewStep form={form} onEdit={goTo} eta={eta} blocks={blocks} />}
 
           <div className="mt-8 flex flex-wrap items-center justify-between gap-2 border-t pt-4">
             <Button variant="outline" onClick={() => goTo(stepIndex - 1)} disabled={stepIndex === 0 || busy}>
@@ -299,16 +272,6 @@ function PickupStep({ form, set, setForm, err }: StepProps) {
       </Field>
       <Field label={t('cp13.contactMobile')} htmlFor="b-cmob" required error={err('contactMobile')}>
         <Input id="b-cmob" inputMode="tel" value={form.contactMobile} onChange={(e) => set('contactMobile', e.target.value)} aria-invalid={!!err('contactMobile')} />
-      </Field>
-      <Field label={t('cp13.instructions')} htmlFor="b-instr" error={err('instructions')} hint={t('cp13.charsLeft', { n: 250 - form.instructions.length })} className="sm:col-span-2">
-        <textarea
-          id="b-instr"
-          maxLength={250}
-          rows={2}
-          value={form.instructions}
-          onChange={(e) => set('instructions', e.target.value)}
-          className="rounded-md border border-input bg-background px-3 py-2 text-body outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        />
       </Field>
     </div>
   )
@@ -523,15 +486,6 @@ function ShipmentStep({ form, set, setForm, err }: StepProps) {
       </fieldset>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label={t('cp13.packaging')} htmlFor="b-pack" required>
-          <NativeSelect id="b-pack" value={form.packaging} onChange={(e) => set('packaging', e.target.value as BookingForm['packaging'])}>
-            {PACKAGING.map((p) => (
-              <option key={p} value={p}>
-                {t(`cp13.packagingTypes.${p}`)}
-              </option>
-            ))}
-          </NativeSelect>
-        </Field>
         <label className="flex items-center gap-2 self-end pb-2">
           <Checkbox checked={form.fragile} onCheckedChange={(v) => set('fragile', v === true)} />
           {t('cp13.fragile')}
@@ -580,9 +534,6 @@ function InvoiceStep({ form, set, err, ewb }: StepProps & { ewb: { required: boo
         </Field>
         <Field label={t('cp13.hsn')} htmlFor="b-hsn" required={ewb.required} error={err('hsn')}>
           <Input id="b-hsn" inputMode="numeric" maxLength={8} value={form.hsn} onChange={(e) => set('hsn', e.target.value.replace(/\D/g, ''))} />
-        </Field>
-        <Field label={t('cp13.customerRef')} htmlFor="b-ref">
-          <Input id="b-ref" value={form.customerRef} onChange={(e) => set('customerRef', e.target.value)} />
         </Field>
         <Field label={t('cp13.invoiceCopy')} required error={err('invoiceFile')} hint={t('cp13.invoiceCopyHint')}>
           {/* SIMULATED: only the file name is kept; nothing is uploaded */}
@@ -688,7 +639,7 @@ function PaymentStep({ form, set, err }: StepProps) {
   )
 }
 
-function ReviewStep({ form, set, err, onEdit, eta, blocks }: StepProps & { onEdit: (i: number) => void; eta?: string; blocks: string[] }) {
+function ReviewStep({ form, onEdit, eta, blocks }: Pick<StepProps, 'form'> & { onEdit: (i: number) => void; eta?: string; blocks: string[] }) {
   const { t } = useTranslation()
   const { customer } = useCustomerSession()
   const data = useData((d) => d)
@@ -718,7 +669,7 @@ function ReviewStep({ form, set, err, onEdit, eta, blocks }: StepProps & { onEdi
       <div className="grid gap-3 sm:grid-cols-2">
         {card(0, t('cp13.step.pickup'), [loc?.name, `${formatDateLong(form.pickupDate)}, ${form.slotFrom}–${String(Number(form.slotFrom.slice(0, 2)) + 2).padStart(2, '0')}${form.slotFrom.slice(2)}`, `${form.contactName}, ${form.contactMobile}`])}
         {card(1, t('cp13.step.consignee'), [form.consignee.company, `${form.consignee.contact}, ${form.consignee.mobile}`, `${form.consignee.address}, ${pin?.city ?? ''} ${form.consignee.pincode}`])}
-        {card(2, t('cp13.step.shipment'), [t(`service.${form.service === 'parcel' ? form.tier : form.service}`), `${t('cp13.pieces', { count: pieces })} · ${t(`cp13.packagingTypes.${form.packaging}`)}`, quote?.ok ? `${t('weight.chargeable')} ${formatKg(quote.quote.weights.chargeable)}` : ''])}
+        {card(2, t('cp13.step.shipment'), [t(`service.${form.service === 'parcel' ? form.tier : form.service}`), t('cp13.pieces', { count: pieces }), quote?.ok ? `${t('weight.chargeable')} ${formatKg(quote.quote.weights.chargeable)}` : ''])}
         {card(3, t('cp13.step.invoice'), [`${form.invoiceNo} · ${formatDate(form.invoiceDate)}`, formatINR(num(form.invoiceValue) || 0), form.goods])}
         {card(4, t('cp13.step.payment'), [t(`cp13.payment.${form.paymentMode}`), form.insurance ? t('cp13.transitInsurance', { pct: data.rateCards[customer.rateCardId].surcharges.fovPct }) : t('cp13.ownersRisk'), form.appointment ? t('cp13.appointmentRequested') : ''])}
       </div>
@@ -748,15 +699,6 @@ function ReviewStep({ form, set, err, onEdit, eta, blocks }: StepProps & { onEdi
         </div>
       ))}
 
-      <label className="flex items-start gap-2">
-        <Checkbox checked={form.acceptTerms} onCheckedChange={(v) => set('acceptTerms', v === true)} className="mt-0.5" aria-invalid={!!err('acceptTerms')} />
-        <span>{t('cp13.terms')}</span>
-      </label>
-      {err('acceptTerms') && (
-        <p role="alert" className="text-caption font-medium text-status-danger">
-          {err('acceptTerms')}
-        </p>
-      )}
     </div>
   )
 }

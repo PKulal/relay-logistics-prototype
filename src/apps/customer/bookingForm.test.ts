@@ -19,7 +19,7 @@ const data = buildSeed()
 const sharma = data.customers['C-SHARMA']
 const priya = data.customerUsers['CU-PRIYA']
 const ctx = (f: BookingForm, d = data, customer = sharma) => ({ data: d, customer, now: DEMO_START, quote: quoteFor(d, customer.id, f) })
-const hero = () => ({ ...heroSample(data, emptyBooking(data, sharma, DEMO_START)), acceptTerms: true })
+const hero = () => heroSample(data, emptyBooking(data, sharma, DEMO_START))
 
 describe('CP-13 hero booking', () => {
   it('defaults to Okhla Factory, today, the first open slot, and Ramesh as contact', () => {
@@ -48,9 +48,6 @@ describe('CP-13 hero booking', () => {
       eta: '2026-11-26',
       pickupSlot: { date: '2026-11-23', from: '14:00', to: '16:00' },
       pickupContact: { name: 'Ramesh Kumar', mobile: '98730 11223' },
-      pickupInstructions: 'Use Gate 2',
-      packaging: 'carton',
-      customerRef: 'DISP-2311-07',
       invoice: { no: 'SE/25-26/1187', value: 180000, po: 'HED/PO/3321', fileUrl: 'INV_1187.pdf' },
       ewb: { no: '3410 2256 7781', validTill: '2026-12-03', source: 'auto' },
       appointment: { date: '2026-11-26', confirmed: false },
@@ -94,8 +91,8 @@ describe('CP-13 validation', () => {
     expect(validateStep('invoice', f, ctx(f))).toEqual({})
   })
 
-  it('Step 6: terms must be accepted; credit and wallet blocks are reported', () => {
-    expect(validateStep('review', { ...hero(), acceptTerms: false }, ctx(hero()))).toEqual({ acceptTerms: 'terms' })
+  it('Step 6: credit and wallet blocks are reported', () => {
+    expect(validateStep('review', hero(), ctx(hero()))).toEqual({})
     const nearLimit = { ...sharma, creditUsed: 498000 }
     expect(confirmationBlocks(hero(), { ...ctx(hero()), customer: nearLimit })).toEqual(['creditExceeded'])
   })

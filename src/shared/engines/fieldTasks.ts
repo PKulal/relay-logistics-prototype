@@ -173,12 +173,3 @@ export function riderCounts(tasks: Task[]) {
     failed: tasks.filter((t) => t.state === 'failed').length,
   }
 }
-
-/** Office notes for the staff member: notes on today's assignments. */
-export function officeMessages(data: DemoData, staffId: Id, now: IsoDateTime) {
-  const today = istDate(now)
-  return Object.values(data.events)
-    .filter((e) => e.type === 'legAssigned' && e.assigneeStaffId === staffId && e.note && istDate(e.at) === today)
-    .sort((a, b) => b.at.localeCompare(a.at))
-    .map((e) => ({ legId: e.legId!, note: e.note!, at: e.at, by: e.by }))
-}

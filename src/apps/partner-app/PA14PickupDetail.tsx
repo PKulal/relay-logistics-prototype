@@ -33,8 +33,6 @@ export default function PA14PickupDetail({ leg }: { leg: Leg }) {
   const sameStop = Object.values(data.legs).filter(
     (l) => l.staffId === staff.id && l.type === 'firstMile' && l.status === 'assigned' && data.shipments[l.shipmentId].pickupLocationId === loc.id && l.window.from === leg.window.from,
   )
-  const assignedNote = Object.values(data.events).filter((e) => e.legId === leg.id && e.type === 'legAssigned' && e.note).at(-1)?.note
-  const instructions = [s.pickupInstructions, assignedNote].filter((x, i, all) => x && all.indexOf(x) === i)
   const arrived = Object.values(data.events).some((e) => e.legId === leg.id && e.type === 'pickupArrived')
 
   const requirements = [t('pa14.req.invoice'), ...(s.ewb ? [t('pa14.req.ewb')] : []), ...(s.addOns.specialHandling ? [t('pa14.req.fragile')] : []), t('pa14.req.labels')]
@@ -84,17 +82,6 @@ export default function PA14PickupDetail({ leg }: { leg: Leg }) {
           })}
         </ul>
       </section>
-
-      {instructions.length > 0 && (
-        <section className="rounded-2xl border-2 border-brand-amber bg-amber-50 p-4">
-          <h2 className="mb-1 font-bold">{t('pa14.instructions')}</h2>
-          {instructions.map((x) => (
-            <p key={x} className="text-[18px]">
-              {x}
-            </p>
-          ))}
-        </section>
-      )}
 
       <section>
         <h2 className="mb-2 font-bold">{t('pa14.requirements')}</h2>

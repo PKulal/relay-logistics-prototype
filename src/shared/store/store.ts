@@ -10,7 +10,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { advanceJourneys } from '@shared/sim/journey'
-import type { BookingDraft, Consignee, DemoData, Id, IsoDateTime, ShipmentEvent } from '@shared/types'
+import type { Consignee, DemoData, Id, IsoDateTime, ShipmentEvent } from '@shared/types'
 import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
 import * as erp from './erpActions'
@@ -26,7 +26,7 @@ import type { Dispatch, InScan, ReceiveManifest, SealBag } from './hubActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 9
+export const STORE_VERSION = 10
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -48,9 +48,6 @@ export interface DemoState {
   bookShipment: (input: BookingInput) => Id
   /** Add or update a consignee (CP-13 Step 2, CP-30) */
   saveConsignee: (consignee: Consignee) => void
-  /** CP-13 "Save as draft" and its removal once booked */
-  saveDraft: (draft: BookingDraft) => void
-  deleteDraft: (id: Id) => void
   /** ERP one-click actions (SIMULATED integrations; each writes an audit entry) */
   extendEwayBill: (lr: Id, userId: Id) => void
   updatePartB: (lr: Id, userId: Id) => void
@@ -59,11 +56,10 @@ export interface DemoState {
   /** Partner Portal job actions (PP-12 to PP-14) */
   acceptLegs: (legIds: Id[], userId: Id) => void
   flagLeg: (legId: Id, reason: FlagReason, remark: string, userId: Id) => void
-  assignLegs: (legIds: Id[], staffId: Id, vehicleId: Id | undefined, note: string, userId: Id) => void
+  assignLegs: (legIds: Id[], staffId: Id, vehicleId: Id | undefined, userId: Id) => void
   unassignLeg: (legId: Id, userId: Id) => void
   reportProblem: (legId: Id, kind: ProblemKind, text: string, userId: Id) => void
   /** Partner App (PA-05, PA-14 to PA-17) */
-  setDuty: (staffId: Id, onDuty: boolean) => void
   arriveAtPickup: (legId: Id, staffId: Id) => void
   confirmPickup: (c: PickupConfirmation) => void
   markNotificationsRead: (ids: Id[]) => void
@@ -116,7 +112,6 @@ export const useDemoStore = create<DemoState>()(
 
       saveConsignee: (consignee) => set((s) => ({ data: { ...s.data, consignees: { ...s.data.consignees, [consignee.id]: consignee } } })),
 
-      saveDraft: (draft) => set((s) => ({ data: { ...s.data, drafts: { ...s.data.drafts, [draft.id]: draft } } })),
 
       extendEwayBill: (lr, userId) => set((s) => ({ data: erp.extendEwayBill(s.data, lr, userId, s.demoNow) })),
       updatePartB: (lr, userId) => set((s) => ({ data: erp.updatePartB(s.data, lr, userId, s.demoNow) })),
@@ -125,11 +120,10 @@ export const useDemoStore = create<DemoState>()(
 
       acceptLegs: (legIds, userId) => set((s) => ({ data: pp.acceptLegs(s.data, legIds, userId, s.demoNow) })),
       flagLeg: (legId, reason, remark, userId) => set((s) => ({ data: pp.flagLeg(s.data, legId, reason, remark, userId, s.demoNow) })),
-      assignLegs: (legIds, staffId, vehicleId, note, userId) => set((s) => ({ data: pp.assignLegs(s.data, legIds, staffId, vehicleId, note, userId, s.demoNow) })),
+      assignLegs: (legIds, staffId, vehicleId, userId) => set((s) => ({ data: pp.assignLegs(s.data, legIds, staffId, vehicleId, userId, s.demoNow) })),
       unassignLeg: (legId, userId) => set((s) => ({ data: pp.unassignLeg(s.data, legId, userId, s.demoNow) })),
       reportProblem: (legId, kind, text, userId) => set((s) => ({ data: pp.reportProblem(s.data, legId, kind, text, userId, s.demoNow) })),
 
-      setDuty: (staffId, onDuty) => set((s) => ({ data: pick.setDuty(s.data, staffId, onDuty, s.demoNow) })),
       arriveAtPickup: (legId, staffId) => set((s) => ({ data: pick.arriveAtPickup(s.data, legId, staffId, s.demoNow) })),
       confirmPickup: (c) => set((s) => ({ data: pick.confirmPickup(s.data, c, s.demoNow) })),
       markNotificationsRead: (ids) => set((s) => ({ data: pick.markRead(s.data, ids) })),
@@ -146,12 +140,6 @@ export const useDemoStore = create<DemoState>()(
       dispatchManifest: (x) => set((s) => ({ data: hub.dispatchManifest(s.data, x, s.demoNow) })),
       receiveManifest: (x) => set((s) => ({ data: hub.receiveManifest(s.data, x, s.demoNow) })),
 
-      deleteDraft: (id) =>
-        set((s) => {
-          const drafts = { ...s.data.drafts }
-          delete drafts[id]
-          return { data: { ...s.data, drafts } }
-        }),
 
       setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),
 

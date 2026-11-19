@@ -30,7 +30,7 @@ function heroPickedUpByRavi() {
   })
   const s = useDemoStore.getState()
   s.acceptLegs(['JOB-000781-L1'], 'PU-NEHA')
-  s.assignLegs(['JOB-000781-L1'], 'FS-RAVI', 'V-DL01LT4521', '', 'PU-NEHA')
+  s.assignLegs(['JOB-000781-L1'], 'FS-RAVI', 'V-DL01LT4521', 'PU-NEHA')
   useDemoStore.getState().confirmPickup({
     legId: 'JOB-000781-L1',
     staffId: 'FS-RAVI',

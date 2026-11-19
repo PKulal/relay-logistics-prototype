@@ -11,6 +11,11 @@ One launcher opens four apps that share the same data:
 
 Client’s original document: `docs/00-source-workflow.md`.
 
+## Scope rule (client document first)
+Build only what the client's own document (`docs/00-source-workflow.md`) addresses. If the client names a capability but leaves details open (a **gap**), fill them in. If the client never mentions it (a **missing feature**), do not build it, even when our specs (docs/01–04) list it. Demo tooling (demo clock, persona switching, simulated scans/OTP/GPS) is allowed. When planning a screen, check each spec field against the client document and leave out what has no basis.
+
+Removed or not to be built for this reason (scope check, 19-Nov-2026): booking drafts (CP-13 "Save as draft", any Drafts list), "Download quote" with quote ID/validity, packaging type, "Your reference", booking-terms tick-box, blocking bookings over an overdue invoice, PP-14 suggested staff / co-driver / note to staff, pickup instructions and "Messages from the office", On duty / Off duty, odometer readings (PA-22, PA-24).
+
 ## Read before building
 - The spec section for the screen(s) you are building — find it with `grep -n "^### CP-13" docs/01-customer-portal.md`. Do not read whole spec files unless asked.
 - `docs/data-model.md` for entities and engines.

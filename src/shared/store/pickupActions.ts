@@ -155,13 +155,6 @@ export function confirmPickup(data: DemoData, c: PickupConfirmation, at: IsoDate
   return next
 }
 
-/** Duty toggle (PA-05). */
-export function setDuty(data: DemoData, staffId: Id, onDuty: boolean, at: IsoDateTime): DemoData {
-  const s = data.fieldStaff[staffId]
-  if (!s) return data
-  return { ...data, fieldStaff: { ...data.fieldStaff, [staffId]: { ...s, onDuty, dutySince: onDuty ? at : undefined } } }
-}
-
 /** Mark notifications read (Partner App "New" badges). */
 export function markRead(data: DemoData, ids: Id[]): DemoData {
   if (ids.length === 0) return data

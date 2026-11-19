@@ -1,8 +1,8 @@
 import { buildSeed, DEMO_START } from '@data/seed'
 import { bookShipment } from '@shared/store/booking'
 import { acceptLegs, assignLegs } from '@shared/store/partnerActions'
-import { arriveAtPickup, confirmPickup, outsideTolerance, setDuty, verifiedOutcome, type VerifiedPiece } from '@shared/store/pickupActions'
-import { nextTask, officeMessages, riderCounts, taskDistance, tasksFor } from './fieldTasks'
+import { arriveAtPickup, confirmPickup, outsideTolerance, verifiedOutcome, type VerifiedPiece } from '@shared/store/pickupActions'
+import { nextTask, riderCounts, taskDistance, tasksFor } from './fieldTasks'
 
 /** Hero booked, SwiftCity accepts and assigns Ravi with "Use Gate 2" (as in PP-12 / PP-14). */
 function heroWithRavi() {
@@ -27,7 +27,7 @@ function heroWithRavi() {
     DEMO_START,
   )
   data = acceptLegs(data, ['JOB-000781-L1'], 'PU-NEHA', DEMO_START)
-  data = assignLegs(data, ['JOB-000781-L1'], 'FS-RAVI', 'V-DL01LT4521', 'Use Gate 2', 'PU-NEHA', DEMO_START)
+  data = assignLegs(data, ['JOB-000781-L1'], 'FS-RAVI', 'V-DL01LT4521', 'PU-NEHA', DEMO_START)
   return data
 }
 
@@ -55,8 +55,7 @@ describe('PA-05 / PA-06 tasks', () => {
     expect(doneDays.every((id) => Object.values(data.events).some((e) => e.legId === id && e.at.startsWith('2026-11-23')))).toBe(true)
   })
 
-  it('shows the office note and a simulated distance from the Gurugram hub', () => {
-    expect(officeMessages(data, 'FS-RAVI', DEMO_START)[0]).toMatchObject({ legId: 'JOB-000781-L1', note: 'Use Gate 2', by: 'PU-NEHA' })
+  it('shows a simulated distance from the Gurugram hub', () => {
     expect(taskDistance(data, data.fieldStaff['FS-RAVI'], hero)).toBeGreaterThan(10)
   })
 
@@ -119,9 +118,5 @@ describe('PA-14 → PA-17 pickup', () => {
     expect(after.weightRevisions['WR-000781']).toMatchObject({ booked: 162, verified: 170, amountDiff: 145.38, status: 'pending' })
     expect(after.shipments['LGS-DEL-000781'].weights.verifiedChargeable).toBe(170)
     expect(after.shipments['LGS-DEL-000781'].pieces[5].verifiedDims).toEqual({ l: 62, b: 42, h: 42 })
-  })
-
-  it('going off duty records the change', () => {
-    expect(setDuty(data, 'FS-RAVI', false, DEMO_START).fieldStaff['FS-RAVI']).toMatchObject({ onDuty: false, dutySince: undefined })
   })
 })

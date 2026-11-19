@@ -14,8 +14,6 @@ import { emptyRow, num, positive, tryQuote, type QuoteForm, type QuoteResult, ty
 export const STEPS = ['pickup', 'consignee', 'shipment', 'invoice', 'payment', 'review'] as const
 export type Step = (typeof STEPS)[number]
 
-export type Packaging = NonNullable<Shipment['packaging']>
-export const PACKAGING: Packaging[] = ['carton', 'bag', 'pallet', 'crate', 'drum', 'other']
 export const CATEGORIES: ConsigneeCategory[] = ['distributor', 'retailer', 'dc', 'modernTrade', 'factory', 'otherBusiness']
 /** Appointment switches on automatically for these (CP-13 Step 2) */
 export const APPOINTMENT_CATEGORIES: ConsigneeCategory[] = ['dc', 'modernTrade']
@@ -41,7 +39,6 @@ export interface BookingForm {
   slotFrom: string
   contactName: string
   contactMobile: string
-  instructions: string
   // Step 2 — consignee
   /** Address-book entry the fields came from (cleared when the fields are edited) */
   consigneeId: Id
@@ -51,7 +48,6 @@ export interface BookingForm {
   service: ServiceChoice
   tier: ParcelTier
   rows: Row[]
-  packaging: Packaging
   fragile: boolean
   // Step 4 — invoice and e-way bill
   invoiceNo: string
@@ -62,7 +58,6 @@ export interface BookingForm {
   po: string
   goods: string
   hsn: string
-  customerRef: string
   ewbOption: 'auto' | 'existing'
   existingEwbNo: string
   // Step 5 — payment and add-ons
@@ -70,8 +65,6 @@ export interface BookingForm {
   codAmount: string
   insurance: boolean
   appointment: boolean
-  // Step 6
-  acceptTerms: boolean
 }
 
 const blankConsignee = (): ConsigneeFields => ({
@@ -97,14 +90,12 @@ export function emptyBooking(data: DemoData, customer: Customer, now: IsoDateTim
     slotFrom: '',
     contactName: loc?.contact.name ?? '',
     contactMobile: loc?.contact.mobile ?? '',
-    instructions: '',
     consigneeId: '',
     consignee: blankConsignee(),
     saveToBook: true,
     service: customer.billing === 'credit' ? 'expressPtl' : 'parcel',
     tier: 'standard',
     rows: [emptyRow()],
-    packaging: 'carton',
     fragile: false,
     invoiceNo: '',
     invoiceDate: istDate(now),
@@ -113,14 +104,12 @@ export function emptyBooking(data: DemoData, customer: Customer, now: IsoDateTim
     po: '',
     goods: '',
     hsn: '',
-    customerRef: '',
     ewbOption: 'auto',
     existingEwbNo: '',
     paymentMode: customer.billing === 'credit' ? 'tbb' : 'paid',
     codAmount: '',
     insurance: false,
     appointment: false,
-    acceptTerms: false,
   }
   return withDefaultSlot(data, form, now)
 }
@@ -194,11 +183,9 @@ export function fromShipment(data: DemoData, base: BookingForm, s: Shipment, now
     locationId: s.pickupLocationId,
     contactName: s.pickupContact?.name ?? loc.contact.name,
     contactMobile: s.pickupContact?.mobile ?? loc.contact.mobile,
-    instructions: s.pickupInstructions ?? '',
     service: s.serviceKind === 'parcel' ? 'parcel' : (s.service as ServiceChoice),
     tier: s.serviceKind === 'parcel' ? (s.service as ParcelTier) : base.tier,
     rows: groupPieces(s),
-    packaging: s.packaging ?? 'carton',
     fragile: s.addOns.specialHandling,
     invoiceValue: String(s.invoice.value),
     goods: s.goodsDescription,
@@ -291,7 +278,6 @@ export function validateStep(step: Step, f: BookingForm, ctx: ValidationCtx): St
       else if (!pickupSlots(loc.window, f.pickupDate, now, data.settings.pickupCutoff).some((s) => s.from === f.slotFrom)) e.slotFrom = 'slot'
       if (!f.contactName.trim()) e.contactName = 'required'
       if (!MOBILE.test(digits(f.contactMobile))) e.contactMobile = 'mobile'
-      if (f.instructions.length > 250) e.instructions = 'tooLong'
       break
     }
     case 'consignee': {
@@ -335,7 +321,6 @@ export function validateStep(step: Step, f: BookingForm, ctx: ValidationCtx): St
       break
     }
     case 'review': {
-      if (!f.acceptTerms) e.acceptTerms = 'terms'
       break
     }
   }
@@ -415,9 +400,6 @@ export function toBookingInput(f: BookingForm, customerId: Id, user: CustomerUse
     pieces: f.rows.flatMap((r) => Array.from({ length: Math.floor(num(r.qty)) }, () => ({ l: num(r.l), b: num(r.b), h: num(r.h), weight: num(r.weight), skuCode: r.skuCode || undefined }))),
     pickupSlot: { date: f.pickupDate, from: f.slotFrom, to: addTwoHours(f.slotFrom) },
     pickupContact: { name: f.contactName.trim(), mobile: f.contactMobile.trim() },
-    pickupInstructions: f.instructions.trim() || undefined,
-    packaging: f.packaging,
-    customerRef: f.customerRef.trim() || undefined,
     existingEwbNo: f.ewbOption === 'existing' ? digits(f.existingEwbNo).replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : undefined,
   }
 }
@@ -436,18 +418,15 @@ export function heroSample(data: DemoData, f: BookingForm): BookingForm {
     slotFrom: f.pickupDate === '2026-11-23' ? '14:00' : f.slotFrom,
     contactName: 'Ramesh Kumar',
     contactMobile: '98730 11223',
-    instructions: 'Use Gate 2',
     consignee: { ...withHed.consignee, landmark: 'Near Gate 3', email: 'stores@hublielectric.in' },
     service: 'expressPtl',
     rows: [{ ...emptyRow(), skuCode: 'SG-LT-400', description: 'Switchgear panels', qty: '6', l: '60', b: '40', h: '40', weight: '20' }],
-    packaging: 'carton',
     invoiceNo: 'SE/25-26/1187',
     invoiceValue: '180000',
     invoiceFile: 'INV_1187.pdf',
     po: 'HED/PO/3321',
     goods: 'LT switchgear panels',
     hsn: '8537',
-    customerRef: 'DISP-2311-07',
     paymentMode: 'tbb',
     insurance: true,
     appointment: true,

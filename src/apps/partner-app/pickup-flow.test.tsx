@@ -27,10 +27,9 @@ function heroAssignedToRavi() {
     goodsDescription: 'LT switchgear panels',
     pieces: Array.from({ length: 6 }, () => ({ l: 60, b: 40, h: 40, weight: 20, skuCode: 'SG-LT-400' })),
     pickupSlot: { date: '2026-11-23', from: '14:00', to: '16:00' },
-    pickupInstructions: 'Use Gate 2',
   })
   useDemoStore.getState().acceptLegs(['JOB-000781-L1'], 'PU-NEHA')
-  useDemoStore.getState().assignLegs(['JOB-000781-L1'], 'FS-RAVI', 'V-DL01LT4521', 'Use Gate 2', 'PU-NEHA')
+  useDemoStore.getState().assignLegs(['JOB-000781-L1'], 'FS-RAVI', 'V-DL01LT4521', 'PU-NEHA')
 }
 
 function renderApp(path: string) {
@@ -54,11 +53,10 @@ function renderApp(path: string) {
 describe('Partner App — Ravi picks up the hero shipment', () => {
   beforeEach(heroAssignedToRavi)
 
-  it('PA-05 Home: on duty since 09:02, 8 pickups today, the office note', () => {
+  it('PA-05 Home: 8 pickups today, no duty switch', () => {
     renderApp('/app')
-    expect(screen.getByText('On duty since 09:02')).toBeInTheDocument()
+    expect(screen.queryByRole('switch')).not.toBeInTheDocument()
     expect(screen.getByText('0/8')).toBeInTheDocument()
-    expect(screen.getByText('Use Gate 2')).toBeInTheDocument()
   })
 
   it('PA-06 Tasks: the hero pickup is listed with a New badge', () => {
@@ -75,7 +73,6 @@ describe('Partner App — Ravi picks up the hero shipment', () => {
     renderApp('/app/tasks/JOB-000781-L1')
 
     // PA-14
-    expect(screen.getByText('Use Gate 2')).toBeInTheDocument()
     expect(screen.getByText('NCR CrossDock, Gurugram by 21:00')).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'I’ve arrived' }))
 

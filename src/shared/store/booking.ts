@@ -37,9 +37,6 @@ export interface BookingInput {
    */
   appointment?: { from: string; to: string; dock?: string }
   pickupContact?: { name: string; mobile: string }
-  pickupInstructions?: string
-  packaging?: Shipment['packaging']
-  customerRef?: string
   /** "I already have one": the customer's 12-digit e-way bill number */
   existingEwbNo?: string
   /** Seed only: a fixed LR (e.g. LGS-DEL-000784). Live bookings take the next free LR. */
@@ -179,9 +176,6 @@ export function bookShipment(data: DemoData, input: BookingInput, at: IsoDateTim
       : undefined,
     pickupSlot: input.pickupSlot,
     pickupContact: input.pickupContact,
-    pickupInstructions: input.pickupInstructions,
-    packaging: input.packaging,
-    customerRef: input.customerRef,
     pieces: input.pieces.map((p, i) => ({ id: `${lr}-${String(i + 1).padStart(2, '0')}`, l: p.l, b: p.b, h: p.h, weight: p.weight, skuCode: p.skuCode })),
     weights: { actual: q.weights.actual, volumetricOrCft: q.weights.volumetricOrCft, chargeable: q.weights.chargeable },
     price: q.price,

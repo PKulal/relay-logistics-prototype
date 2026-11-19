@@ -173,5 +173,5 @@ Parcel zones (assumed): A within city · B within state · C metro to metro · D
 | Early-pay fee | 1% |
 | Credit grace before hold | 15 days |
 | Trial pass mark | 80 (source) |
-| Bronze volume cap | 50% of declared capacity |
+| Volume cut when a Bronze partner falls to Probation | 50% of declared capacity (source §5.3; Bronze itself is capped at declared capacity) |
 | Tier bands | Platinum ≥ 90, Gold 80–89, Silver 70–79, Bronze 60–69, Probation < 60 (source) |

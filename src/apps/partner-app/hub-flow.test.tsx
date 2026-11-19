@@ -29,7 +29,7 @@ function heroReceivedAtHub() {
     pickupSlot: { date: '2026-11-23', from: '14:00', to: '16:00' },
   })
   st().acceptLegs(['JOB-000781-L1'], 'PU-NEHA')
-  st().assignLegs(['JOB-000781-L1'], 'FS-RAVI', 'V-DL01LT4521', '', 'PU-NEHA')
+  st().assignLegs(['JOB-000781-L1'], 'FS-RAVI', 'V-DL01LT4521', 'PU-NEHA')
   const pieceIds = st().data.shipments['LGS-DEL-000781'].pieces.map((p) => p.id)
   st().confirmPickup({ legId: 'JOB-000781-L1', staffId: 'FS-RAVI', pieceIds, verified: [], photos: ['invoice'], handedOverBy: 'Ramesh Kumar', confirmation: 'otp', packagingDamaged: false, labelledBy: 'shipper' })
   st().giveHandover({ legId: 'JOB-000781-L1', staffId: 'FS-RAVI', pieceIds, photos: ['p'] })

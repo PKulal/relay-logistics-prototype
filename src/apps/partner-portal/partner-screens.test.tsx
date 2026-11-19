@@ -23,7 +23,6 @@ function bookHero() {
     goodsDescription: 'LT switchgear panels',
     pieces: Array.from({ length: 6 }, () => ({ l: 60, b: 40, h: 40, weight: 20 })),
     pickupSlot: { date: '2026-11-23', from: '14:00', to: '16:00' },
-    pickupInstructions: 'Use Gate 2',
   })
 }
 
@@ -63,7 +62,7 @@ describe('SwiftCity takes the hero pickup (PP-12 → PP-14 → PP-13)', () => {
 
     fireEvent.click(within(row).getByRole('button', { name: /Accept and assign/ }))
     expect(await screen.findByRole('heading', { name: 'Assign to field staff' })).toBeInTheDocument()
-    expect(screen.getByLabelText('Note to staff')).toHaveValue('Use Gate 2')
+    expect(screen.queryByLabelText('Note to staff')).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('radio', { name: /Ravi Kumar/ }))
     expect(screen.getByRole('combobox', { name: 'Vehicle' })).toHaveValue('V-DL01LT4521')
