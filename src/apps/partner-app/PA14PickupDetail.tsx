@@ -108,6 +108,9 @@ export default function PA14PickupDetail({ leg }: { leg: Leg }) {
       <p className="-mt-2 flex items-center justify-center gap-2 text-[13px] text-muted-foreground">
         {t('pa14.geofence', { m: data.settings.arrivalGeofenceM })} <SimulatedTag />
       </p>
+      <Link to={`/app/tasks/${leg.id}/cannot`} className="flex min-h-12 items-center justify-center rounded-xl border-2 border-status-danger font-semibold text-status-danger">
+        {t('pa18.cannot')}
+      </Link>
     </div>
   )
 }

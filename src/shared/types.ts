@@ -915,6 +915,8 @@ export type ExceptionKind =
   | 'weightMismatch'
   /** Auto-ticket: e-way bill expiring within 24 hours (source §10 Step 3) */
   | 'ewbExpiry'
+  /** A hand-over or hub scan that should have happened (source §10 Step 1); internal, not shown to the customer */
+  | 'missedScan'
 
 export interface ShipmentEvent {
   id: Id
@@ -972,6 +974,39 @@ export interface ShipmentException {
   log?: { at: IsoDateTime; by: Id; action: string; note?: string }[]
   closedAt?: IsoDateTime
   closedBy?: Id
+  /** PA-18 / PA-30: who reported it in the app, with evidence */
+  report?: { by: Id; pieceIds?: Id[]; photos: string[]; note?: string; reason?: string }
+  /** PP-20: the partner's side of the escalation (source §5.1 response timer; §5.2 Responsiveness) */
+  partner?: PartnerTicketSide
+}
+
+export type PartnerRootCause = 'staffShortage' | 'vehicleIssue' | 'addressIssue' | 'customerNotReady' | 'weatherTraffic' | 'other'
+
+export interface PartnerTicketSide {
+  ackDueAt: IsoDateTime
+  ackAt?: IsoDateTime
+  ackBy?: Id
+  response?: string
+  evidence?: string[]
+  rootCause?: PartnerRootCause
+  resolvedAt?: IsoDateTime
+  resolvedBy?: Id
+}
+
+/** PA-12 SOS from a field staff phone (source §5.1). SIMULATED location sharing and emergency call. */
+export interface SosAlert {
+  id: Id
+  staffId: Id
+  partnerId: Id
+  at: IsoDateTime
+  lat: number
+  lng: number
+  kind?: 'accident' | 'theft' | 'medical' | 'threat' | 'other'
+  status: 'active' | 'cancelled' | 'resolved'
+  cancelledAt?: IsoDateTime
+  resolvedAt?: IsoDateTime
+  resolvedBy?: Id
+  note?: string
 }
 
 export type RootCause = 'partnerCapacity' | 'partnerNoShow' | 'lineHaulDelay' | 'hubDwell' | 'lastMileDelay' | 'pickupDelay' | 'consignee' | 'handoverGap' | 'longTransit' | 'vehicle'
@@ -1381,6 +1416,7 @@ export interface DemoData {
   codRemittances: Record<Id, CodRemittance>
   partnerInvoices: Record<Id, PartnerInvoice>
   payoutBatches: Record<Id, PayoutBatch>
+  sosAlerts: Record<Id, SosAlert>
   payouts: Record<Id, Payout>
   tickets: Record<Id, Ticket>
   /** ERP-06: AI risk suggestions an operator dismissed, by leg */

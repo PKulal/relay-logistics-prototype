@@ -40,11 +40,13 @@ describe('DemoToolbar', () => {
     expect(useDemoStore.getState().flags).toEqual({ offline: true, showSimulationLabels: true, manualApprovals: false })
   })
 
-  it('keeps scenario actions disabled until their phase', () => {
+  it('keeps weekly scoring disabled until Phase 5; inject exception raises a SwiftCity escalation', () => {
+    useDemoStore.getState().resetDemo()
     renderToolbar()
     fireEvent.click(screen.getByRole('button', { name: 'Open demo controls' }))
-    expect(screen.getByRole('button', { name: 'Inject exception' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Run weekly scoring' })).toBeDisabled()
+    fireEvent.click(screen.getByRole('button', { name: 'Inject exception' }))
+    expect(Object.values(useDemoStore.getState().data.exceptions).some((x) => x.type === 'missedScan' && x.ownerPartnerId === 'P-SWIFTCITY')).toBe(true)
   })
 
   it('resets only after confirmation', () => {

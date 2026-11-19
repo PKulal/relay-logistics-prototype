@@ -6,7 +6,7 @@
 import { AlertTriangle, ArrowLeft, Check, ShieldCheck, Ruler } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { cn } from '@/shared/lib/utils'
 import { useData } from '@shared/hooks/useDemo'
@@ -191,7 +191,9 @@ export default function PickupFlow({ leg }: { leg: Leg }) {
             <Choice checked={f.condition === 'damaged'} onClick={() => set('condition', 'damaged')} label={t('pa15.damaged')} />
             {f.condition === 'damaged' && <PhotoCapture className="mt-2" label={t('pa15.damagePhoto')} caption={t('pa15.damaged')} value={f.damagePhoto} onChange={(v) => set('damagePhoto', v)} idBase={`${s.id}-damage`} required />}
           </Card>
-          <p className="text-center text-[13px] text-muted-foreground">{t('pa15.cannotLater')}</p>
+          <Link to={`/app/tasks/${leg.id}/cannot`} className="flex min-h-12 items-center justify-center rounded-xl border-2 border-status-danger font-semibold text-status-danger">
+            {t('pa18.cannot')}
+          </Link>
         </>
       )}
 

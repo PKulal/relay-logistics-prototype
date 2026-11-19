@@ -54,7 +54,7 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
   - [ ] Claim outcome feeds the partner's damage / on-time / responsiveness KPIs (source §10 Step 5) — with the Phase 5 scoring item
 - [x] Customer money: CP-23 wallet, CP-24 invoices, CP-25 COD, PA-34 COD collection, ERP-31, ERP-34
 - [x] Partner money: PP-25 to PP-28; ERP-32 3-way match (₹72), ERP-33 payout batch with maker-checker
-- [ ] PP-20 escalations, PP-21 delivery exceptions, PA-18 pickup failed, PA-30 short / excess, PA-12 SOS
+- [x] PP-20 escalations, PP-21 delivery exceptions, PA-18 pickup failed, PA-30 short / excess, PA-12 SOS (acknowledge / resolve times recorded for the Responsiveness KPI; scored with weekly scoring in Phase 5)
 
 ## Phase 5 — Depth
 - [ ] Scoring: ERP-16 run, PP-23 scorecard, PP-24 tier, ERP-17 / PP-39 suspension (FastTrack Logistics)

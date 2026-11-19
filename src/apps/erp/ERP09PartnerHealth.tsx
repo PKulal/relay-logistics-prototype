@@ -18,6 +18,7 @@ import type { Id } from '@shared/types'
 import { Button } from '@shared/ui/button'
 import { PageHeader } from '@shared/ui/Page'
 import { SimulatedTag } from '@shared/ui/SimulatedTag'
+import { SosAlerts } from './SosAlerts'
 import { useErpSession } from './useErpSession'
 
 export default function ERP09PartnerHealth() {
@@ -30,6 +31,7 @@ export default function ERP09PartnerHealth() {
   return (
     <div className="flex flex-col gap-4">
       <PageHeader title={t('erp09.title')} subtitle={t('erp09.subtitle', { time: formatTime(now) })} className="mb-0" />
+      <SosAlerts showEmpty />
       <div className="grid gap-4 xl:grid-cols-2">
         <Panel title={t('erp09.pickups')} empty={pickups.length === 0 ? t('erp09.noPickups') : undefined} testId="pickups">
           <table className="w-full text-table">

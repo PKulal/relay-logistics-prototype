@@ -10,7 +10,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { advanceJourneys } from '@shared/sim/journey'
-import type { Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
+import type { SosAlert, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
 import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
 import * as erp from './erpActions'
@@ -37,6 +37,8 @@ import * as ct from './controlTowerActions'
 import * as clm from './claimActions'
 import * as money from './moneyActions'
 import * as pay from './payoutActions'
+import * as exc from './exceptionActions'
+import type { HubReport, PickupFailed, TicketResolution } from './exceptionActions'
 import type { PartnerCodDeposit, UploadInvoice } from './payoutActions'
 import type { CodDeposit } from './moneyActions'
 import type { PayMethod } from '@shared/sim/payment'
@@ -53,7 +55,7 @@ import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 21
+export const STORE_VERSION = 22
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -222,6 +224,17 @@ export interface DemoState {
   requestEarlyPay: (partnerId: Id, amount: number, by: Id) => Id | undefined
   releaseEarlyPay: (id: Id, by: Id) => void
   recordPartnerCodDeposit: (partnerId: Id, x: PartnerCodDeposit, by: Id) => void
+  /** Exceptions (PA-18, PA-30, PP-20, PP-21, PA-12) */
+  reportPickupFailed: (x: PickupFailed) => void
+  reportHubException: (x: HubReport) => Id | undefined
+  acknowledgeTicket: (id: Id, by: Id) => void
+  resolvePartnerTicket: (id: Id, r: TicketResolution, by: Id) => void
+  injectEscalation: (partnerId: Id) => Id | undefined
+  assignReattempt: (legId: Id, staffId: Id, by: Id) => void
+  triggerSos: (staffId: Id) => Id | undefined
+  setSosKind: (id: Id, kind: NonNullable<SosAlert['kind']>) => void
+  cancelSos: (id: Id) => void
+  resolveSos: (id: Id, note: string, by: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -445,6 +458,28 @@ export const useDemoStore = create<DemoState>()(
       },
       releaseEarlyPay: (id, by) => set((s) => ({ data: pay.releaseEarlyPay(s.data, id, by, s.demoNow) })),
       recordPartnerCodDeposit: (partnerId, x, by) => set((s) => ({ data: pay.recordPartnerCodDeposit(s.data, partnerId, x, by, s.demoNow) })),
+      reportPickupFailed: (x) => set((s) => ({ data: exc.reportPickupFailed(s.data, x, s.demoNow) })),
+      reportHubException: (x) => {
+        const r = exc.reportHubException(get().data, x, get().demoNow)
+        set({ data: r.data })
+        return r.id
+      },
+      acknowledgeTicket: (id, by) => set((s) => ({ data: exc.acknowledgeTicket(s.data, id, by, s.demoNow) })),
+      resolvePartnerTicket: (id, r, by) => set((s) => ({ data: exc.resolvePartnerTicket(s.data, id, r, by, s.demoNow) })),
+      injectEscalation: (partnerId) => {
+        const r = exc.injectEscalation(get().data, partnerId, get().demoNow)
+        set({ data: r.data })
+        return r.id
+      },
+      assignReattempt: (legId, staffId, by) => set((s) => ({ data: exc.assignReattempt(s.data, legId, staffId, by, s.demoNow) })),
+      triggerSos: (staffId) => {
+        const r = exc.triggerSos(get().data, staffId, get().demoNow)
+        set({ data: r.data })
+        return r.id
+      },
+      setSosKind: (id, kind) => set((s) => ({ data: exc.setSosKind(s.data, id, kind) })),
+      cancelSos: (id) => set((s) => ({ data: exc.cancelSos(s.data, id, s.demoNow) })),
+      resolveSos: (id, note, by) => set((s) => ({ data: exc.resolveSos(s.data, id, note, by, s.demoNow) })),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),
 
 

@@ -34,6 +34,12 @@ export function DemoToolbar() {
   const deccanTrial = useData((d) => (d.partners['P-DECCAN']?.status === 'trial' && d.partners['P-DECCAN'].trial ? d.partners['P-DECCAN'].trial : undefined))
   const canCompleteTrip = !!deccanTrial && deccanTrial.tripsDone < deccanTrial.tripsRequired
 
+  // PP-20 prototype note: an escalation on a SwiftCity job
+  const injectException = () => {
+    const id = useDemoStore.getState().injectEscalation('P-SWIFTCITY')
+    if (id) toast.success(t('toolbar.injected', { id }))
+    else toast.error(t('toolbar.injectNone'))
+  }
   const completeTrip = () => {
     useDemoStore.getState().completeTrialTrip(DECCAN_TRIAL_TRIP)
     const tr = useDemoStore.getState().data.partners['P-DECCAN'].trial!
@@ -126,11 +132,9 @@ export function DemoToolbar() {
           <div>
             <Label icon={TriangleAlert}>{t('toolbar.scenarios')}</Label>
             <div className="grid grid-cols-2 gap-2">
-              <ComingLater phase={4}>
-                <ToolButton icon={TriangleAlert} disabled>
-                  {t('toolbar.injectException')}
-                </ToolButton>
-              </ComingLater>
+              <ToolButton icon={TriangleAlert} onClick={injectException}>
+                {t('toolbar.injectException')}
+              </ToolButton>
               <ComingLater phase={5}>
                 <ToolButton icon={Gauge} disabled>
                   {t('toolbar.runScoring')}

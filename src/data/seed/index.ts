@@ -71,6 +71,7 @@ export function buildBaseSeed(): DemoData {
     codRecords: {},
     codRemittances: {},
     payoutBatches: byId(payoutBatchHistory),
+    sosAlerts: {},
     partnerInvoices: byId(partnerInvoices),
     payouts: byId(payouts),
     tickets: {},

@@ -30,6 +30,7 @@ import { AppointmentForm } from './AppointmentForm'
 import { StatusTrack } from './StatusTrack'
 import { downloadDocuments, usePrintShipments } from './shipmentFiles'
 import { useCustomerSession } from './useCustomerSession'
+import { INTERNAL_KINDS } from '@shared/engines/escalations'
 
 export default function CP17Shipment() {
   const { t } = useTranslation()
@@ -46,7 +47,7 @@ export default function CP17Shipment() {
   const step = trackStep(s.status)
   const delivered = s.status === 'delivered' || s.status === 'deliveredWithException'
   const claimable = claimableShipments(data, s.customerId, now).some((x) => x.id === s.id)
-  const openExceptions = Object.values(data.exceptions).filter((x) => x.shipmentId === s.id && x.status !== 'resolved')
+  const openExceptions = Object.values(data.exceptions).filter((x) => x.shipmentId === s.id && x.status !== 'resolved' && !INTERNAL_KINDS.includes(x.type))
   const pendingRevision = Object.values(data.weightRevisions).find((w) => w.shipmentId === s.id && w.status === 'pending')
   const pod = proofOfDelivery(data, s)
   const link = `${window.location.origin}/track/${s.id}`

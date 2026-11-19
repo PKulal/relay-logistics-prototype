@@ -12,7 +12,8 @@ import { currentLeg, DONE_SHIPMENT, legSla } from './sla'
 
 /** Legs that can still move to another partner: nothing picked up or started on them yet. */
 const BEFORE_START: LegStatus[] = ['offered', 'accepted', 'flagged', 'assigned']
-export const canReassign = (leg: Leg) => BEFORE_START.includes(leg.status)
+/** Before work starts, or a first-mile leg whose pickup failed (PA-18; source §10: reassign within 2 hours). */
+export const canReassign = (leg: Leg) => BEFORE_START.includes(leg.status) || (leg.type === 'firstMile' && leg.status === 'exception')
 
 /** The assignment engine's input for one leg of a booked shipment. */
 export function assignmentInputFor(data: DemoData, s: Shipment, leg: Leg): AssignmentInput {

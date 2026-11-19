@@ -368,7 +368,9 @@
     "completeTrip": "Complete Deccan's third trial trip",
     "tripDone": "{{trip}} counted: Deccan trial {{done}} of {{required}}, score {{score}}",
     "tripDoneAuto": "Deccan Roadlines goes live at Bronze in a few seconds (ERP-14).",
-    "tripDoneManual": "Decide go-live in ERP → Partner Management → Trials and go-live."
+    "tripDoneManual": "Decide go-live in ERP → Partner Management → Trials and go-live.",
+    "injected": "Escalation {{id}} raised on a SwiftCity job",
+    "injectNone": "No SwiftCity job in progress to raise it on"
   },
   "service": {
     "parcel": "Parcel",
@@ -740,7 +742,8 @@
     "delay": "Delay",
     "breakdown": "Breakdown",
     "ndr": "NDR",
-    "weightMismatch": "Weight mismatch"
+    "weightMismatch": "Weight mismatch",
+    "missedScan": "Missed scan"
   },
   "erp05": {
     "title": "Live job board",
@@ -1019,7 +1022,8 @@
     "tierCap": {
       "bronze": "Bronze tier: capped at your declared capacity",
       "probation": "Probation: volume cut by 50%"
-    }
+    },
+    "sos": "SOS from {{name}} ({{mobile}}) at {{time}}"
   },
   "pp12": {
     "title": "Job inbox",
@@ -1256,7 +1260,6 @@
     "allGood": "All good",
     "damaged": "Packaging damaged",
     "damagePhoto": "Photo of the damage",
-    "cannotLater": "Can’t pick up, or a piece is missing? That flow arrives in Phase 4.",
     "next": "Next",
     "todo": {
       "scan": "Scan all pieces and take the invoice photo to continue",
@@ -1532,7 +1535,9 @@
       "delay": "Delay",
       "breakdown": "Breakdown",
       "ndr": "Delivery failed",
-      "weightMismatch": "Weight mismatch"
+      "weightMismatch": "Weight mismatch",
+      "missedScan": "Missed scan",
+      "ewbExpiry": "E-way bill expiry"
     }
   },
   "pa21": {
@@ -1781,7 +1786,8 @@
       "delay": "Delay",
       "breakdown": "Truck breakdown",
       "ndr": "Delivery failed",
-      "weightMismatch": "Weight difference"
+      "weightMismatch": "Weight difference",
+      "missedScan": "Missed scan"
     },
     "tab": {
       "timeline": "Timeline and map",
@@ -3406,7 +3412,8 @@
       "damage": "Damage",
       "delay": "Delay",
       "breakdown": "Vehicle breakdown",
-      "weightMismatch": "Weight mismatch"
+      "weightMismatch": "Weight mismatch",
+      "missedScan": "Missed scan"
     },
     "amount": "Revised by {{amount}}",
     "takeAction": "Take action",
@@ -3718,7 +3725,8 @@
       "delay": "Send the new ETA to the customer; move to a faster lane if possible.",
       "breakdown": "Send the new ETA to the customer; arrange a backup vehicle if needed.",
       "ndr": "WhatsApp buttons to the consignee and shipper, same day.",
-      "ewbExpiry": "Extend the e-way bill or update Part B."
+      "ewbExpiry": "Extend the e-way bill or update Part B.",
+      "missedScan": "Ask the partner for the scan and the reason; check the hand-over evidence."
     },
     "a": {
       "reassign": "Reassign to backup",
@@ -3747,8 +3755,12 @@
       "partB": "Part B updated",
       "customerConfirmed": "Customer confirmed",
       "reassigned": "Reassigned to",
-      "closed": "Closed"
-    }
+      "closed": "Closed",
+      "partnerAck": "Partner acknowledged",
+      "partnerResolved": "Partner resolved"
+    },
+    "report": "Reported in the app by {{name}} · {{photos}} photos",
+    "partnerSays": "{{partner}}:"
   },
   "erp08": {
     "back": "Back",
@@ -4641,5 +4653,173 @@
     "releaseImps": "Release by IMPS",
     "earlyReleased": "{{id}} paid by IMPS",
     "history": "Released batches"
+  },
+  "pa18": {
+    "title": "Cannot pick up",
+    "cannot": "Cannot pick up",
+    "reason": "Reason",
+    "r": {
+      "goodsNotReady": "Goods not ready",
+      "shipperClosed": "Shipper closed",
+      "shipperRefused": "Shipper refused",
+      "documentsMissing": "Documents missing (invoice / e-way bill)",
+      "addressWrong": "Address wrong",
+      "vehicleTooSmall": "Vehicle too small",
+      "other": "Other"
+    },
+    "call": "Call the shipper",
+    "callRule": "A masked call in the last 15 minutes is required.",
+    "photo": "Photo of the location or the problem",
+    "note": "Note",
+    "notePh": "Ready at 17:00",
+    "submit": "Submit: pickup failed",
+    "todo": "Choose a reason, call the shipper and take the photo",
+    "done": "Pickup failed reported; the office and Logisco have been told"
+  },
+  "pa30": {
+    "open": "Report short, excess or damage",
+    "title": "Short, excess or damage",
+    "type": "Type",
+    "shipment": "Shipment",
+    "pcs": "pcs",
+    "noShipments": "No shipments at the hub right now.",
+    "pieces": "Pieces affected",
+    "excessPiece": "Extra piece (scan or type)",
+    "photos": "Photos (up to {{max}})",
+    "photoN": "Photo {{n}}",
+    "addPhoto": "Add photo",
+    "note": "Note",
+    "notePh": "Bag seal intact, 5 of 6",
+    "submit": "Submit report",
+    "todo": "Choose the type, the pieces and take at least one photo",
+    "done": "Ticket {{id}} raised; the previous leg will be investigated",
+    "failed": "The report couldn't be sent"
+  },
+  "pa12": {
+    "title": "SOS",
+    "hint": "For emergencies only. Your location is shared with your office and Logisco, and your emergency contact is called.",
+    "hold": "Hold for SOS",
+    "holdHint": "Press and hold for {{s}} seconds",
+    "helpComing": "Help is being contacted",
+    "sharedWith": "Your live location is shared with your office and the Logisco Control Tower.",
+    "location": "{{lat}}, {{lng}} · since {{time}}",
+    "calling": "Calling your emergency contact…",
+    "offline": "No network: SOS sent by SMS and a phone call.",
+    "kind": "What happened? (optional)",
+    "k": {
+      "accident": "Accident",
+      "theft": "Theft / robbery",
+      "medical": "Medical",
+      "threat": "Threat",
+      "other": "Other"
+    },
+    "cancel": "Cancel SOS ({{s}} s)",
+    "closed": "Logisco closed your last SOS at {{time}}."
+  },
+  "sos": {
+    "title": "SOS alerts",
+    "none": "None",
+    "note": "Note",
+    "resolve": "Mark resolved",
+    "resolved": "SOS for {{name}} closed"
+  },
+  "pp20": {
+    "title": "Escalations",
+    "subtitle_one": "{{count}} open ticket. A missed timer reduces your Responsiveness score.",
+    "subtitle_other": "{{count}} open tickets. A missed timer reduces your Responsiveness score.",
+    "empty": "No escalations",
+    "col": {
+      "ticket": "Ticket",
+      "job": "Job / LR",
+      "type": "Type",
+      "raised": "Raised by / on",
+      "timers": "Acknowledge / resolve by",
+      "status": "Status"
+    },
+    "type": {
+      "pickupMissed": "Missed pickup",
+      "sealMismatch": "Seal mismatch",
+      "short": "Short",
+      "excess": "Excess",
+      "damage": "Damaged",
+      "delay": "Delay",
+      "breakdown": "Breakdown",
+      "ndr": "NDR",
+      "weightMismatch": "Weight mismatch",
+      "ewbExpiry": "E-way bill expiry",
+      "missedScan": "Missed scan"
+    },
+    "by": {
+      "system": "System",
+      "desk": "Logisco desk",
+      "app": "Partner App"
+    },
+    "timer": {
+      "ack": "Ack in {{d}}",
+      "ackMissed": "Ack missed by {{d}}",
+      "resolve": "Resolve in {{d}}",
+      "resolveMissed": "Resolve overdue by {{d}}"
+    },
+    "status": {
+      "new": "New",
+      "acknowledged": "Acknowledged",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "rule": "Acknowledgement and resolution within the SLA feed the Responsiveness KPI (10% of your score).",
+    "back": "All escalations",
+    "report": "Reported in the app",
+    "photos_one": "{{count}} photo",
+    "photos_other": "{{count}} photos",
+    "timeline": "Shipment timeline",
+    "yourResponse": "Your resolution",
+    "closedByLogisco": "Closed by Logisco",
+    "respond": "Respond",
+    "ack": "Acknowledge",
+    "acked": "Acknowledged; the timer has stopped",
+    "response": "Response",
+    "rootCause": "Root cause",
+    "cause": {
+      "staffShortage": "Staff shortage",
+      "vehicleIssue": "Vehicle issue",
+      "addressIssue": "Address issue",
+      "customerNotReady": "Customer not ready",
+      "weatherTraffic": "Weather / traffic",
+      "other": "Other"
+    },
+    "evidence": "Evidence",
+    "resolve": "Resolve",
+    "resolved": "Resolution sent to Logisco"
+  },
+  "pp21": {
+    "title": "Delivery exceptions",
+    "subtitle": "Failed attempts and returns. The action follows the shipper's or consignee's choice.",
+    "tab": {
+      "ndr": "NDR",
+      "rto": "RTO jobs"
+    },
+    "empty": "No failed deliveries",
+    "noRto": "No returns",
+    "col": {
+      "job": "Job / LR",
+      "attempt": "Attempt and reason",
+      "instruction": "Customer instruction",
+      "assigned": "Reattempt assigned to",
+      "lr": "LR",
+      "consignee": "Consignee",
+      "rtoAt": "RTO started",
+      "origin": "Back to"
+    },
+    "photo": "location photo",
+    "choice": {
+      "awaiting": "Awaiting",
+      "reattempt": "Reattempt",
+      "changeSlot": "New slot / address",
+      "rto": "RTO"
+    },
+    "slot": "{{date}} {{from}}–{{to}}",
+    "assign": "Assign reattempt",
+    "assigned": "Reattempt assigned to {{name}}",
+    "rule": "Attempts without a location photo and geo-tag count against Scan and e-POD compliance."
   }
 }

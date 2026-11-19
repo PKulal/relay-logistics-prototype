@@ -6,14 +6,14 @@
  * and deductions; Admin sees all.
  */
 import { nextPayout, partnerCodOutstanding } from '@shared/engines/payables'
-import { AlertTriangle, ArrowRight, BadgeIndianRupee, Gauge, Inbox, ShieldAlert, UserPlus, Wallet } from 'lucide-react'
+import { AlertTriangle, ArrowRight, BadgeIndianRupee, Gauge, Inbox, ShieldAlert, Siren, UserPlus, Wallet } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { cn } from '@/shared/lib/utils'
 import { acceptBy, capacityToday, jobEnds, partnerAlerts, partnerLegs, scoreTrend, todayTiles } from '@shared/engines/partnerJobs'
 import { useData, useDemoNow } from '@shared/hooks/useDemo'
-import { formatDate, formatINR } from '@shared/lib/format'
+import { formatDate, formatINR, formatTime } from '@shared/lib/format'
 import { person } from '@shared/people'
 import { useSimulatedLoading } from '@shared/sim/latency'
 import { Button } from '@shared/ui/button'
@@ -24,6 +24,7 @@ import { Skeleton } from '@shared/ui/skeleton'
 import { TierBadge } from '@shared/ui/TierBadge'
 import { AcceptByChip } from './JobBits'
 import { usePartnerSession } from './usePartnerSession'
+import { activeSos } from '@shared/engines/escalations'
 
 export default function PP11Dashboard() {
   const { t } = useTranslation()
@@ -57,9 +58,22 @@ export default function PP11Dashboard() {
   const usedPct = view.capacity.capacity ? Math.min(100, Math.round((view.capacity.used / view.capacity.capacity) * 100)) : 0
   const codTotal = view.cod.reduce((s, c) => s + c.amount, 0)
 
+  const sos = activeSos(data.sosAlerts).filter((a) => a.partnerId === partner.id)
   return (
     <div className="flex flex-col gap-6">
       <PageHeader title={t('pp11.title')} subtitle={t('pp11.greeting', { name: user.name.split(' ')[0], partner: partner.shortName })} className="mb-0" />
+      {sos.map((a) => (
+        <section key={a.id} role="alert" className="flex flex-wrap items-center gap-3 rounded-xl border-2 border-status-danger bg-status-danger-bg p-4 text-status-danger" data-testid="sos-banner">
+          <Siren className="size-6 shrink-0" aria-hidden />
+          <p className="flex-1 font-semibold">
+            {t('pp11.sos', { name: data.fieldStaff[a.staffId].name, mobile: data.fieldStaff[a.staffId].mobile, time: formatTime(a.at) })}
+            <span className="tabular block text-caption font-normal">
+              {a.lat.toFixed(4)}, {a.lng.toFixed(4)}
+              {a.kind && ` · ${t(`pa12.k.${a.kind}`)}`}
+            </span>
+          </p>
+        </section>
+      ))}
 
       {ops && (
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">

@@ -16,7 +16,10 @@ import PA05Home from './PA05Home'
 import PA06Tasks from './PA06Tasks'
 import PA07ScanTab from './PA07ScanTab'
 import HubExceptions from './HubExceptions'
+import PA12Sos from './PA12Sos'
+import PA18PickupFailed from './PA18PickupFailed'
 import PA20ReceiveManifest from './PA20ReceiveManifest'
+import PA30HubReport from './PA30HubReport'
 import PA21Trip from './PA21Trip'
 import PA22StartTrip from './PA22StartTrip'
 import PA31DeliveryRun from './PA31DeliveryRun'
@@ -79,11 +82,13 @@ export default function PartnerAppApp() {
             )}
             <Route path="tasks/:legId" element={<TaskScreen />} />
             <Route path="tasks/:legId/pickup" element={<TaskScreen flow="pickup" />} />
+            <Route path="tasks/:legId/cannot" element={<PA18PickupFailed />} />
             {staff.role === 'hub' && (
               <>
                 <Route path="hub/sort" element={<PA27Sort />} />
                 <Route path="hub/bags" element={<PA28Bags />} />
                 <Route path="hub/exceptions" element={<HubExceptions />} />
+                <Route path="hub/exceptions/new" element={<PA30HubReport />} />
                 <Route path="outbound/:manifestId" element={<PA29OutScan />} />
                 <Route path="outbound/rider/:riderId" element={<RiderHandover />} />
               </>
@@ -103,7 +108,7 @@ export default function PartnerAppApp() {
                 <Route path="trip/start" element={<PA22StartTrip />} />
               </>
             )}
-            <Route path={SOS_SCREEN.path} element={screen(SOS_SCREEN)} />
+            <Route path={SOS_SCREEN.path} element={<PA12Sos />} />
             <Route path={SYNC_SCREEN.path} element={screen(SYNC_SCREEN)} />
             {/* Another role's tab opened by URL */}
             <Route

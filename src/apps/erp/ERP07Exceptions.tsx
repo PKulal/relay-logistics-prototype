@@ -25,6 +25,7 @@ import { SimulatedTag } from '@shared/ui/SimulatedTag'
 import { SlaTimer } from '@shared/ui/SlaTimer'
 import { Chip } from '@shared/ui/StatusChip'
 import { useErpSession } from './useErpSession'
+import { SosAlerts } from './SosAlerts'
 
 const FILTERS = ['open', 'resolved', 'all'] as const
 const INVESTIGATE: ExceptionKind[] = ['sealMismatch', 'short', 'excess', 'damage', 'weightMismatch']
@@ -40,6 +41,7 @@ export default function ERP07Exceptions() {
   return (
     <div className="flex flex-col gap-4">
       <PageHeader title={t('erp07.title')} subtitle={t('erp07.subtitle', { count: all.filter((x) => x.status !== 'resolved').length })} className="mb-0" />
+      <SosAlerts />
       <div className="flex gap-2" role="group" aria-label={t('erp07.filter')}>
         {FILTERS.map((f) => (
           <Button key={f} size="sm" variant={filter === f ? 'default' : 'outline'} aria-pressed={filter === f} onClick={() => setFilter(f)}>
@@ -128,6 +130,19 @@ function Detail({ x }: { x: ShipmentException }) {
         </p>
       )}
       {x.rootCause && <p className="text-table">{x.rootCause}</p>}
+      {x.report && (
+        <p className="text-table" data-testid="field-report">
+          {t('erp07.report', { name: data.fieldStaff[x.report.by]?.name ?? x.report.by, photos: x.report.photos.length })}
+          {x.report.reason && ` · ${t(`pa18.r.${x.report.reason}`, { defaultValue: x.report.reason })}`}
+          {x.report.pieceIds?.length ? ` · ${x.report.pieceIds.join(', ')}` : ''}
+          {x.report.note && ` · ${x.report.note}`}
+        </p>
+      )}
+      {x.partner?.response && (
+        <p className="rounded-lg bg-primary-soft p-3 text-table" data-testid="partner-response">
+          <span className="font-semibold">{t('erp07.partnerSays', { partner: data.partners[x.ownerPartnerId!].shortName })}</span> {x.partner.response} · {t(`pp20.cause.${x.partner.rootCause}`)}
+        </p>
+      )}
 
       {canAct && (
         <div className="flex flex-col gap-2 rounded-lg bg-gray-50 p-3">

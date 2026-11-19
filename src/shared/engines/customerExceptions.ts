@@ -5,6 +5,7 @@
 import { addHours } from '@shared/lib/time'
 import type { DemoData, ExceptionKind, Id, IsoDateTime } from '@shared/types'
 import { actionsNeeded, WEIGHT_REVISION_RESPONSE_HOURS } from './customerDashboard'
+import { INTERNAL_KINDS } from './escalations'
 
 export type QueueTab = 'action' | 'ndr' | 'weight' | 'hold' | 'claims'
 
@@ -58,7 +59,7 @@ export function exceptionQueue(data: DemoData, customerId: Id, _now: IsoDateTime
 
   // On hold: open tickets Logisco is working on (no customer timer), incl. e-way bills about to expire (auto-tickets)
   for (const x of Object.values(data.exceptions)) {
-    if (!mine(x.shipmentId) || x.status === 'resolved' || x.type === 'ndr') continue
+    if (!mine(x.shipmentId) || x.status === 'resolved' || x.type === 'ndr' || INTERNAL_KINDS.includes(x.type)) continue
     rows.push({ key: x.id, tab: 'hold', shipmentId: x.shipmentId, type: x.type, raisedAt: x.raisedAt, details: x.rootCause, to: `/customer/shipments/${x.shipmentId}` })
   }
   for (const c of Object.values(data.claims)) {
