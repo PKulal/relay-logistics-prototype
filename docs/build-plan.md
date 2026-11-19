@@ -33,7 +33,7 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 - [x] PA-21 to PA-24 Driver trip (moving map marker)
 - [x] PA-31 to PA-33 Delivery with e-POD
 - [x] CP-16 Shipments list, CP-17 Tracking (timeline updates live), CP-18 Public tracking + appointment
-- [ ] End-to-end check: book → deliver across all four apps with no page refresh
+- [x] End-to-end check: book → deliver across all four apps with no page refresh
 
 ## Phase 3 — Onboarding
 - [ ] Customer: CP-04 to CP-10; ERP-26, ERP-27 (Sales), ERP-30 (credit), ERP-22/23 (rate card)

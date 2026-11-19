@@ -78,7 +78,7 @@ export default function PA32Stop() {
         ) : (
           <p className="tabular text-[18px] font-semibold">
             {slot.from}–{slot.to}
-            {a?.dock ? ` · ${t('pa32.dock', { dock: a.dock })}` : ''}
+            {a?.dock ? ` · ${a.dock}` : ''}
           </p>
         )}
         {outsideSlot && (

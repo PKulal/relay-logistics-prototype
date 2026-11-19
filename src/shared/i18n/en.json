@@ -1648,7 +1648,6 @@
     "appointment": "Appointment",
     "window": "Delivery window",
     "notBooked": "The consignee has not booked a slot yet (due {{date}})",
-    "dock": "Dock {{dock}}",
     "outsideSlot": "You are outside the booked slot. Call the consignee before unloading.",
     "pieces": "Pieces",
     "cod": "Collect on delivery",
