@@ -3,7 +3,7 @@
  * needing customer input, NDR actions, weight disputes, claims"; §10).
  */
 import { addHours } from '@shared/lib/time'
-import type { DemoData, ExceptionKind, Id, IsoDateTime, ShipmentStatus } from '@shared/types'
+import type { DemoData, ExceptionKind, Id, IsoDateTime } from '@shared/types'
 import { actionsNeeded, WEIGHT_REVISION_RESPONSE_HOURS } from './customerDashboard'
 
 export type QueueTab = 'action' | 'ndr' | 'weight' | 'hold' | 'claims'
@@ -25,11 +25,8 @@ export interface QueueRow {
   to: string
 }
 
-/** E-way bills expiring within this many hours put a moving shipment on hold (assumed). */
-const EWB_WARN_HOURS = 24
-const DONE: ShipmentStatus[] = ['delivered', 'deliveredWithException', 'cancelled', 'returnToOrigin']
 
-export function exceptionQueue(data: DemoData, customerId: Id, now: IsoDateTime): QueueRow[] {
+export function exceptionQueue(data: DemoData, customerId: Id, _now: IsoDateTime): QueueRow[] {
   const rows: QueueRow[] = []
   const mine = (lr: Id) => data.shipments[lr]?.customerId === customerId
 
@@ -59,19 +56,11 @@ export function exceptionQueue(data: DemoData, customerId: Id, now: IsoDateTime)
     }
   }
 
-  // On hold: open exceptions Logisco is working on (no customer timer), and e-way bills about to expire
+  // On hold: open tickets Logisco is working on (no customer timer), incl. e-way bills about to expire (auto-tickets)
   for (const x of Object.values(data.exceptions)) {
     if (!mine(x.shipmentId) || x.status === 'resolved' || x.type === 'ndr') continue
     rows.push({ key: x.id, tab: 'hold', shipmentId: x.shipmentId, type: x.type, raisedAt: x.raisedAt, details: x.rootCause, to: `/customer/shipments/${x.shipmentId}` })
   }
-  for (const s of Object.values(data.shipments)) {
-    if (s.customerId !== customerId || !s.ewb || DONE.includes(s.status)) continue
-    const expiresAt = `${s.ewb.validTill}T23:59:00+05:30`
-    const hoursLeft = (Date.parse(expiresAt) - Date.parse(now)) / 3_600_000
-    if (hoursLeft <= EWB_WARN_HOURS)
-      rows.push({ key: `ewb-${s.id}`, tab: 'hold', shipmentId: s.id, type: 'ewbExpiry', raisedAt: addHours(expiresAt, -EWB_WARN_HOURS), details: s.ewb.no, to: `/customer/shipments/${s.id}` })
-  }
-
   for (const c of Object.values(data.claims)) {
     if (c.customerId !== customerId || c.status === 'settled' || c.status === 'rejected') continue
     rows.push({ key: c.id, tab: 'claims', shipmentId: c.shipmentId, type: 'claim', raisedAt: c.raisedAt, to: '/customer/claims' })

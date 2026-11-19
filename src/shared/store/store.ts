@@ -33,6 +33,8 @@ import * as pon from './partnerOnboardingActions'
 import * as pag from './partnerAgreementActions'
 import * as wt from './weightActions'
 import * as ndr from './ndrActions'
+import * as ct from './controlTowerActions'
+import type { Reassign, TicketAction } from './controlTowerActions'
 import type { NdrChoice, ReportNdr } from './ndrActions'
 import type { DisputeInput } from './weightActions'
 import type { CommercialDecisionKind, LineEdit, NewStaff } from './partnerAgreementActions'
@@ -44,7 +46,7 @@ import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 17
+export const STORE_VERSION = 18
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -175,6 +177,13 @@ export interface DemoState {
   reportNdr: (x: ReportNdr) => void
   /** `by`: customer user id or 'consignee' */
   respondNdr: (lr: Id, c: NdrChoice, by: Id) => void
+  /** Control Tower (ERP-06 to ERP-09) */
+  reassignLeg: (x: Reassign, by: Id) => void
+  applyRiskSuggestion: (legId: Id, by: Id) => void
+  dismissRisk: (legId: Id, reason: string, by: Id) => void
+  ticketAction: (id: Id, action: TicketAction, note: string, by: Id) => void
+  closeTicket: (id: Id, note: string, by: Id) => void
+  contactPartner: (partnerId: Id, kind: 'call' | 'message', by: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -202,7 +211,8 @@ export const useDemoStore = create<DemoState>()(
           // Background shipments move along their simulated journeys (ERP spec §11.1).
           // … and weight revisions left unanswered for 48 hours are accepted (CP-20 rule)
           // … and failed deliveries with no response get their reattempt (CP-21 rule)
-          return { demoNow, data: ndr.autoReattempt(wt.autoAcceptRevisions(advanceJourneys(s.data, s.demoNow, demoNow), demoNow), demoNow) }
+          // … and new exceptions are auto-ticketed (source §10 Steps 1–2)
+          return { demoNow, data: ct.raiseAutoTickets(ndr.autoReattempt(wt.autoAcceptRevisions(advanceJourneys(s.data, s.demoNow, demoNow), demoNow), demoNow), demoNow) }
         })
       },
 
@@ -327,6 +337,12 @@ export const useDemoStore = create<DemoState>()(
       resolveDispute: (wrId, decision, note, by) => set((s) => ({ data: wt.resolveDispute(s.data, wrId, decision, note, by, s.demoNow) })),
       reportNdr: (x) => set((s) => ({ data: ndr.reportNdr(s.data, x, s.demoNow) })),
       respondNdr: (lr, c, by) => set((s) => ({ data: ndr.respondNdr(s.data, lr, c, by, s.demoNow) })),
+      reassignLeg: (x, by) => set((s) => ({ data: ct.reassignLeg(s.data, x, by, s.demoNow) })),
+      applyRiskSuggestion: (legId, by) => set((s) => ({ data: ct.applyRiskSuggestion(s.data, legId, by, s.demoNow) })),
+      dismissRisk: (legId, reason, by) => set((s) => ({ data: ct.dismissRisk(s.data, legId, reason, by, s.demoNow) })),
+      ticketAction: (id, action, note, by) => set((s) => ({ data: ct.ticketAction(s.data, id, action, note, by, s.demoNow) })),
+      closeTicket: (id, note, by) => set((s) => ({ data: ct.closeTicket(s.data, id, note, by, s.demoNow) })),
+      contactPartner: (partnerId, kind, by) => set((s) => ({ data: ct.contactPartner(s.data, partnerId, kind, by, s.demoNow) })),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),
 
 

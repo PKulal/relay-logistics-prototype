@@ -37,11 +37,12 @@ export function applyEvents(data: DemoData, newEvents: ShipmentEvent[], now: Iso
     if (shipment.status !== result.shipmentStatus) {
       shipments[shipmentId] = { ...shipment, status: result.shipmentStatus, updatedAt: now }
     }
-    // Who holds each leg also comes from events: the latest legAssigned wins; a later legUnassigned clears it.
+    // Who holds each leg also comes from events: the latest legAssigned wins; a later
+    // legUnassigned, or a legWithdrawn (ERP-08 reassign to another partner), clears it.
     const assigned = new Map<Id, ShipmentEvent | null>()
     for (const e of sortEvents(shipmentEvents)) {
       if (e.legId && e.type === 'legAssigned') assigned.set(e.legId, e)
-      if (e.legId && e.type === 'legUnassigned') assigned.set(e.legId, null)
+      if (e.legId && (e.type === 'legUnassigned' || e.type === 'legWithdrawn')) assigned.set(e.legId, null)
     }
 
     for (const leg of shipmentLegs) {

@@ -6,7 +6,7 @@
 import { List, Map as MapIcon, Rows3, X } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { shipmentPosition } from '@shared/engines/position'
 import type { SlaState } from '@shared/engines/sla'
 import { useData, useDemoNow } from '@shared/hooks/useDemo'
@@ -39,7 +39,9 @@ export default function ERP05JobBoard() {
   const data = useData((d) => d)
   const now = useDemoNow()
   const [view, setView] = useState<View>('legs')
-  const [f, setF] = useState<BoardFilters>(NO_FILTERS)
+  // ?partner=… opens the board filtered on one partner (ERP-09 Partner health links)
+  const [params] = useSearchParams()
+  const [f, setF] = useState<BoardFilters>(() => ({ ...NO_FILTERS, partnerId: params.get('partner') ?? '' }))
   const loading = useSimulatedLoading(view)
   const set = <K extends keyof BoardFilters>(k: K, v: BoardFilters[K]) => setF((x) => ({ ...x, [k]: v }))
 
@@ -93,7 +95,7 @@ export default function ERP05JobBoard() {
     { key: 'status', header: t('erp05.col.legStatus'), cell: (r) => <LegStatusChip status={r.leg.status} />, sortValue: (r) => r.leg.status },
     { key: 'sla', header: t('erp05.col.sla'), cell: (r) => <SlaBadge state={r.sla} dueAt={r.leg.slaDueAt} now={now} />, sortValue: (r) => SLA_ORDER[r.sla] * 1e13 + Date.parse(r.leg.slaDueAt) },
     { key: 'last', header: t('erp05.col.lastEvent'), cell: (r) => lastEvent(r.last), sortValue: (r) => (r.last ? -Date.parse(r.last.event.at) : 0) },
-    { key: 'actions', header: <span className="sr-only">{t('erp05.col.actions')}</span>, cell: (r) => <ShipmentActions shipment={r.shipment} partnerId={r.leg.partnerId} /> },
+    { key: 'actions', header: <span className="sr-only">{t('erp05.col.actions')}</span>, cell: (r) => <ShipmentActions shipment={r.shipment} partnerId={r.leg.partnerId} legId={r.leg.id} /> },
   ]
 
   const shipmentColumns: Column<ShipmentRow>[] = [

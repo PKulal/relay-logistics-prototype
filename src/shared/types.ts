@@ -913,6 +913,8 @@ export type ExceptionKind =
   | 'breakdown'
   | 'ndr'
   | 'weightMismatch'
+  /** Auto-ticket: e-way bill expiring within 24 hours (source §10 Step 3) */
+  | 'ewbExpiry'
 
 export interface ShipmentEvent {
   id: Id
@@ -958,10 +960,23 @@ export interface ShipmentException {
   raisedAt: IsoDateTime
   actionDueAt: IsoDateTime
   ownerPartnerId?: Id
+  /** Free-text finding (e.g. from an investigation) */
   rootCause?: string
+  /** SIMULATED AI root-cause class (source §10 Step 1: "classifies the root cause") */
+  aiCause?: RootCause
   status: 'open' | 'inProgress' | 'resolved'
   customerConfirmed: boolean
+  /** Raised by the detector (auto-ticket) rather than by a person in an app */
+  auto?: boolean
+  /** What the Control Tower did (ERP-07) */
+  log?: { at: IsoDateTime; by: Id; action: string; note?: string }[]
+  closedAt?: IsoDateTime
+  closedBy?: Id
 }
+
+export type RootCause = 'partnerCapacity' | 'partnerNoShow' | 'lineHaulDelay' | 'hubDwell' | 'lastMileDelay' | 'pickupDelay' | 'consignee' | 'handoverGap' | 'longTransit' | 'vehicle'
+
+export type ReassignReason = 'slaRisk' | 'partnerRequest' | 'capacity' | 'quality' | 'customerRequest' | 'other'
 
 export type WeightDisputeReason = 'dimensions' | 'weight' | 'wrongPiece' | 'skuFrozen' | 'other'
 
@@ -1236,6 +1251,8 @@ export interface DemoData {
   partnerInvoices: Record<Id, PartnerInvoice>
   payouts: Record<Id, Payout>
   tickets: Record<Id, Ticket>
+  /** ERP-06: AI risk suggestions an operator dismissed, by leg */
+  riskDismissals: Record<Id, { legId: Id; reason: string; by: Id; at: IsoDateTime }>
   // cross-cutting
   notifications: Record<Id, Notification>
   aiDecisions: Record<Id, AiDecision>

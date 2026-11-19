@@ -69,3 +69,13 @@ export function maskMobile(mobile: string): string {
   if (digits.length < 6) return mobile
   return `${digits.slice(0, 5)} •••${digits.slice(-2)}`
 }
+
+/** "45 m", "2 h 40 m", "1 d 3 h" for a span in minutes. */
+export function formatDuration(minutes: number): string {
+  const m = Math.round(Math.abs(minutes))
+  if (m < 60) return `${m} m`
+  if (m < 24 * 60) return m % 60 ? `${Math.floor(m / 60)} h ${m % 60} m` : `${m / 60} h`
+  const d = Math.floor(m / 1440)
+  const h = Math.floor((m % 1440) / 60)
+  return h ? `${d} d ${h} h` : `${d} d`
+}

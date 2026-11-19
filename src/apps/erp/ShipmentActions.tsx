@@ -1,12 +1,15 @@
 /**
  * One-click actions on a shipment (ERP spec §11.1 "One-Click Actions"; ERP-03, ERP-05).
  * Message customer, masked call and e-way bill actions are SIMULATED integrations.
- * Reassign leg (ERP-08) and Open claim (ERP-37) arrive in Phase 4.
+ * Reassign leg opens ERP-08; Open claim (ERP-37) arrives with the claims item.
  */
 import { FileClock, MessageSquare, MoreHorizontal, PhoneCall, Repeat, ShieldAlert, Truck } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+import { canReassign } from '@shared/engines/controlTower'
+import { currentLeg } from '@shared/engines/sla'
 import { useData } from '@shared/hooks/useDemo'
 import { formatDate, formatDayShort } from '@shared/lib/format'
 import { useDemoStore } from '@shared/store'
@@ -24,15 +27,19 @@ import { useErpSession } from './useErpSession'
 type Open = null | 'message' | 'call' | 'extend' | 'partB'
 
 /** Row menu (job board) or a button bar (Shipment 360). */
-export function ShipmentActions({ shipment, partnerId, variant = 'menu' }: { shipment: Shipment; partnerId?: Id; variant?: 'menu' | 'bar' }) {
+/** `legId`: the leg to reassign (job board leg rows); otherwise the shipment's current leg. */
+export function ShipmentActions({ shipment, partnerId, legId, variant = 'menu' }: { shipment: Shipment; partnerId?: Id; legId?: Id; variant?: 'menu' | 'bar' }) {
   const { t } = useTranslation()
   const [open, setOpen] = useState<Open>(null)
   const { user } = useErpSession()
   const data = useData((d) => d)
   const partner = partnerId ? data.partners[partnerId] : undefined
+  const navigate = useNavigate()
+  const leg = legId ? data.legs[legId] : currentLeg(data, shipment)
+  const reassignable = !!leg && canReassign(leg) && (user.role === 'controlTower' || user.role === 'superAdmin')
 
   const items = [
-    { key: 'reassign', icon: Repeat, label: t('erpActions.reassign'), disabled: true, hint: t('toolbar.comingInPhase', { phase: 4 }) },
+    { key: 'reassign', icon: Repeat, label: t('erpActions.reassign'), disabled: !reassignable, hint: leg && !canReassign(leg) ? t('erp08.underWay') : undefined, onClick: () => leg && navigate(`/erp/control-tower/reassign/${leg.id}`) },
     { key: 'message', icon: MessageSquare, label: t('erpActions.message'), onClick: () => setOpen('message') },
     { key: 'call', icon: PhoneCall, label: t('erpActions.call'), disabled: !partner, onClick: () => setOpen('call') },
     { key: 'claim', icon: ShieldAlert, label: t('erpActions.claim'), disabled: true, hint: t('toolbar.comingInPhase', { phase: 4 }) },

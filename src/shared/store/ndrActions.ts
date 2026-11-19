@@ -53,7 +53,7 @@ export function reportNdr(data: DemoData, x: ReportNdr, at: IsoDateTime): DemoDa
   const ndr: Ndr = { id: `NDR-${s.id.slice(-6)}-${attempt}`, shipmentId: s.id, legId: leg.id, attempt, reason: x.reason, photo: x.photo, note: ev.note, calledAt: x.calledAt, at }
   next = setNdr(next, ndr)
   const excId = exceptionId(next, s.id)
-  next = { ...next, exceptions: { ...next.exceptions, [excId]: { id: excId, shipmentId: s.id, legId: leg.id, type: 'ndr', raisedAt: at, actionDueAt: addHours(at, 24), ownerPartnerId: leg.partnerId, status: 'open', customerConfirmed: false } } }
+  next = { ...next, exceptions: { ...next.exceptions, [excId]: { id: excId, shipmentId: s.id, legId: leg.id, type: 'ndr', raisedAt: at, actionDueAt: addHours(at, 24), ownerPartnerId: leg.partnerId, aiCause: 'consignee', status: 'open', customerConfirmed: false } } }
   if (attempt >= data.settings.ndrMaxAttempts) return respondNdr(next, s.id, { kind: 'rto' }, 'system', at)
   // SIMULATED WhatsApp with buttons to the consignee (shown on CP-18); in-app to the shipper
   for (const u of shipperUsers(next, s.id)) next = notify(next, { app: 'customer', userId: u.id }, 'Delivery failed: choose what to do', `${s.id} · ${x.reason}`, `/customer/exceptions/ndr/${s.id}`, at)

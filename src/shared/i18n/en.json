@@ -3579,5 +3579,222 @@
     "confirmRtoBody": "The shipment comes back to your pickup location. This can't be undone.",
     "done": "Reattempt booked for {{date}}, {{from}}–{{to}}; the rider has been told",
     "doneRto": "Return to origin started"
+  },
+  "erp06": {
+    "title": "At risk today",
+    "subtitle": "The 20 open legs most likely to miss their SLA today, ranked by AI. Act before the breach.",
+    "empty": "Nothing at risk right now",
+    "col": {
+      "rank": "#",
+      "leg": "LR · leg at risk",
+      "risk": "Risk",
+      "why": "Why",
+      "action": "Suggested action"
+    },
+    "r": {
+      "staffLoad": "{{name}} has {{n}} pending jobs in this window",
+      "timeLeft": "{{time}} to the SLA",
+      "partnerScore": "Partner score {{score}}",
+      "tripHalt": "Truck stopped for {{time}}",
+      "notAccepted": "Not accepted by the partner yet",
+      "flagged": "Flagged by the partner"
+    },
+    "a": {
+      "reassign": "Reassign to {{partner}}",
+      "callPartner": "Call partner",
+      "informCustomer": "Inform customer"
+    },
+    "dismissReason": "Why dismiss?",
+    "dismiss": "Dismiss",
+    "dismissed": "Suggestion dismissed for today",
+    "confirmBody": "{{lr}} · {{risk}}% risk. The action runs now and is logged with the AI's reasons.",
+    "apply": "Apply",
+    "applied": "Done; logged with the AI's reasons"
+  },
+  "erp07": {
+    "title": "Exceptions",
+    "subtitle_one": "{{count}} open ticket",
+    "subtitle_other": "{{count}} open tickets",
+    "filter": "Filter tickets",
+    "f": {
+      "open": "Open",
+      "resolved": "Closed",
+      "all": "All"
+    },
+    "empty": "No tickets here",
+    "col": {
+      "ticket": "Ticket",
+      "type": "Type",
+      "owner": "Owner",
+      "target": "Action target",
+      "cause": "Root cause (AI)",
+      "confirmation": "Customer confirmation"
+    },
+    "ctDesk": "CT desk",
+    "closedOn": "Closed {{date}}",
+    "cause": {
+      "partnerCapacity": "Partner capacity",
+      "partnerNoShow": "Partner no-show",
+      "lineHaulDelay": "Line-haul delay",
+      "hubDwell": "Hub dwell",
+      "lastMileDelay": "Last-mile delay",
+      "pickupDelay": "Pickup not handed over",
+      "consignee": "Consignee side",
+      "handoverGap": "Hand-over gap",
+      "longTransit": "Long transit",
+      "vehicle": "Vehicle"
+    },
+    "confirmed": "Confirmed",
+    "pending": "Pending",
+    "detail": "Ticket {{id}}",
+    "timeline": "Shipment 360 · {{lr}}",
+    "raised": "Raised {{at}}",
+    "auto": "auto-ticket",
+    "aiCause": "AI root cause: {{cause}}",
+    "note": "Note",
+    "todo": {
+      "pickupMissed": "Reassign to a backup first-mile partner within 2 hours.",
+      "sealMismatch": "Hold, collect photo evidence and investigate the previous leg within 4 hours.",
+      "short": "Hold, collect photo evidence and investigate the previous leg within 4 hours.",
+      "excess": "Hold, collect photo evidence and investigate the previous leg within 4 hours.",
+      "damage": "Hold, collect photo evidence and investigate the previous leg within 4 hours.",
+      "weightMismatch": "Check the weight evidence with the previous leg.",
+      "delay": "Send the new ETA to the customer; move to a faster lane if possible.",
+      "breakdown": "Send the new ETA to the customer; arrange a backup vehicle if needed.",
+      "ndr": "WhatsApp buttons to the consignee and shipper, same day.",
+      "ewbExpiry": "Extend the e-way bill or update Part B."
+    },
+    "a": {
+      "reassign": "Reassign to backup",
+      "sendEta": "Send new ETA",
+      "investigate": "Hold and investigate {{partner}}",
+      "resendNdr": "Resend WhatsApp buttons",
+      "customerConfirmed": "Record customer confirmation",
+      "close": "Close ticket"
+    },
+    "done": {
+      "sendEta": "New ETA sent to the customer",
+      "investigate": "Investigation started",
+      "resendNdr": "WhatsApp buttons sent again",
+      "extendEwb": "E-way bill extended",
+      "partB": "Part B updated",
+      "customerConfirmed": "Customer confirmation recorded",
+      "closed": "Ticket closed"
+    },
+    "needConfirmation": "A ticket can't close until the customer's confirmation is recorded.",
+    "log": "Ticket log",
+    "logAction": {
+      "sendEta": "New ETA sent",
+      "investigate": "Investigation",
+      "resendNdr": "WhatsApp buttons resent",
+      "extendEwb": "E-way bill extended",
+      "partB": "Part B updated",
+      "customerConfirmed": "Customer confirmed",
+      "reassigned": "Reassigned to",
+      "closed": "Closed"
+    }
+  },
+  "erp08": {
+    "back": "Back",
+    "title": "Reassign leg",
+    "leg": "Leg",
+    "current": "Current partner",
+    "underWay": "This leg is already under way. Reassigning after pickup needs a hand-over plan (e.g. at a hub).",
+    "eligible": "Eligible partners (engine ranking: score ↓, cost ↑, transit ↑)",
+    "newPartner": "New partner",
+    "col": {
+      "partner": "Partner",
+      "cost": "Cost",
+      "diff": "Difference",
+      "capacity": "Capacity today"
+    },
+    "capLeft": "{{n}} left",
+    "capFull": "Full",
+    "isCurrent": "Current",
+    "reason": "Reason",
+    "reasons": {
+      "slaRisk": "SLA risk",
+      "partnerRequest": "Partner request",
+      "capacity": "Capacity",
+      "quality": "Quality",
+      "customerRequest": "Customer request",
+      "other": "Other"
+    },
+    "notify": "Notify",
+    "notifyWho": {
+      "oldPartner": "Old partner",
+      "newPartner": "New partner",
+      "customer": "Customer"
+    },
+    "reassign": "Reassign",
+    "ctOnly": "Only the Control Tower reassigns legs.",
+    "confirmTitle": "Move this leg from {{from}} to {{to}}?",
+    "confirmBody": "The old job is withdrawn and the new partner is offered it at {{cost}}.",
+    "done": "Reassigned to {{partner}}; the job is in their inbox"
+  },
+  "erp09": {
+    "title": "Partner health",
+    "subtitle": "Live at {{time}}",
+    "pickups": "Pickups behind (today)",
+    "noPickups": "No pickups due today.",
+    "col": {
+      "partner": "Partner",
+      "due": "Due",
+      "done": "Done",
+      "late": "Late",
+      "oldest": "Oldest late",
+      "hub": "Hub",
+      "inHub": "In hub",
+      "avg": "Avg dwell",
+      "over": "Over {{hours}} h",
+      "trip": "Trip",
+      "lastMove": "Last movement",
+      "stopped": "Stopped for",
+      "reason": "Reason"
+    },
+    "lateBy": "{{time}} late",
+    "hubs": "Hub dwell (flag over {{hours}} h)",
+    "noHubs": "No shipments in hubs right now.",
+    "hours": "{{n}} h",
+    "trucks": "Stopped trucks",
+    "noTrucks": "All trucks on the road are moving.",
+    "breakdown": "Breakdown",
+    "noReason": "No reason reported",
+    "sos": "SOS alerts",
+    "noSos": "No SOS alerts.",
+    "call": "Call {{name}}",
+    "message": "Message {{name}}",
+    "calling": "Calling {{name}} (masked number)",
+    "messaged": "Message sent to {{name}}"
+  },
+  "erp10": {
+    "title": "Daily review · {{date}}",
+    "generated": "Generated {{at}}",
+    "print": "Print / PDF",
+    "email": "Email to ops group",
+    "emailed": "Sent to the operations group",
+    "summary": "Summary",
+    "ai": {
+      "delivered": "{{n}} shipments delivered, {{pct}}% on time.",
+      "open": "{{n}} exception tickets carried over into today.",
+      "noOpen": "No exception tickets carried over.",
+      "worst": "Lowest on-time: {{name}} at {{pct}}% over the last 7 days.",
+      "stopped": "{{n}} trucks stopped.",
+      "dwell": "Dwell over 12 h at {{hubs}}."
+    },
+    "yesterday": "Yesterday",
+    "booked": "Booked",
+    "delivered": "Delivered",
+    "onTime": "On time",
+    "claims": "Claims opened",
+    "exceptions": "Exceptions raised",
+    "none": "None",
+    "legs": "{{n}} legs",
+    "best": "Best 5 partners (on time, 7 days)",
+    "worst": "Worst 5 partners (on time, 7 days)",
+    "risks": "Open risks",
+    "carried": "Carried-over tickets",
+    "stopped": "Stopped trucks",
+    "dwell": "Hubs over dwell"
   }
 }

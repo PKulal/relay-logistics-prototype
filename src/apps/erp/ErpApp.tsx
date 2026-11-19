@@ -9,6 +9,11 @@ import { useSessionUser } from '@shared/store/session'
 import { NotFound, ScreenPlaceholder } from '@shared/ui/Page'
 import ERP03Shipment360 from './ERP03Shipment360'
 import ERP05JobBoard from './ERP05JobBoard'
+import ERP06AtRisk from './ERP06AtRisk'
+import ERP07Exceptions from './ERP07Exceptions'
+import ERP08Reassign from './ERP08Reassign'
+import ERP09PartnerHealth from './ERP09PartnerHealth'
+import ERP10DailyPack from './ERP10DailyPack'
 import ERP11Applications from './ERP11Applications'
 import ERP12KycDesk from './ERP12KycDesk'
 import ERP13Commercials from './ERP13Commercials'
@@ -22,7 +27,7 @@ import ERP31Invoicing from './ERP31Invoicing'
 import { erpNav, type ErpCtx } from './nav'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'ERP-05': ERP05JobBoard, 'ERP-11': ERP11Applications, 'ERP-12': ERP12KycDesk, 'ERP-13': ERP13Commercials, 'ERP-14': ERP14Trials, 'ERP-22': ERP22RateCards, 'ERP-23': ERP23Approvals, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-30': ERP30CreditReview, 'ERP-31': ERP31Invoicing }
+const SCREENS = { 'ERP-05': ERP05JobBoard, 'ERP-06': ERP06AtRisk, 'ERP-07': ERP07Exceptions, 'ERP-09': ERP09PartnerHealth, 'ERP-10': ERP10DailyPack, 'ERP-11': ERP11Applications, 'ERP-12': ERP12KycDesk, 'ERP-13': ERP13Commercials, 'ERP-14': ERP14Trials, 'ERP-22': ERP22RateCards, 'ERP-23': ERP23Approvals, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-30': ERP30CreditReview, 'ERP-31': ERP31Invoicing }
 
 /** Logisco ERP + Control Tower (/erp) — Logisco staff. Spec: docs/04-erp-control-tower.md */
 export default function ErpApp() {
@@ -66,6 +71,7 @@ export default function ErpApp() {
         />
         {/* ERP-03 Shipment 360 is opened from search and lists, not the menu; every role can open it */}
         <Route path="shipments/:lr" element={<ERP03Shipment360 />} />
+        <Route path="control-tower/reassign/:legId" element={<ERP08Reassign />} />
         <Route path="sales/onboarding/:customerId" element={<ERP27OnboardingReview />} />
         <Route path="pricing/rate-cards/:cardId" element={<ERP22RateCards />} />
         {navRoutes(erpNav, ctx, SCREENS)}

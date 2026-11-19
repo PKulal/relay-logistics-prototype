@@ -2,6 +2,7 @@
  * Builds the complete demo data set. Called on first load and by resetDemo(),
  * so every reset produces identical data.
  */
+import { raiseAutoTickets } from '@shared/store/controlTowerActions'
 import type { DemoData, IsoDateTime } from '@shared/types'
 import { consignees, customers, customerUsers, pickupLocations, skus } from './customers'
 import { extraConsignees, extraCustomers, extraCustomerUsers, extraPickupLocations, extraSkus } from './customers-extra'
@@ -68,6 +69,7 @@ export function buildBaseSeed(): DemoData {
     partnerInvoices: byId(partnerInvoices),
     payouts: byId(payouts),
     tickets: {},
+    riskDismissals: {},
 
     notifications: {},
     aiDecisions: {},
@@ -84,5 +86,6 @@ export function buildBaseSeed(): DemoData {
  */
 export function buildSeed(): DemoData {
   const data = generateShipments(addKeyShipments(buildBaseSeed(), DEMO_START), DEMO_START)
-  return joinTrips(data, Object.keys(data.legs))
+  // Exceptions already present at 10:00 are auto-ticketed (source §10 Steps 1–2)
+  return raiseAutoTickets(joinTrips(data, Object.keys(data.legs)), DEMO_START)
 }

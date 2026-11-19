@@ -125,6 +125,7 @@ export function addKeyShipments(seed: DemoData, until: IsoDateTime): DemoData {
         raisedAt: ndrAt,
         actionDueAt: '2026-11-24T18:00:00+05:30',
         ownerPartnerId: 'P-NKEXP',
+        aiCause: 'consignee',
         status: 'open',
         customerConfirmed: false,
       },
