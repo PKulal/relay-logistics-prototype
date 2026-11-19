@@ -476,14 +476,111 @@ export interface Partner {
 
 export type DocStatus = 'pending' | 'submitted' | 'verified' | 'flagged' | 'rejected'
 
+/** Partner KYC documents (source §4.1 checklist; PP-06 sections). */
+export type PartnerDocKey =
+  | 'gstin'
+  | 'pan'
+  | 'incorporation'
+  | 'udyam'
+  | 'transportLicence'
+  | 'bank'
+  | 'insurance'
+  | 'premisesInsurance'
+  | 'vehicles'
+  | 'driverLicence'
+  | 'policeVerification'
+  | 'hubDocs'
+
+/** Automatic checks (source §4 Step 3; ERP-12 "API checks"). */
+export type PartnerCheckKey = 'gstin' | 'pan' | 'pennyDrop' | 'vahan' | 'sarathi' | 'digilocker'
+
+export type OcrFlag = 'tampered' | 'duplicate' | 'mismatch' | 'expired'
+
+export interface PartnerDocument {
+  key: PartnerDocKey
+  status: DocStatus
+  file?: string
+  /** Fetched from DigiLocker instead of uploaded */
+  viaDigilocker?: boolean
+  /** Policy / registration / licence number typed with the upload */
+  number?: string
+  expiry?: IsoDate
+  /** SIMULATED AI OCR: values read from the file */
+  ocr?: { label: string; value: string }[]
+  flag?: OcrFlag
+  /** Reason shown with a flag or a re-upload request */
+  note?: string
+  uploadedAt?: IsoDateTime
+}
+
+export interface PartnerCheck {
+  ok: boolean
+  /** Structured detail; screens word it through i18n */
+  detail: Record<string, string | number>
+  at: IsoDateTime
+}
+
+export type PartnerSource = 'website' | 'app' | 'referral' | 'sales'
+export type VehicleClass = 'twoWheeler' | 'threeWheeler' | 'tempo' | 'truck14' | 'truck19' | 'truck32'
+export type PartnerServiceOffer = 'parcel' | 'expressPtl' | 'standardPtl'
+export type VerificationResult = 'approved' | 'conditional' | 'rejected'
+export type AuditItem = 'security' | 'cctv' | 'fireSafety' | 'docks' | 'scale'
+
 export interface PartnerApplication {
   id: Id
   partnerId: Id
   ref: string
+  receivedAt: IsoDateTime
+  source: PartnerSource
+  services: PartnerServiceOffer[]
+  constitution: 'proprietorship' | 'partnership' | 'llp' | 'privateLtd' | 'publicLtd'
+  contact: { name: string; designation: string; mobile: string; email: string }
+  address: string
+  gstRegistered: boolean
+  states: string[]
+  cities: string[]
+  /** First / last mile (Types A, B, C) */
+  pincodes: string[]
+  /** Line-haul (Types A, D, E): city to city */
+  lanes: { origin: string; dest: string; frequency: 'daily' | 'alternate' | 'weekly'; transitHours: number }[]
+  /** Types E, F (and B if it runs a hub) */
+  hubs: { name: string; address: string; pincode: string; areaSqft: number; docks: number }[]
+  fleet: Partial<Record<VehicleClass, number>>
+  /** Type B: own fleet (source §4.1 note 4: vehicle documents only if own fleet) */
+  ownFleet?: boolean
+  /** In the unit for the type: shipments (A–C), kg (D, E), pieces (F) per day */
+  capacity: number
+  indicativeRates: { leg: LegType; rate: number }[]
+  /** AI network-gap fit (source §4 Step 2); the reason is structured for i18n */
   fitScore: number
   fitReason: string
+  fitDetail?: { kind: 'laneGap' | 'laneCovered' | 'pincodeGap' | 'pincodeCovered' | 'hubGap' | 'hubCovered' | 'none'; place: string; partners: number }
   status: 'new' | 'invited' | 'waitlisted' | 'kyc' | 'agreement' | 'integration' | 'trial' | 'live' | 'rejected'
-  documents: { name: string; status: DocStatus; note?: string }[]
+  decision?: { by: Id; at: IsoDateTime; reason?: string }
+  /** Monthly re-score date for waitlisted applications */
+  rescoreOn?: IsoDate
+  documents: PartnerDocument[]
+  checks: Partial<Record<PartnerCheckKey, PartnerCheck>>
+  kycSubmittedAt?: IsoDateTime
+  /** Verification outcome (PP-07, ERP-12) */
+  outcome?: {
+    result: VerificationResult
+    conditions: { text: string; due: IsoDate; docKey?: PartnerDocKey; closedAt?: IsoDateTime }[]
+    reasons?: string
+    by: Id
+    at: IsoDateTime
+  }
+  /** Hub audit: Type F, and Type E with a hub (source §4 Step 4) */
+  hubAudit?: {
+    date: IsoDate
+    window: 'morning' | 'afternoon'
+    contact: string
+    phone: string
+    auditorId: Id
+    items?: Record<AuditItem, { result: 'pass' | 'fail' | 'observation'; note?: string; photo: { lat: number; lng: number; at: IsoDateTime } }>
+    result?: VerificationResult
+    completedAt?: IsoDateTime
+  }
 }
 
 export type PartnerRole = 'admin' | 'operations' | 'finance'

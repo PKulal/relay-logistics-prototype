@@ -69,6 +69,9 @@ export default function Launcher() {
           <Link to="/signup" className="font-semibold text-primary hover:underline">
             {t('launcher.signUp')}
           </Link>
+          <Link to="/partner/apply" className="font-semibold text-primary hover:underline">
+            {t('launcher.partnerApply')}
+          </Link>
           <Link to="/track" className="font-semibold text-primary hover:underline">
             {t('launcher.track')}
           </Link>

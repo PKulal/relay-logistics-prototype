@@ -10,7 +10,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { advanceJourneys } from '@shared/sim/journey'
-import type { Consignee, Customer, DemoData, Id, IsoDateTime, KycRecord, LeadStage, PickupLocation, Qualification, ShipmentEvent } from '@shared/types'
+import type { Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
 import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
 import * as erp from './erpActions'
@@ -29,6 +29,8 @@ import * as appt from './appointmentActions'
 import * as onb from './onboardingActions'
 import type { CreditDecision, CreditRequest, DecisionKind, SignUpInput } from './onboardingActions'
 import * as ctr from './contractActions'
+import * as pon from './partnerOnboardingActions'
+import type { AuditItems, CheckInput, PartnerApplyInput, PartnerDecisionKind, VerificationDecision } from './partnerOnboardingActions'
 import type { IntegrationStep, RateEdit, SkuRow } from './contractActions'
 import type { AppointmentInput } from './appointmentActions'
 import type { CompleteDelivery, GiveToRider, ReceiveLoad } from './deliveryActions'
@@ -36,7 +38,7 @@ import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 13
+export const STORE_VERSION = 14
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -130,6 +132,17 @@ export interface DemoState {
   completeIntegration: (customerId: Id, skipped: boolean, by: Id) => void
   markLive: (customerId: Id, by: Id) => void
   setTrack: (customerId: Id, track: Customer['track'], by: Id) => void
+  /** Partner onboarding, Phases 1–2 (PP-04 to PP-07; ERP-11/12) */
+  applyAsPartner: (x: PartnerApplyInput) => { applicationId: Id; partnerId: Id; userId: Id }
+  decideFit: (appId: Id, decision: 'invite' | 'waitlist' | 'reject', o: { coordinatorId?: Id; reason?: string }, by: Id) => void
+  uploadPartnerDoc: (appId: Id, key: PartnerDocKey, f: { file: string; number?: string; expiry?: IsoDate }) => void
+  runPartnerCheck: (appId: Id, c: CheckInput) => void
+  submitPartnerKyc: (appId: Id, by: Id) => void
+  requestReupload: (appId: Id, key: PartnerDocKey, reason: string, by: Id) => void
+  decideVerification: (appId: Id, d: VerificationDecision, by: Id) => void
+  bookHubAudit: (appId: Id, b: { date: IsoDate; window: 'morning' | 'afternoon'; contact: string; phone: string }, by: Id) => void
+  recordHubAudit: (appId: Id, items: AuditItems, result: VerificationResult, by: Id) => void
+  autoDecidePartner: (appId: Id, kind: PartnerDecisionKind) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
   /** Restore the seed data in every app (other tabs follow via sync). */
   resetDemo: () => void
@@ -242,6 +255,20 @@ export const useDemoStore = create<DemoState>()(
       completeIntegration: (customerId, skipped, by) => set((s) => ({ data: ctr.completeIntegration(s.data, customerId, skipped, by, s.demoNow) })),
       markLive: (customerId, by) => set((s) => ({ data: ctr.markLive(s.data, customerId, by, s.demoNow) })),
       setTrack: (customerId, track, by) => set((s) => ({ data: onb.setTrack(s.data, customerId, track, by, s.demoNow) })),
+      applyAsPartner: (x) => {
+        const r = pon.applyAsPartner(get().data, x, get().demoNow)
+        set({ data: r.data })
+        return { applicationId: r.applicationId, partnerId: r.partnerId, userId: r.userId }
+      },
+      decideFit: (appId, decision, o, by) => set((s) => ({ data: pon.decideFit(s.data, appId, decision, o, by, s.demoNow) })),
+      uploadPartnerDoc: (appId, key, f) => set((s) => ({ data: pon.uploadPartnerDoc(s.data, appId, key, f, s.demoNow) })),
+      runPartnerCheck: (appId, c) => set((s) => ({ data: pon.runPartnerCheck(s.data, appId, c, s.demoNow) })),
+      submitPartnerKyc: (appId, by) => set((s) => ({ data: pon.submitPartnerKyc(s.data, appId, by, s.demoNow) })),
+      requestReupload: (appId, key, reason, by) => set((s) => ({ data: pon.requestReupload(s.data, appId, key, reason, by, s.demoNow) })),
+      decideVerification: (appId, d, by) => set((s) => ({ data: pon.decideVerification(s.data, appId, d, by, s.demoNow) })),
+      bookHubAudit: (appId, b, by) => set((s) => ({ data: pon.bookHubAudit(s.data, appId, b, by, s.demoNow) })),
+      recordHubAudit: (appId, items, result, by) => set((s) => ({ data: pon.recordHubAudit(s.data, appId, items, result, by, s.demoNow) })),
+      autoDecidePartner: (appId, kind) => set((s) => ({ data: pon.autoDecidePartner(s.data, appId, kind, s.demoNow) })),
 
 
       setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),

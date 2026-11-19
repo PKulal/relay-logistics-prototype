@@ -3,6 +3,7 @@ import CustomerApp from '@apps/customer/CustomerApp'
 import ErpApp from '@apps/erp/ErpApp'
 import PartnerAppApp from '@apps/partner-app/PartnerAppApp'
 import PartnerPortalApp from '@apps/partner-portal/PartnerPortalApp'
+import PP04PartnerApply from '@apps/public/PP04PartnerApply'
 import { DemoToolbar } from '@shared/ui/DemoToolbar'
 import { Toaster } from '@shared/ui/sonner'
 import { TooltipProvider } from '@shared/ui/tooltip'
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/" element={<Launcher />} />
         <Route path="/launch/:appId" element={<PersonaPicker />} />
         <Route path="/customer/*" element={<CustomerApp />} />
+        <Route path="/partner/apply" element={<PP04PartnerApply />} />
         <Route path="/partner/*" element={<PartnerPortalApp />} />
         <Route path="/signup" element={<CP04SignUp />} />
         <Route path="/track" element={<CP18Track />} />

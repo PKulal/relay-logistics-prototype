@@ -9,6 +9,8 @@ import { useSessionUser } from '@shared/store/session'
 import { NotFound, ScreenPlaceholder } from '@shared/ui/Page'
 import ERP03Shipment360 from './ERP03Shipment360'
 import ERP05JobBoard from './ERP05JobBoard'
+import ERP11Applications from './ERP11Applications'
+import ERP12KycDesk from './ERP12KycDesk'
 import ERP22RateCards from './ERP22RateCards'
 import ERP23Approvals from './ERP23Approvals'
 import ERP26Leads from './ERP26Leads'
@@ -17,7 +19,7 @@ import ERP30CreditReview from './ERP30CreditReview'
 import { erpNav, type ErpCtx } from './nav'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'ERP-05': ERP05JobBoard, 'ERP-22': ERP22RateCards, 'ERP-23': ERP23Approvals, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-30': ERP30CreditReview }
+const SCREENS = { 'ERP-05': ERP05JobBoard, 'ERP-11': ERP11Applications, 'ERP-12': ERP12KycDesk, 'ERP-22': ERP22RateCards, 'ERP-23': ERP23Approvals, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-30': ERP30CreditReview }
 
 /** Logisco ERP + Control Tower (/erp) — Logisco staff. Spec: docs/04-erp-control-tower.md */
 export default function ErpApp() {
