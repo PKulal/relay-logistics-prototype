@@ -16,6 +16,7 @@ import {
   Route,
   Settings,
   ShieldAlert,
+  ShieldX,
   Users,
   Wallet,
   Warehouse,
@@ -62,6 +63,8 @@ export const partnerNav: NavGroup<PartnerCtx>[] = [
       { path: 'delivery-exceptions', labelKey: 'nav.pp.deliveryExceptions', screenId: 'PP-21', icon: PackageX, phase: 4, visible: types('A', 'B', 'C') },
       { path: 'claims', labelKey: 'nav.pp.claims', screenId: 'PP-22', icon: ShieldAlert, phase: 4 },
       { path: 'scorecard', labelKey: 'nav.pp.scorecard', screenId: 'PP-23', icon: Gauge, phase: 5 },
+      // PP-39: shown while the partner is suspended or offboarded (source §5.4)
+      { path: 'case', labelKey: 'nav.pp.case', screenId: 'PP-39', icon: ShieldX, phase: 5, visible: (c) => c.partner.status === 'suspended' || c.partner.status === 'offboarded' },
       {
         path: 'finance',
         labelKey: 'nav.pp.finance',

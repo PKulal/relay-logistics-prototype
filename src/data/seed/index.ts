@@ -5,6 +5,7 @@
 import { raiseAutoTickets } from '@shared/store/controlTowerActions'
 import { addInvestigatingClaim } from './claims'
 import { addMoneySeed } from './money'
+import { addBengaluruBackup, buildWeeklyScores } from './scores'
 import { codFromDeliveries } from '@shared/store/moneyActions'
 import type { DemoData, IsoDateTime } from '@shared/types'
 import { consignees, customers, customerUsers, pickupLocations, skus } from './customers'
@@ -12,7 +13,7 @@ import { extraConsignees, extraCustomers, extraCustomerUsers, extraPickupLocatio
 import { generateShipments } from './generator'
 import { hubDayBags, hubDayManifests, hubDayTrips } from './hubDay'
 import { hubs, lanes, partnerRates, pincodes, rateCards, settings } from './master'
-import { applications, namedFieldStaff, namedPartners, namedPartnerUsers, namedVehicles, partnerInvoices, payoutBatchHistory, payouts, weeklyScores } from './partners'
+import { applications, namedFieldStaff, namedPartners, namedPartnerUsers, namedVehicles, partnerInvoices, payoutBatchHistory, payouts } from './partners'
 import { extraFieldStaff, extraPartners, extraPartnerUsers, extraVehicles } from './partners-extra'
 import { addKeyShipments } from './shipments-key'
 import { staff } from './staff'
@@ -50,7 +51,7 @@ export function buildBaseSeed(): DemoData {
     partnerUsers: byId([...namedPartnerUsers, ...extraPartnerUsers]),
     fieldStaff: byId([...namedFieldStaff, ...extraFieldStaff]),
     vehicles: byId([...namedVehicles, ...extraVehicles]),
-    weeklyScores: byId(weeklyScores),
+    weeklyScores: byId(buildWeeklyScores([...namedPartners, ...extraPartners])),
 
     staff: byId(staff),
 
@@ -72,6 +73,8 @@ export function buildBaseSeed(): DemoData {
     codRemittances: {},
     payoutBatches: byId(payoutBatchHistory),
     sosAlerts: {},
+    improvementPlans: {},
+    suspensionCases: {},
     partnerInvoices: byId(partnerInvoices),
     payouts: byId(payouts),
     tickets: {},
@@ -93,5 +96,5 @@ export function buildBaseSeed(): DemoData {
 export function buildSeed(): DemoData {
   const data = generateShipments(addKeyShipments(buildBaseSeed(), DEMO_START), DEMO_START)
   // Exceptions already present at 10:00 are auto-ticketed (source §10 Steps 1–2)
-  return raiseAutoTickets(codFromDeliveries(addMoneySeed(addInvestigatingClaim(joinTrips(data, Object.keys(data.legs))))), DEMO_START)
+  return raiseAutoTickets(addBengaluruBackup(codFromDeliveries(addMoneySeed(addInvestigatingClaim(joinTrips(data, Object.keys(data.legs)))))), DEMO_START)
 }

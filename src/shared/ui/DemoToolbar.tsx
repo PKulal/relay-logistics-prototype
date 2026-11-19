@@ -11,13 +11,12 @@ import { toast } from 'sonner'
 import { cn } from '@/shared/lib/utils'
 import { APPS } from '@shared/apps'
 import { useData, useDemoNow, useFlags } from '@shared/hooks/useDemo'
-import { formatDayShort, formatTime } from '@shared/lib/format'
+import { formatDayShort, formatTime, formatWeek } from '@shared/lib/format'
 import { useDemoStore } from '@shared/store'
 import { useSession } from '@shared/store/session'
 import { DECCAN_TRIAL_TRIP } from '@shared/store/tripActions'
 import { ConfirmDialog } from './ConfirmDialog'
 import { Switch } from './switch'
-import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip'
 
 export function DemoToolbar() {
   const { t } = useTranslation()
@@ -34,6 +33,12 @@ export function DemoToolbar() {
   const deccanTrial = useData((d) => (d.partners['P-DECCAN']?.status === 'trial' && d.partners['P-DECCAN'].trial ? d.partners['P-DECCAN'].trial : undefined))
   const canCompleteTrip = !!deccanTrial && deccanTrial.tripsDone < deccanTrial.tripsRequired
 
+  // ERP-16 prototype note: publish the latest finished week with the proposed tiers
+  const runScoring = () => {
+    const week = useDemoStore.getState().runWeeklyScoring('LS-MEERA')
+    if (week) toast.success(t('toolbar.scored', { week: formatWeek(week) }))
+    else toast.error(t('toolbar.scoreNone'))
+  }
   // PP-20 prototype note: an escalation on a SwiftCity job
   const injectException = () => {
     const id = useDemoStore.getState().injectEscalation('P-SWIFTCITY')
@@ -135,11 +140,9 @@ export function DemoToolbar() {
               <ToolButton icon={TriangleAlert} onClick={injectException}>
                 {t('toolbar.injectException')}
               </ToolButton>
-              <ComingLater phase={5}>
-                <ToolButton icon={Gauge} disabled>
-                  {t('toolbar.runScoring')}
-                </ToolButton>
-              </ComingLater>
+              <ToolButton icon={Gauge} onClick={runScoring}>
+                {t('toolbar.runScoring')}
+              </ToolButton>
               <div className="col-span-2">
                 <ToolButton icon={Truck} disabled={!canCompleteTrip} onClick={completeTrip}>
                   {t('toolbar.completeTrip')}
@@ -211,18 +214,5 @@ function SwitchRow({ icon: Icon, label, checked, onChange }: { icon: typeof Cloc
       <span className="flex-1">{label}</span>
       <Switch checked={checked} onCheckedChange={onChange} className="data-[state=checked]:bg-brand-amber" />
     </label>
-  )
-}
-
-/** Disabled control with a "comes in Phase N" tooltip. */
-function ComingLater({ phase, children }: { phase: number; children: React.ReactNode }) {
-  const { t } = useTranslation()
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <span tabIndex={0}>{children}</span>
-      </TooltipTrigger>
-      <TooltipContent>{t('toolbar.comingInPhase', { phase })}</TooltipContent>
-    </Tooltip>
   )
 }

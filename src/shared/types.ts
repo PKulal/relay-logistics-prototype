@@ -719,6 +719,55 @@ export interface WeeklyScore {
   total: number
   tierBefore: Tier | null
   tierAfter: Tier | null
+  /** ERP-16: calculated weeks wait for the Partner Manager to publish */
+  published: boolean
+  publishedAt?: IsoDateTime
+  publishedBy?: Id
+  /** Rule the tier engine applied (source §5.3) */
+  rule?: TierRule
+  /** ERP-16 override of the proposed tier, with a reason (assumed) */
+  override?: { tier: Tier; reason: string; by: Id }
+}
+
+export type KpiKey = 'pickup' | 'onTime' | 'firstAttempt' | 'damage' | 'scanCompliance' | 'responsiveness'
+export type TierRule = 'up' | 'same' | 'platinumGrace' | 'platinumDown' | 'improvementPlan' | 'warning' | 'volumeCut' | 'suspensionReview'
+
+/** Source §5.3: a Gold partner dropping below band gets an improvement plan. */
+export interface ImprovementPlan {
+  id: Id
+  partnerId: Id
+  week: IsoDate
+  targets: KpiKey[]
+  deadline: IsoDate
+  coordinatorId: Id
+  createdAt: IsoDateTime
+  acknowledgedAt?: IsoDateTime
+  acknowledgedBy?: Id
+}
+
+export type SuspensionTrigger = 'scoreBelow60' | 'fraud' | 'documentExpiry' | 'partnerRequest'
+
+/** Source §5.4: trigger → freeze and transfer → settle and close; every step logged and visible to the partner. */
+export interface SuspensionCase {
+  id: Id
+  partnerId: Id
+  trigger: SuspensionTrigger
+  reason: string
+  auto: boolean
+  openedAt: IsoDateTime
+  openedBy: Id
+  step: 1 | 2 | 3 | 'closed'
+  frozenAt?: IsoDateTime
+  /** Step 2: each in-flight leg finished by the partner or transferred to a backup */
+  inFlight: { legId: Id; decision?: 'finish' | 'transfer'; toPartnerId?: Id }[]
+  /** Step 3: final payout = earnings − deductions with evidence */
+  settlement?: { earnings: number; deductions: { kind: PayoutDeductionKind; reason: string; amount: number; ref?: string }[]; finalPayout: number }
+  closeRequestedBy?: Id
+  closeRequestedAt?: IsoDateTime
+  checkerId?: Id
+  closedAt?: IsoDateTime
+  payoutId?: Id
+  log: { at: IsoDateTime; by: Id; app: AppKey; text: string }[]
 }
 
 // ─── Shipments ─────────────────────────────────────────────────────────────────
@@ -1257,7 +1306,7 @@ export interface Payout {
   id: Id
   batchId?: Id
   partnerId: Id
-  kind?: 'cycle' | 'earlyPay'
+  kind?: 'cycle' | 'earlyPay' | 'final'
   invoiceId?: Id
   invoiceIds?: Id[]
   gross: number
@@ -1417,6 +1466,8 @@ export interface DemoData {
   partnerInvoices: Record<Id, PartnerInvoice>
   payoutBatches: Record<Id, PayoutBatch>
   sosAlerts: Record<Id, SosAlert>
+  improvementPlans: Record<Id, ImprovementPlan>
+  suspensionCases: Record<Id, SuspensionCase>
   payouts: Record<Id, Payout>
   tickets: Record<Id, Ticket>
   /** ERP-06: AI risk suggestions an operator dismissed, by leg */

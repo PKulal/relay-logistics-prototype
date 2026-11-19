@@ -3,6 +3,7 @@ import { addMinutes } from '@shared/lib/time'
 import { bookShipment, type BookingInput } from '@shared/store/booking'
 import { acceptLegs, assignLegs, flagLeg, reportProblem, unassignLeg } from '@shared/store/partnerActions'
 import { acceptBy, capacityToday, jobEnds, jobSpecials, jobTab, neighbours, partnerAlerts, scoreTrend, staffOptions, todayTiles, vehicleRequired } from './partnerJobs'
+import { publishScores } from '@shared/store/scoringActions'
 
 const hero: BookingInput = {
   customerId: 'C-SHARMA',
@@ -118,8 +119,9 @@ describe('partner actions', () => {
 })
 
 describe('PP-11 dashboard figures', () => {
-  it('score 86.2 Gold, up 1 point on last week', () => {
-    expect(scoreTrend(data, 'P-SWIFTCITY')).toEqual({ score: 86.2, tier: 'gold', delta: 1 })
+  it('before the weekly run: 85.6 Gold (09–15 Nov); after publishing 16–22 Nov: 86.2, up 0.6', () => {
+    expect(scoreTrend(data, 'P-SWIFTCITY')).toMatchObject({ score: 85.6, tier: 'gold' })
+    expect(scoreTrend(publishScores(data, '2026-11-16', 'LS-MEERA', DEMO_START), 'P-SWIFTCITY')).toEqual({ score: 86.2, tier: 'gold', delta: 0.6 })
   })
 
   it('capacity today counts outside work plus the day jobs', () => {

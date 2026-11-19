@@ -57,7 +57,7 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 - [x] PP-20 escalations, PP-21 delivery exceptions, PA-18 pickup failed, PA-30 short / excess, PA-12 SOS (acknowledge / resolve times recorded for the Responsiveness KPI; scored with weekly scoring in Phase 5)
 
 ## Phase 5 — Depth
-- [ ] Scoring: ERP-16 run, PP-23 scorecard, PP-24 tier, ERP-17 / PP-39 suspension (FastTrack Logistics)
+- [x] Scoring: ERP-16 run, PP-23 scorecard, PP-24 tier, ERP-17 / PP-39 suspension (FastTrack Logistics)
 - [ ] Network: ERP-18 to ERP-21; PP-18 capacity, PP-19 coverage
 - [ ] Pricing: ERP-24 margin monitor, ERP-25 simulator
 - [ ] Leadership ERP-04; Sales ERP-28, ERP-29; light departments ERP-39 to ERP-41; ERP-45 placeholders

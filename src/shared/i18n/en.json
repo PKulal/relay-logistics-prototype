@@ -131,7 +131,8 @@
       "users": "Users",
       "integration": "Integration",
       "preferences": "Preferences",
-      "help": "Help"
+      "help": "Help",
+      "case": "Suspension case"
     },
     "erp": {
       "home": "Home",
@@ -356,7 +357,6 @@
     "scenarios": "Scenarios",
     "injectException": "Inject exception",
     "runScoring": "Run weekly scoring",
-    "comingInPhase": "Arrives in Phase {{phase}}",
     "offline": "Partner App offline",
     "simLabels": "Show simulation labels",
     "reset": "Reset demo data",
@@ -370,7 +370,9 @@
     "tripDoneAuto": "Deccan Roadlines goes live at Bronze in a few seconds (ERP-14).",
     "tripDoneManual": "Decide go-live in ERP → Partner Management → Trials and go-live.",
     "injected": "Escalation {{id}} raised on a SwiftCity job",
-    "injectNone": "No SwiftCity job in progress to raise it on"
+    "injectNone": "No SwiftCity job in progress to raise it on",
+    "scored": "Scores for {{week}} published",
+    "scoreNone": "No finished week waiting to be scored"
   },
   "service": {
     "parcel": "Parcel",
@@ -1023,7 +1025,8 @@
       "bronze": "Bronze tier: capped at your declared capacity",
       "probation": "Probation: volume cut by 50%"
     },
-    "sos": "SOS from {{name}} ({{mobile}}) at {{time}}"
+    "sos": "SOS from {{name}} ({{mobile}}) at {{time}}",
+    "case": "Suspension review {{id}}: {{reason}}"
   },
   "pp12": {
     "title": "Job inbox",
@@ -4821,5 +4824,255 @@
     "assign": "Assign reattempt",
     "assigned": "Reattempt assigned to {{name}}",
     "rule": "Attempts without a location photo and geo-tag count against Scan and e-POD compliance."
+  },
+  "kpi": {
+    "pickup": "Pickup adherence",
+    "onTime": "On-time delivery / arrival",
+    "firstAttempt": "First-attempt / appointment success",
+    "damage": "Damage, loss & shortage",
+    "scanCompliance": "Scan & e-POD compliance",
+    "responsiveness": "Responsiveness",
+    "short": {
+      "pickup": "Pickup",
+      "onTime": "On time",
+      "firstAttempt": "1st attempt",
+      "damage": "Damage",
+      "scanCompliance": "Scans",
+      "responsiveness": "Resp."
+    },
+    "measure": {
+      "pickup": "Picked up within the promised window",
+      "onTime": "Delivered or arrived at the hub by the promised time",
+      "firstAttempt": "Delivered on the first attempt or within the booked slot",
+      "damage": "Claims per 10,000 pieces on your legs",
+      "scanCompliance": "Every hand-over scanned with photo and seal; e-POD complete",
+      "responsiveness": "Tickets acknowledged and resolved within SLA"
+    },
+    "profile": {
+      "parcel": "Parcel",
+      "ptl": "PTL & line-haul"
+    }
+  },
+  "erp16": {
+    "title": "Scorecard run and tier review",
+    "subtitle": "Weekly scores on six KPIs; review the proposed tiers, then publish to the Partner Portal.",
+    "week": "Week",
+    "toPublish": "to publish",
+    "waiting_one": "Waiting to publish · {{count}} tier change",
+    "waiting_other": "Waiting to publish · {{count}} tier changes",
+    "publishedBy": "Published by {{name}}, {{at}}",
+    "publish": "Publish scores",
+    "col": {
+      "partner": "Partner",
+      "profile": "Profile",
+      "total": "Total",
+      "tier": "Current → proposed tier",
+      "rule": "Rule applied",
+      "override": "Override"
+    },
+    "rule": {
+      "up": "Moved up",
+      "same": "No change",
+      "platinumGrace": "Platinum: first week below band",
+      "platinumDown": "Platinum: 2 weeks below band",
+      "improvementPlan": "Improvement plan",
+      "warning": "Warning and coaching",
+      "volumeCut": "Probation: volume cut 50%",
+      "suspensionReview": "Suspension review"
+    },
+    "caseLink": "Suspension case",
+    "overridden": "Overridden: {{reason}}",
+    "asProposed": "As proposed",
+    "overrideX": "Override tier for {{partner}}",
+    "reasonX": "Reason for {{partner}}",
+    "reason": "Reason",
+    "saveOverride": "Save override",
+    "overrideSaved": "Override saved",
+    "plans": "Improvement plans to create",
+    "planFor": "{{partner}} · coordinator {{coordinator}} · 4 weeks",
+    "rules": "Platinum ≥ 90 · Gold 80–89 · Silver 70–79 · Bronze 60–69 · Probation < 60. Platinum drops one tier after 2 weeks below band; Probation for 2 weeks opens a suspension review.",
+    "confirm": "Publish scores for {{week}}?",
+    "confirmBody": "{{count}} partners, {{changes}} tier changes. Scores and tiers appear in the Partner Portal; payout speed and assignment priority change at once.",
+    "published_one": "Scores published for {{count}} partner",
+    "published_other": "Scores published for {{count}} partners"
+  },
+  "erp17": {
+    "title": "Suspension and offboarding",
+    "subtitle": "Trigger → freeze and transfer → settle and close. Every step is logged and visible to the partner.",
+    "start": "Start a case",
+    "startBtn": "Open case",
+    "started": "{{id}} opened",
+    "reason": "Reason",
+    "empty": "No cases",
+    "auto": "automatic",
+    "col": {
+      "case": "Case",
+      "partner": "Partner",
+      "trigger": "Trigger",
+      "opened": "Opened",
+      "step": "Step",
+      "job": "Job",
+      "status": "Status",
+      "decision": "Decision"
+    },
+    "trigger": {
+      "scoreBelow60": "Score below 60 for 2 weeks",
+      "fraud": "Fraud / theft / tampering",
+      "documentExpiry": "Repeated document expiry",
+      "partnerRequest": "Partner request"
+    },
+    "step": {
+      "1": "Step 1: freeze",
+      "2": "Step 2: in-flight jobs",
+      "3": "Step 3: settle and close",
+      "closed": "Closed"
+    },
+    "steps": "Steps",
+    "s1": {
+      "title": "1 · Freeze",
+      "what": "Stop new allocations",
+      "body": "Freezing stops new allocations at once. In-flight jobs are listed for step 2."
+    },
+    "s2": {
+      "title": "2 · In-flight jobs",
+      "what": "Let the partner finish, or transfer to a backup"
+    },
+    "s3": {
+      "title": "3 · Settle and close",
+      "what": "Claims and deductions → final payout → revoke access → archive"
+    },
+    "back": "All cases",
+    "freeze": "Freeze new allocations",
+    "confirmFreeze": "Freeze {{partner}}?",
+    "freezeBody": "The partner gets no new jobs from now. This is shown to the partner with the reason.",
+    "frozen": "Allocations frozen",
+    "frozenOn": "frozen {{date}}",
+    "noInFlight": "No in-flight jobs.",
+    "finish": "Partner finishes",
+    "finishes": "Partner finishes",
+    "transfer": "Transfer",
+    "transferTo": "Transfer to {{partner}}",
+    "transferredTo": "Transferred to {{partner}}",
+    "noBackup": "No eligible backup partner, or the job has started",
+    "decided": "Decision recorded",
+    "goSettle": "Go to settlement",
+    "toSettlement": "Settlement calculated",
+    "earnings": "Earnings owed (incl. GST)",
+    "finalPayout": "Final payout",
+    "check": {
+      "settled": "Claims and deductions settled with evidence",
+      "payout": "Final payout",
+      "revoke": "App and API access revoked",
+      "archive": "Records archived per retention policy"
+    },
+    "submitClose": "Submit for approval",
+    "sentForApproval": "Sent for approval",
+    "approveClose": "Approve and close",
+    "waitingApprover": "Submitted by {{maker}}; waiting for a different approver",
+    "confirmClose": "Offboard {{partner}}?",
+    "closeBody": "Final payout {{amount}} by NEFT, access revoked, records archived.",
+    "offboarded": "Partner offboarded",
+    "closed": "Closed: final payout {{amount}} · UTR {{utr}}",
+    "log": "Case log",
+    "system": "System"
+  },
+  "pp23": {
+    "title": "Scorecard",
+    "subtitle": "Your weekly score on six KPIs. Higher scores get more jobs and faster payouts.",
+    "notScored": "Partners in trial are scored from their first live week.",
+    "tierLink": "Tier and benefits",
+    "download": "Download (Excel)",
+    "period": "Period",
+    "p": {
+      "this": "This week (live)",
+      "last": "Last week",
+      "four": "Last 4 weeks"
+    },
+    "thisWeek": "{{from}} – {{to}} so far",
+    "profile": "{{profile}} profile",
+    "total": "Total score",
+    "liveNote": "Worked out from this week's jobs so far; published after the week ends.",
+    "per10k": "{{n}} per 10k",
+    "drillOnlyLive": "Choose “This week” and tap a KPI to see the jobs behind it.",
+    "drill": "{{kpi}}: jobs behind the number",
+    "counted": "{{counted}} counted · {{failed}} missed",
+    "damageCount": "{{claims}} claims on {{pieces}} pieces",
+    "reason": {
+      "late": "Late",
+      "pickupFailed": "Pickup failed",
+      "noPhoto": "No photo at hand-over",
+      "ndr": "Failed first attempt",
+      "ackLate": "Not acknowledged in time",
+      "resolveLate": "Not resolved in time",
+      "damage": "Damage claim",
+      "shortage": "Shortage claim",
+      "loss": "Loss claim",
+      "pilferage": "Pilferage claim"
+    },
+    "trend": "Weekly score, last 12 weeks",
+    "col": {
+      "week": "Week",
+      "tier": "Tier"
+    }
+  },
+  "pp24": {
+    "title": "Tier and benefits",
+    "subtitle": "What your tier earns you, and what happens if your score falls.",
+    "back": "Scorecard",
+    "benefits": "You get",
+    "b": {
+      "firstChoice": "First choice in assignment",
+      "payout3Days": "Payout in 3 days",
+      "volumeCommitments": "Volume commitments",
+      "coBranding": "Co-branding",
+      "priorityAssignment": "Priority assignment",
+      "weeklyPayout": "Weekly payout",
+      "earlyPay": "Early-pay option",
+      "normalAssignment": "Normal assignment",
+      "cappedVolume": "Capped volume",
+      "fortnightlyPayout": "Fortnightly payout",
+      "essentialOnly": "Essential allocations only"
+    },
+    "ifFalls": "If your score falls below the band",
+    "falls": {
+      "platinum": "Down one tier after 2 weeks below 90.",
+      "gold": "An improvement plan with target KPIs and a deadline.",
+      "silver": "Warning and coaching.",
+      "bronze": "Probation: volume cut by 50%.",
+      "probation": "Suspension review after 2 weeks; offboarding if there is no recovery."
+    },
+    "progress": "Progress to the next tier",
+    "toNext": "{{points}} points to {{tier}}",
+    "reached": "Score in the {{tier}} band; the tier moves up when the week is published",
+    "plan": "Improvement plan",
+    "planBody": "Recover by {{deadline}}. Your Logisco coordinator: {{coordinator}}.",
+    "targets": "Target KPIs:",
+    "acknowledge": "Acknowledge plan",
+    "acked": "Plan acknowledged",
+    "acknowledged": "Acknowledged by {{name}}, {{at}}",
+    "history": "Tier history",
+    "score": "Score",
+    "change": "Change",
+    "changed": "{{from}} → {{to}}"
+  },
+  "pp39": {
+    "title": "Suspension and offboarding",
+    "none": "No suspension or offboarding case",
+    "reason": "Reason:",
+    "opened": "Opened {{at}}",
+    "s1pending": "Not frozen yet",
+    "frozen": "New allocations frozen on {{date}}",
+    "inFlight": "{{finish}} you finish · {{transfer}} transferred · {{open}} to decide",
+    "youFinish": "You finish this job",
+    "pending": "Decision pending",
+    "settlement": "Final payout {{amount}}",
+    "done": "Done",
+    "open": "Open",
+    "access": "App and API access",
+    "accessPending": "Active until the case is closed",
+    "revoked": "Revoked on {{date}} · final payout UTR {{utr}}",
+    "respond": "Respond or appeal",
+    "send": "Send",
+    "sent": "Added to the case log"
   }
 }

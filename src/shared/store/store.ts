@@ -10,7 +10,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { advanceJourneys } from '@shared/sim/journey'
-import type { SosAlert, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
+import type { SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
 import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
 import * as erp from './erpActions'
@@ -38,6 +38,7 @@ import * as clm from './claimActions'
 import * as money from './moneyActions'
 import * as pay from './payoutActions'
 import * as exc from './exceptionActions'
+import * as sc from './scoringActions'
 import type { HubReport, PickupFailed, TicketResolution } from './exceptionActions'
 import type { PartnerCodDeposit, UploadInvoice } from './payoutActions'
 import type { CodDeposit } from './moneyActions'
@@ -55,7 +56,7 @@ import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 22
+export const STORE_VERSION = 23
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -235,6 +236,18 @@ export interface DemoState {
   setSosKind: (id: Id, kind: NonNullable<SosAlert['kind']>) => void
   cancelSos: (id: Id) => void
   resolveSos: (id: Id, note: string, by: Id) => void
+  /** Scoring and suspension (ERP-16, ERP-17, PP-24, PP-39) */
+  overrideTier: (scoreId: Id, tier: Tier | undefined, reason: string, by: Id) => void
+  publishScores: (week: IsoDate, by: Id) => void
+  runWeeklyScoring: (by: Id) => IsoDate | undefined
+  acknowledgePlan: (planId: Id, by: Id) => void
+  openSuspensionCase: (partnerId: Id, trigger: SuspensionTrigger, reason: string, by: Id) => void
+  freezePartner: (caseId: Id, by: Id) => void
+  decideInFlight: (caseId: Id, legId: Id, decision: 'finish' | 'transfer', by: Id) => void
+  moveToSettlement: (caseId: Id, by: Id) => void
+  requestClose: (caseId: Id, by: Id) => void
+  approveClose: (caseId: Id, by: Id) => void
+  respondToCase: (caseId: Id, text: string, by: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -480,6 +493,21 @@ export const useDemoStore = create<DemoState>()(
       setSosKind: (id, kind) => set((s) => ({ data: exc.setSosKind(s.data, id, kind) })),
       cancelSos: (id) => set((s) => ({ data: exc.cancelSos(s.data, id, s.demoNow) })),
       resolveSos: (id, note, by) => set((s) => ({ data: exc.resolveSos(s.data, id, note, by, s.demoNow) })),
+      overrideTier: (scoreId, tier, reason, by) => set((s) => ({ data: sc.overrideTier(s.data, scoreId, tier, reason, by, s.demoNow) })),
+      publishScores: (week, by) => set((s) => ({ data: sc.publishScores(s.data, week, by, s.demoNow) })),
+      runWeeklyScoring: (by) => {
+        const r = sc.runWeeklyScoring(get().data, by, get().demoNow)
+        set({ data: r.data })
+        return r.week
+      },
+      acknowledgePlan: (planId, by) => set((s) => ({ data: sc.acknowledgePlan(s.data, planId, by, s.demoNow) })),
+      openSuspensionCase: (partnerId, trigger, reason, by) => set((s) => ({ data: sc.openSuspensionCase(s.data, partnerId, trigger, reason, by, s.demoNow) })),
+      freezePartner: (caseId, by) => set((s) => ({ data: sc.freezePartner(s.data, caseId, by, s.demoNow) })),
+      decideInFlight: (caseId, legId, decision, by) => set((s) => ({ data: sc.decideInFlight(s.data, caseId, legId, decision, by, s.demoNow) })),
+      moveToSettlement: (caseId, by) => set((s) => ({ data: sc.moveToSettlement(s.data, caseId, by, s.demoNow) })),
+      requestClose: (caseId, by) => set((s) => ({ data: sc.requestClose(s.data, caseId, by, s.demoNow) })),
+      approveClose: (caseId, by) => set((s) => ({ data: sc.approveClose(s.data, caseId, by, s.demoNow) })),
+      respondToCase: (caseId, text, by) => set((s) => ({ data: sc.respondToCase(s.data, caseId, text, by, s.demoNow) })),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),
 
 

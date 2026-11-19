@@ -79,3 +79,10 @@ export function formatDuration(minutes: number): string {
   const h = Math.floor((m % 1440) / 60)
   return h ? `${d} d ${h} h` : `${d} d`
 }
+
+/** A Monday–Sunday week: "16-Nov – 22-Nov-2026". */
+export function formatWeek(monday: string): string {
+  const d = new Date(`${monday}T12:00:00+05:30`)
+  d.setUTCDate(d.getUTCDate() + 6)
+  return `${formatDate(monday).slice(0, 6)} – ${formatDate(d.toISOString().slice(0, 10))}`
+}

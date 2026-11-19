@@ -6,7 +6,7 @@
  * and deductions; Admin sees all.
  */
 import { nextPayout, partnerCodOutstanding } from '@shared/engines/payables'
-import { AlertTriangle, ArrowRight, BadgeIndianRupee, Gauge, Inbox, ShieldAlert, Siren, UserPlus, Wallet } from 'lucide-react'
+import { AlertTriangle, ArrowRight, BadgeIndianRupee, Gauge, Inbox, ShieldAlert, ShieldX, Siren, UserPlus, Wallet } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
@@ -25,6 +25,7 @@ import { TierBadge } from '@shared/ui/TierBadge'
 import { AcceptByChip } from './JobBits'
 import { usePartnerSession } from './usePartnerSession'
 import { activeSos } from '@shared/engines/escalations'
+import { openCaseOf } from '@shared/store/scoringActions'
 
 export default function PP11Dashboard() {
   const { t } = useTranslation()
@@ -59,9 +60,15 @@ export default function PP11Dashboard() {
   const codTotal = view.cod.reduce((s, c) => s + c.amount, 0)
 
   const sos = activeSos(data.sosAlerts).filter((a) => a.partnerId === partner.id)
+  const openCase = openCaseOf(data, partner.id)
   return (
     <div className="flex flex-col gap-6">
       <PageHeader title={t('pp11.title')} subtitle={t('pp11.greeting', { name: user.name.split(' ')[0], partner: partner.shortName })} className="mb-0" />
+      {openCase && (
+        <Link to="/partner/case" role="alert" className="flex items-center gap-3 rounded-xl border-2 border-status-danger bg-status-danger-bg p-4 font-semibold text-status-danger" data-testid="case-banner">
+          <ShieldX className="size-6 shrink-0" aria-hidden /> {t('pp11.case', { id: openCase.id, reason: openCase.reason })}
+        </Link>
+      )}
       {sos.map((a) => (
         <section key={a.id} role="alert" className="flex flex-wrap items-center gap-3 rounded-xl border-2 border-status-danger bg-status-danger-bg p-4 text-status-danger" data-testid="sos-banner">
           <Siren className="size-6 shrink-0" aria-hidden />

@@ -96,12 +96,13 @@ describe('PP-11 dashboard', () => {
     bookHero()
   })
 
-  it('Operations: the hero pickup is waiting to be accepted; score 86.2 Gold up 1', async () => {
+  it('Operations: the hero pickup is waiting to be accepted; after the weekly run, score 86.2 Gold up 0.6', async () => {
+    useDemoStore.getState().runWeeklyScoring('LS-MEERA')
     renderPortal('PU-NEHA', '/partner')
     expect(await screen.findByRole('heading', { name: '1 job to accept' })).toBeInTheDocument()
     expect(await screen.findByText('JOB-000781-L1', {}, { timeout: 15000 })).toBeInTheDocument()
     expect(screen.getByText('86.2')).toBeInTheDocument()
-    expect(screen.getByText(/↑ 1 vs last week/)).toBeInTheDocument()
+    expect(screen.getByText(/↑ 0.6 vs last week/)).toBeInTheDocument()
     expect(screen.queryByText('Next payout')).not.toBeInTheDocument()
   })
 

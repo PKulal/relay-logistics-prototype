@@ -157,7 +157,7 @@ export function capacityToday(data: DemoData, partnerId: Id, now: IsoDateTime): 
 export function scoreTrend(data: DemoData, partnerId: Id): { score: number; tier: Tier | null; delta: number | null } {
   const p = data.partners[partnerId]
   const weeks = Object.values(data.weeklyScores)
-    .filter((w) => w.partnerId === partnerId)
+    .filter((w) => w.partnerId === partnerId && w.published)
     .sort((a, b) => b.week.localeCompare(a.week))
   if (weeks.length === 0) return { score: p.score, tier: p.tier, delta: null }
   const delta = weeks[1] ? Math.round((weeks[0].total - weeks[1].total) * 10) / 10 : null

@@ -4,7 +4,7 @@
  * GSTINs, mobiles and emails not given in seed-data.md are INVENTED
  * (none ends in "Z9", which is reserved for failing GST verification).
  */
-import type { FieldStaff, Partner, PartnerApplication, PartnerInvoice, PartnerUser, Payout, PayoutBatch, Vehicle, WeeklyScore } from '@shared/types'
+import type { FieldStaff, Partner, PartnerApplication, PartnerInvoice, PartnerUser, Payout, PayoutBatch, Vehicle } from '@shared/types'
 import { addDaysToDate } from '@shared/lib/time'
 
 const NCR = ['110020', '110001', '110037', '122001', '122050', '201301']
@@ -367,29 +367,6 @@ export const applications: PartnerApplication[] = [
 ]
 
 /** SwiftCity last week, Parcel profile (seed-data.md §6, Partner Portal spec §7.3). */
-export const weeklyScores: WeeklyScore[] = [
-  // INVENTED: the week before, so the dashboard can show the trend (86.2 vs 85.2 → ↑1)
-  {
-    id: 'WS-SWIFTCITY-2026-11-09',
-    partnerId: 'P-SWIFTCITY',
-    week: '2026-11-09',
-    profile: 'parcel',
-    kpis: { pickup: 95, onTime: 90, firstAttempt: 87, damagePer10k: 5, damagePct: 83, scanCompliance: 94, responsiveness: 45 },
-    total: 85.2,
-    tierBefore: 'gold',
-    tierAfter: 'gold',
-  },
-  {
-    id: 'WS-SWIFTCITY-2026-11-16',
-    partnerId: 'P-SWIFTCITY',
-    week: '2026-11-16',
-    profile: 'parcel',
-    kpis: { pickup: 96, onTime: 91, firstAttempt: 88, damagePer10k: 4, damagePct: 85, scanCompliance: 95, responsiveness: 45 },
-    total: 86.2,
-    tierBefore: 'gold',
-    tierAfter: 'gold',
-  },
-]
 
 /**
  * SwiftCity's next payout (seed-data.md §6): self-billed SB/SWC/25-26/047,
