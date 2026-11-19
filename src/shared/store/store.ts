@@ -25,6 +25,8 @@ import * as hub from './hubActions'
 import type { Dispatch, InScan, ReceiveManifest, SealBag } from './hubActions'
 import * as trip from './tripActions'
 import * as dlv from './deliveryActions'
+import * as appt from './appointmentActions'
+import type { AppointmentInput } from './appointmentActions'
 import type { CompleteDelivery, GiveToRider, ReceiveLoad } from './deliveryActions'
 import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
@@ -88,6 +90,8 @@ export interface DemoState {
   receiveLoad: (x: ReceiveLoad) => void
   startRun: (legIds: Id[], staffId: Id) => void
   completeDelivery: (x: CompleteDelivery) => void
+  /** CP-18 / CP-17 delivery appointment; `by` is the customer user or "consignee" */
+  bookAppointment: (lr: Id, a: AppointmentInput, by: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
   /** Restore the seed data in every app (other tabs follow via sync). */
   resetDemo: () => void
@@ -161,6 +165,7 @@ export const useDemoStore = create<DemoState>()(
       receiveLoad: (x) => set((s) => ({ data: dlv.receiveLoad(s.data, x, s.demoNow) })),
       startRun: (legIds, staffId) => set((s) => ({ data: dlv.startRun(s.data, legIds, staffId, s.demoNow) })),
       completeDelivery: (x) => set((s) => ({ data: dlv.completeDelivery(s.data, x, s.demoNow) })),
+      bookAppointment: (lr, a, by) => set((s) => ({ data: appt.bookAppointment(s.data, lr, a, by, s.demoNow) })),
 
 
       setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),

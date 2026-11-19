@@ -5,7 +5,7 @@
 import { addDaysToDate } from '@shared/lib/time'
 import type { AppKey, DemoData, Id, IsoDateTime } from '@shared/types'
 
-function audit(data: DemoData, entry: { userId: Id; app: AppKey; action: string; recordId: Id; at: IsoDateTime; before?: unknown; after?: unknown }): DemoData {
+export function audit(data: DemoData, entry: { userId: Id; app: AppKey; action: string; recordId: Id; at: IsoDateTime; before?: unknown; after?: unknown }): DemoData {
   const id = `AUD-${String(Object.keys(data.auditLog).length + 1).padStart(5, '0')}`
   return { ...data, auditLog: { ...data.auditLog, [id]: { id, ...entry } } }
 }

@@ -25,6 +25,7 @@ export default defineConfig({
       'sonner',
       'input-otp',
       'qrcode',
+      'xlsx',
       'leaflet',
       'react-leaflet',
       'zustand',

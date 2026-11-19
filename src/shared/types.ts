@@ -511,7 +511,8 @@ export interface Shipment {
    * Appointment delivery. Booked as "requested" (date = ETA, no slot); the consignee
    * confirms a slot on the public tracking page (CP-18), which sets from / to / dock.
    */
-  appointment?: { date: IsoDate; from?: string; to?: string; dock?: string; confirmed: boolean }
+  /** CP-18: the consignee books the slot (source §7 Step 8), with gate / dock, receiving contact and gate pass */
+  appointment?: { date: IsoDate; from?: string; to?: string; dock?: string; confirmed: boolean; contactName?: string; contactMobile?: string; gatePass?: string; bookedAt?: IsoDateTime }
   legIds: Id[]
   /**
    * SIMULATED background movement: the journey this shipment follows when the

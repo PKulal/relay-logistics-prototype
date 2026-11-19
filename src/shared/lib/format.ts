@@ -62,3 +62,10 @@ export function formatTime(value: IsoDateTime | Date): string {
 export function formatDateTime(value: IsoDateTime | Date): string {
   return `${formatDate(value)} ${formatTime(value)}`
 }
+
+/** Masked phone number (DPDP, source §14): "94480 12345" → "94480 •••45". */
+export function maskMobile(mobile: string): string {
+  const digits = mobile.replace(/\D/g, '')
+  if (digits.length < 6) return mobile
+  return `${digits.slice(0, 5)} •••${digits.slice(-2)}`
+}

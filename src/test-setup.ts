@@ -14,3 +14,7 @@ class ResizeObserverStub {
   disconnect() {}
 }
 globalThis.ResizeObserver ??= ResizeObserverStub as unknown as typeof ResizeObserver
+
+// jsdom has no element scrolling; the portal shell scrolls its content pane on navigation.
+Element.prototype.scrollTo ??= function scrollTo() {}
+Element.prototype.scrollIntoView ??= function scrollIntoView() {}
