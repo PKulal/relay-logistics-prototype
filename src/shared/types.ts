@@ -182,6 +182,8 @@ export interface PartnerRateLine {
   minKg?: number
   /** Max weight this line covers, e.g. "PTL pickup up to 200 kg" */
   maxKg?: number
+  /** Line-haul only: applies to drops in this city beyond the destination hub (e.g. Belagavi on Delhi → Hubballi) */
+  destCity?: string
   note?: string
 }
 
@@ -465,7 +467,7 @@ export interface Partner {
   laneIds: Id[]
   hubIds: Id[]
   coordinatorId?: Id
-  trial?: { tripsDone: number; tripsRequired: number; score: number }
+  trial?: PartnerTrial
   /**
    * SIMULATED partner API integration: offered jobs are accepted and given to the
    * partner's default staff member at once. Off for partners the demo drives by
@@ -473,6 +475,77 @@ export interface Partner {
    */
   autoAccept: boolean
 }
+
+/** Monitored trial (source §4 Step 7): 10 parcel jobs, or 3 PTL / line-haul trips. */
+export interface PartnerTrial {
+  tripsDone: number
+  tripsRequired: number
+  /** Running trial score, 0–100 (average of the job scores) */
+  score: number
+  unit?: 'trips' | 'jobs' | 'cycles'
+  startedAt?: IsoDateTime
+  jobs?: TrialJob[]
+  decision?: { result: 'live' | 'extended' | 'declined'; reasons?: string; by: Id; at: IsoDateTime }
+}
+
+export type TrialAnomaly = 'lateArrival' | 'longHalt' | 'breakdown' | 'missedScan' | 'weightGap'
+
+/** One scored trial job (PP-10, ERP-14). */
+export interface TrialJob {
+  /** Trip or job id */
+  ref: Id
+  date: IsoDate
+  leg: LegType
+  onTime: boolean
+  /** Share of pieces scanned at hand-over, % */
+  scanPct: number
+  /** SIMULATED AI anomaly flags in scans, weights and timings */
+  anomalies: TrialAnomaly[]
+  score: number
+  /** Created by the demo action, not by a real job */
+  simulated?: boolean
+}
+
+export type PenaltyKind = 'missedPickup' | 'lateArrival' | 'lateDelivery' | 'missedScan' | 'lateTicket'
+
+/** A rate line of the partner agreement (PP-08, ERP-13); keyed like the rate engine. */
+export interface PartnerAgreementLine {
+  id: Id
+  leg: LegType
+  /** Lane id for line-haul; hub id for hub legs and the first / last-mile cluster around it */
+  laneOrCluster: Id
+  destCity?: string
+  serviceKind?: ServiceKind
+  rate: number
+  unit: RateUnit
+  minKg?: number
+  minimum?: number
+  maxKg?: number
+  /** Logisco's position after the AI margin check (the partner never sees the margin) */
+  status: 'accepted' | 'notAccepted'
+  /** Partner counter-proposal */
+  counter?: { rate: number; remark: string; at: IsoDateTime }
+  /** Pricing approved this line below target margin (maker-checker, assumed) */
+  pricingApproval?: { by: Id; at: IsoDateTime }
+}
+
+/** Source §4 Step 5: rate card, hand-over windows and cut-offs, SLA, penalty matrix, liability cap, payment cycle, optional deposit. */
+export interface PartnerAgreement {
+  lines: PartnerAgreementLine[]
+  /** Cut-off time per leg the partner serves, "HH:mm" */
+  cutoffs: Partial<Record<LegType, string>>
+  ticketAckHours: number
+  penalties: Record<PenaltyKind, number>
+  liabilityPerKg: number
+  liabilityMax: number
+  deposit?: number
+  status: 'draft' | 'issued' | 'negotiation' | 'signed'
+  issuedAt?: IsoDateTime
+  issuedBy?: Id
+  signed?: { at: IsoDateTime; by: Id; method: 'aadhaarOtp' | 'dsc'; selfBilling: boolean }
+}
+
+export type ApiTestStep = 'receive' | 'accept' | 'status' | 'pod'
 
 export type DocStatus = 'pending' | 'submitted' | 'verified' | 'flagged' | 'rejected'
 
@@ -570,6 +643,10 @@ export interface PartnerApplication {
     by: Id
     at: IsoDateTime
   }
+  /** Rate card, terms and agreement (PP-08, ERP-13) */
+  agreement?: PartnerAgreement
+  /** Go-live setup (PP-09): API sandbox for Types A / E */
+  setup?: { apiKey?: string; webhookUrl?: string; tests?: { step: ApiTestStep; ok: boolean; at: IsoDateTime }[]; readyAt?: IsoDateTime }
   /** Hub audit: Type F, and Type E with a hub (source §4 Step 4) */
   hubAudit?: {
     date: IsoDate
@@ -606,8 +683,12 @@ export interface FieldStaff {
   hubId?: Id
   licenceValidTill?: IsoDate
   policeVerified: boolean
+  /** Practice mode completed in the Partner App (source §4 Step 6) */
   trained: boolean
   language: 'en' | 'hi' | 'kn'
+  /** Added at go-live setup with photo and ID (PP-09) */
+  photo?: string
+  idProof?: { kind: 'aadhaar' | 'dl' | 'voterId'; last4: string }
 }
 
 export interface Vehicle {

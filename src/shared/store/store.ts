@@ -10,7 +10,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { advanceJourneys } from '@shared/sim/journey'
-import type { Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
+import type { Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
 import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
 import * as erp from './erpActions'
@@ -30,6 +30,8 @@ import * as onb from './onboardingActions'
 import type { CreditDecision, CreditRequest, DecisionKind, SignUpInput } from './onboardingActions'
 import * as ctr from './contractActions'
 import * as pon from './partnerOnboardingActions'
+import * as pag from './partnerAgreementActions'
+import type { CommercialDecisionKind, LineEdit, NewStaff } from './partnerAgreementActions'
 import type { AuditItems, CheckInput, PartnerApplyInput, PartnerDecisionKind, VerificationDecision } from './partnerOnboardingActions'
 import type { IntegrationStep, RateEdit, SkuRow } from './contractActions'
 import type { AppointmentInput } from './appointmentActions'
@@ -38,7 +40,7 @@ import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 14
+export const STORE_VERSION = 15
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -143,6 +145,24 @@ export interface DemoState {
   bookHubAudit: (appId: Id, b: { date: IsoDate; window: 'morning' | 'afternoon'; contact: string; phone: string }, by: Id) => void
   recordHubAudit: (appId: Id, items: AuditItems, result: VerificationResult, by: Id) => void
   autoDecidePartner: (appId: Id, kind: PartnerDecisionKind) => void
+  /** Partner onboarding, Phases 3–5 (PP-08 to PP-10; ERP-13/14) */
+  draftPartnerAgreement: (appId: Id, by: Id) => void
+  editAgreementLine: (appId: Id, lineId: Id, e: LineEdit) => void
+  editAgreementTerms: (appId: Id, t: Partial<Omit<PartnerAgreement, 'lines' | 'status'>>) => void
+  approveLineBelowTarget: (appId: Id, lineId: Id, by: Id) => void
+  issuePartnerAgreement: (appId: Id, by: Id) => void
+  proposePartnerChanges: (appId: Id, counters: { lineId: Id; rate: number; remark: string }[], by: Id) => void
+  answerCounter: (appId: Id, lineId: Id, accept: boolean, by: Id) => void
+  signPartnerAgreement: (appId: Id, method: 'aadhaarOtp' | 'dsc', selfBilling: boolean, by: Id) => void
+  generateSandboxKey: (appId: Id) => void
+  setWebhook: (appId: Id, url: string) => void
+  recordApiTest: (appId: Id) => void
+  addFieldStaff: (partnerId: Id, s: NewStaff) => void
+  completePractice: (staffId: Id) => void
+  markReadyForTrial: (appId: Id, by: Id) => void
+  simulateTrialJob: (partnerId: Id) => void
+  decideTrial: (partnerId: Id, d: 'live' | 'extend' | 'decline', reasons: string, by: Id) => void
+  autoDecideCommercial: (id: Id, kind: CommercialDecisionKind) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
   /** Restore the seed data in every app (other tabs follow via sync). */
   resetDemo: () => void
@@ -269,6 +289,23 @@ export const useDemoStore = create<DemoState>()(
       bookHubAudit: (appId, b, by) => set((s) => ({ data: pon.bookHubAudit(s.data, appId, b, by, s.demoNow) })),
       recordHubAudit: (appId, items, result, by) => set((s) => ({ data: pon.recordHubAudit(s.data, appId, items, result, by, s.demoNow) })),
       autoDecidePartner: (appId, kind) => set((s) => ({ data: pon.autoDecidePartner(s.data, appId, kind, s.demoNow) })),
+      draftPartnerAgreement: (appId, by) => set((s) => ({ data: pag.draftPartnerAgreement(s.data, appId, by, s.demoNow) })),
+      editAgreementLine: (appId, lineId, e) => set((s) => ({ data: pag.editAgreementLine(s.data, appId, lineId, e) })),
+      editAgreementTerms: (appId, t) => set((s) => ({ data: pag.editAgreementTerms(s.data, appId, t) })),
+      approveLineBelowTarget: (appId, lineId, by) => set((s) => ({ data: pag.approveLineBelowTarget(s.data, appId, lineId, by, s.demoNow) })),
+      issuePartnerAgreement: (appId, by) => set((s) => ({ data: pag.issuePartnerAgreement(s.data, appId, by, s.demoNow) })),
+      proposePartnerChanges: (appId, counters, by) => set((s) => ({ data: pag.proposePartnerChanges(s.data, appId, counters, by, s.demoNow) })),
+      answerCounter: (appId, lineId, accept, by) => set((s) => ({ data: pag.answerCounter(s.data, appId, lineId, accept, by, s.demoNow) })),
+      signPartnerAgreement: (appId, method, selfBilling, by) => set((s) => ({ data: pag.signPartnerAgreement(s.data, appId, method, selfBilling, by, s.demoNow) })),
+      generateSandboxKey: (appId) => set((s) => ({ data: pag.generateSandboxKey(s.data, appId) })),
+      setWebhook: (appId, url) => set((s) => ({ data: pag.setWebhook(s.data, appId, url) })),
+      recordApiTest: (appId) => set((s) => ({ data: pag.recordApiTest(s.data, appId, s.demoNow) })),
+      addFieldStaff: (partnerId, st) => set((s) => ({ data: pag.addFieldStaff(s.data, partnerId, st) })),
+      completePractice: (staffId) => set((s) => ({ data: pag.completePractice(s.data, staffId) })),
+      markReadyForTrial: (appId, by) => set((s) => ({ data: pag.markReadyForTrial(s.data, appId, by, s.demoNow) })),
+      simulateTrialJob: (partnerId) => set((s) => ({ data: pag.simulateTrialJob(s.data, partnerId, s.demoNow) })),
+      decideTrial: (partnerId, d, reasons, by) => set((s) => ({ data: pag.decideTrial(s.data, partnerId, d, reasons, by, s.demoNow) })),
+      autoDecideCommercial: (id, kind) => set((s) => ({ data: pag.autoDecideCommercial(s.data, id, kind, s.demoNow) })),
 
 
       setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),

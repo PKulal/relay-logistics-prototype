@@ -123,9 +123,11 @@ export function rankCandidates(data: DemoData, type: LegType, i: AssignmentInput
     .filter((p) => p.legs.includes(type))
     .map((p): Candidate & { rateLineId?: Id } => {
       const base = { partnerId: p.id, score: p.score, transitDays: transit }
-      const rate = rates.find(
-        (r) => r.partnerId === p.id && r.legType === type && r.laneOrCluster === place && (!r.serviceKind || r.serviceKind === i.serviceKind),
+      // A destination-specific line (destCity) wins over the lane's general line for drops in that city
+      const lines = rates.filter(
+        (r) => r.partnerId === p.id && r.legType === type && r.laneOrCluster === place && (!r.serviceKind || r.serviceKind === i.serviceKind) && (!r.destCity || r.destCity === i.dest.city),
       )
+      const rate = lines.find((r) => r.destCity) ?? lines[0]
       const cost = rate ? legCost(rate, i.chargeableKg, i.pieces) : 0
       const skip = (reason: SkipReason) => ({ ...base, cost, eligible: false, reason })
 

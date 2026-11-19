@@ -115,7 +115,18 @@ export const namedPartners: Partner[] = [
     hubIds: [],
     coordinatorId: 'LS-MEERA',
     autoAccept: true,
-    trial: { tripsDone: 2, tripsRequired: 3, score: 84 },
+    // INVENTED trial trips before the hero trip TRP-2026-0931 (the third); scores 86 and 82 → 84 (seed-data.md §6)
+    trial: {
+      tripsDone: 2,
+      tripsRequired: 3,
+      score: 84,
+      unit: 'trips',
+      startedAt: '2026-11-04T10:00:00+05:30',
+      jobs: [
+        { ref: 'TRP-2026-0904', date: '2026-11-09', leg: 'lineHaul', onTime: true, scanPct: 90, anomalies: ['longHalt', 'weightGap'], score: 86 },
+        { ref: 'TRP-2026-0917', date: '2026-11-16', leg: 'lineHaul', onTime: true, scanPct: 80, anomalies: ['missedScan', 'weightGap'], score: 82 },
+      ],
+    },
   },
   {
     id: 'P-HUBLIWH',
@@ -264,6 +275,31 @@ export const applications: PartnerApplication[] = [
       conditions: [{ text: '', due: '2026-11-26', docKey: 'insurance' }],
       by: 'LS-MEERA',
       at: AT('2026-10-14', '15:10'),
+    },
+    // Signed with Delhi ↔ Hubballi at ₹9.00 / ₹8.50 per kg (Pricing approved below target);
+    // Delhi → Belagavi drops at ₹14.50 not accepted: the negotiation to show (PP-08 prototype note)
+    agreement: {
+      lines: [
+        { id: 'APP-2026-0412-L1', leg: 'lineHaul', laneOrCluster: 'LN-DEL-HBL', serviceKind: 'ptl', rate: 9, unit: 'perKg', minKg: 50, status: 'accepted', pricingApproval: { by: 'LS-DIVYA', at: AT('2026-10-22', '12:30') } },
+        { id: 'APP-2026-0412-L2', leg: 'lineHaul', laneOrCluster: 'LN-DEL-HBL', destCity: 'Belagavi', serviceKind: 'ptl', rate: 14.5, unit: 'perKg', minKg: 50, status: 'notAccepted' },
+        { id: 'APP-2026-0412-L3', leg: 'lineHaul', laneOrCluster: 'LN-HBL-DEL', serviceKind: 'ptl', rate: 8.5, unit: 'perKg', minKg: 50, status: 'accepted', pricingApproval: { by: 'LS-DIVYA', at: AT('2026-10-22', '12:30') } },
+      ],
+      cutoffs: { lineHaul: '23:00' },
+      ticketAckHours: 2,
+      penalties: { missedPickup: 100, lateArrival: 500, lateDelivery: 50, missedScan: 25, lateTicket: 200 },
+      liabilityPerKg: 100,
+      liabilityMax: 10000,
+      deposit: 50000,
+      status: 'signed',
+      issuedAt: AT('2026-10-22', '15:00'),
+      issuedBy: 'LS-MEERA',
+      signed: { at: AT('2026-10-24', '11:15'), by: 'PU-PRAKASH', method: 'aadhaarOtp', selfBilling: true },
+    },
+    setup: {
+      apiKey: 'lg_p_sbx_7c2e',
+      webhookUrl: 'https://api.deccanroadlines.in/logisco',
+      tests: (['receive', 'accept', 'status', 'pod'] as const).map((step) => ({ step, ok: true, at: AT('2026-11-03', '16:40') })),
+      readyAt: AT('2026-11-04', '10:00'),
     },
   },
   {

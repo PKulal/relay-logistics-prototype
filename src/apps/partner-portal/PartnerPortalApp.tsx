@@ -17,10 +17,12 @@ import PP14Assign from './PP14Assign'
 import PP05Status from './onboarding/PP05Status'
 import PP06Documents from './onboarding/PP06Documents'
 import PP07Verification from './onboarding/PP07Verification'
-import { OnboardingHome } from './onboarding/steps'
+import PP08Agreement from './onboarding/PP08Agreement'
+import PP09Setup from './onboarding/PP09Setup'
+import PP10Tracker from './onboarding/PP10Tracker'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'PP-10': OnboardingHome, 'PP-11': PP11Dashboard, 'PP-12': PP12JobInbox }
+const SCREENS = { 'PP-10': PP10Tracker, 'PP-11': PP11Dashboard, 'PP-12': PP12JobInbox }
 
 /** Before the monitored trial the partner sees only its onboarding (no jobs yet). */
 const PRE_TRIAL: PartnerStatus[] = ['applied', 'kyc', 'agreement', 'integration']
@@ -59,13 +61,15 @@ export default function PartnerPortalApp() {
           />
         }
       >
-        {/* Onboarding screens (PP-05 to PP-07): outside the menu, reached from the onboarding step bar */}
+        {/* Onboarding screens (PP-05 to PP-09): outside the menu, reached from the PP-10 tracker and the step bar */}
         <Route path="onboarding/application" element={<PP05Status />} />
         <Route path="onboarding/documents" element={<PP06Documents />} />
         <Route path="onboarding/verification" element={<PP07Verification />} />
+        <Route path="onboarding/agreement" element={<PP08Agreement />} />
+        <Route path="onboarding/setup" element={<PP09Setup />} />
         {preTrial ? (
           <>
-            <Route path="onboarding" element={<OnboardingHome />} />
+            <Route path="onboarding" element={<PP10Tracker />} />
             <Route path="*" element={<Navigate to="/partner/onboarding" replace />} />
           </>
         ) : (

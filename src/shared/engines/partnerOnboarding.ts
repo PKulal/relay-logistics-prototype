@@ -15,8 +15,11 @@ import type {
   PartnerServiceOffer,
   PartnerType,
   Service,
+  TrialAnomaly,
+  TrialJob,
+  Trip,
 } from '@shared/types'
-import { addDaysToDate, istDate } from '@shared/lib/time'
+import { addDaysToDate, istDate, minutesBetween } from '@shared/lib/time'
 
 export const PARTNER_TYPES: PartnerType[] = ['A', 'B', 'C', 'D', 'E', 'F']
 
@@ -263,3 +266,43 @@ export function ocrRead(data: DemoData, app: PartnerApplication, partner: Partne
 
 /** Waitlisted applications are re-scored monthly (source §4 Step 2). */
 export const rescoreDate = (now: IsoDateTime) => addDaysToDate(istDate(now), 30)
+
+// ─── Monitored trial (source §4 Step 7) ───────────────────────────────────────
+
+/** 10 live parcel jobs, or 3 PTL / line-haul trips; Type F 3 hub cycles (assumed, PP spec §2.2). */
+export function trialRequirement(type: PartnerType, legs: LegType[]): { unit: 'trips' | 'jobs' | 'cycles'; required: number } {
+  if (type === 'F') return { unit: 'cycles', required: 3 }
+  if (type === 'D' || type === 'E' || (type === 'A' && legs.includes('lineHaul'))) return { unit: 'trips', required: 3 }
+  return { unit: 'jobs', required: 10 }
+}
+
+/**
+ * Job score, 0–100 (assumed weights): on time 40, scan compliance 40, and 20
+ * for a clean run, less 5 for each AI anomaly flag.
+ */
+export function trialJobScore(j: Pick<TrialJob, 'onTime' | 'scanPct' | 'anomalies'>): number {
+  return Math.round((j.onTime ? 40 : 24) + 0.4 * j.scanPct + Math.max(0, 20 - 5 * j.anomalies.length))
+}
+
+/** Running trial score: the average of the job scores. */
+export const trialScore = (jobs: TrialJob[]) => (jobs.length ? Math.round(jobs.reduce((a, j) => a + j.score, 0) / jobs.length) : 0)
+
+/** Halts longer than this are flagged (assumed). */
+const LONG_HALT_MIN = 60
+
+/**
+ * SIMULATED AI anomaly flags for an arrived line-haul trip: late against the
+ * ETA, long halts, breakdowns, and legs left unscanned at loading.
+ */
+export function tripTrialJob(trip: Trip, at: IsoDateTime): TrialJob {
+  const anomalies: TrialAnomaly[] = []
+  const onTime = minutesBetween(trip.eta, trip.arrivedAt ?? at) <= 0
+  if (!onTime) anomalies.push('lateArrival')
+  if (trip.halts.some((h) => h.breakdown)) anomalies.push('breakdown')
+  if (trip.halts.some((h) => !h.breakdown && h.minutes > LONG_HALT_MIN)) anomalies.push('longHalt')
+  const loaded = trip.loadedLegIds?.length
+  const scanPct = trip.legIds.length && loaded !== undefined ? Math.round((Math.min(loaded, trip.legIds.length) / trip.legIds.length) * 100) : 100
+  if (scanPct < 100) anomalies.push('missedScan')
+  const job = { ref: trip.id, date: istDate(trip.arrivedAt ?? at), leg: 'lineHaul' as const, onTime, scanPct, anomalies }
+  return { ...job, score: trialJobScore(job) }
+}

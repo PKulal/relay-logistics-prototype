@@ -2765,6 +2765,65 @@
       "expiry": "Expiry",
       "reg": "Registration",
       "dl": "Licence no."
+    },
+    "cluster": "{{city}} cluster",
+    "hubAt": "{{city}} hub",
+    "unit": {
+      "perShipment": "{{rate}} per shipment",
+      "perKg": "{{rate}} / kg",
+      "perTrip": "{{rate}} per trip",
+      "perPiece": "{{rate}} per piece",
+      "storagePerDay": "{{rate}} storage per day"
+    },
+    "minKg": "min {{kg}} kg",
+    "minimum": "min {{amount}}",
+    "maxKg": "up to {{kg}} kg",
+    "cycle": {
+      "threeDays": "Within 3 days ({{tier}})",
+      "weekly": "Weekly ({{tier}})",
+      "fortnightly": "Fortnightly ({{tier}})"
+    },
+    "penalty": {
+      "missedPickup": "Missed pickup",
+      "lateArrival": "Late arrival at hub, per trip",
+      "lateDelivery": "Late delivery, per shipment",
+      "missedScan": "Missing hand-over scan, per piece",
+      "lateTicket": "Ticket not acknowledged in time"
+    },
+    "yes": "Yes",
+    "no": "No",
+    "anomaly": {
+      "lateArrival": "Late arrival",
+      "longHalt": "Long halt",
+      "breakdown": "Breakdown",
+      "missedScan": "Missed scans",
+      "weightGap": "Weight gap"
+    },
+    "trial": {
+      "title": "Monitored trial",
+      "result": {
+        "inProgress": "In progress",
+        "live": "Passed · live",
+        "extended": "Extended",
+        "declined": "Declined"
+      },
+      "progress": {
+        "trips": "{{done}} of {{required}} trips",
+        "jobs": "{{done}} of {{required}} live jobs",
+        "cycles": "{{done}} of {{required}} hub cycles"
+      },
+      "passMark": "pass mark {{pass}}",
+      "score": "Trial score",
+      "noJobs": "No trial jobs yet.",
+      "col": {
+        "job": "Job",
+        "date": "Date",
+        "leg": "Leg",
+        "onTime": "On time",
+        "scans": "Scans",
+        "anomalies": "AI anomaly flags",
+        "score": "Score"
+      }
     }
   },
   "ppOnb": {
@@ -3032,5 +3091,260 @@
     "saveAudit": "Save audit",
     "auditSaved": "Audit saved",
     "auditorOnly": "The hub auditor records the audit."
+  },
+  "pp08": {
+    "title": "Rate card and agreement",
+    "status": {
+      "draft": "Being prepared",
+      "issued": "Ready to review and sign",
+      "negotiation": "Under negotiation",
+      "signed": "Signed"
+    },
+    "preparing": "Your coordinator is preparing the rate card and agreement.",
+    "notYet": "The rate card opens after verification.",
+    "tab": {
+      "rates": "Rate card",
+      "terms": "Operations terms",
+      "agreement": "Agreement"
+    },
+    "col": {
+      "leg": "Leg",
+      "lane": "Lane / cluster",
+      "service": "Service",
+      "rate": "Rate",
+      "status": "Status",
+      "proposed": "Your proposed rate"
+    },
+    "ptl": "PTL",
+    "allServices": "All",
+    "counterSent": "You proposed {{rate}}",
+    "accepted": "Accepted",
+    "notAccepted": "Rate not accepted on this lane, please revise",
+    "proposeFor": "Your proposed rate for {{lane}}",
+    "remarkFor": "Reason for {{lane}}",
+    "remark": "Reason (optional)",
+    "reviseHint": "Lines not accepted are left out of the rate card until a rate is agreed.",
+    "propose": "Propose changes",
+    "proposed": "Sent to your coordinator",
+    "underNegotiation": "Your proposals are with your coordinator.",
+    "handover": "Hand-over windows and cut-offs",
+    "cutoff": {
+      "firstMile": "Pickups reach the origin hub by {{time}}",
+      "originHub": "Origin hub dispatch ready by {{time}}",
+      "lineHaul": "Trucks depart by {{time}} and arrive by the promised time",
+      "destHub": "Destination hub sorted by {{time}}",
+      "lastMile": "Out for delivery by {{time}}"
+    },
+    "sla": "SLA",
+    "slaPickup": "Pickup within the booked window",
+    "slaArrival": "Delivery / arrival by the promised time",
+    "slaTicket": "Tickets acknowledged within {{hours}} h",
+    "penalties": "Penalty matrix",
+    "liability": "Liability cap",
+    "liabilityText": "{{perKg}} / kg, max {{max}} per shipment (loss or damage on your leg)",
+    "paymentCycle": "Payment cycle",
+    "deposit": "Security deposit",
+    "noDeposit": "None",
+    "preview": "Agreement preview",
+    "doc": {
+      "title": "Logisco Partner Agreement",
+      "parties": "Between Logisco and {{partner}} ({{gstin}}).",
+      "rates": "Agreed rates",
+      "terms": "Liability {{perKg}} / kg, max {{max}} per shipment. Tickets acknowledged within {{hours}} h. Hand-over windows, SLA and penalties as in Operations terms; payment cycle by tier.",
+      "selfBilling": "Self-billing (if consented): Logisco generates the partner's invoice from completed legs, subject to GST rules."
+    },
+    "signedOn": "Signed {{at}} by {{name}} · {{method}}",
+    "method": {
+      "aadhaarOtp": "Aadhaar OTP",
+      "dsc": "DSC"
+    },
+    "selfBillingOn": "Self-billing: Logisco raises your invoices from completed legs.",
+    "selfBillingOff": "Self-billing: off; you raise your own invoices.",
+    "toSetup": "Continue to go-live setup",
+    "selfBilling": "Self-billing: Logisco may generate our invoice from completed legs (subject to GST rules)",
+    "agree": "I agree to the rate card, operations terms and agreement",
+    "methodLabel": "E-sign method",
+    "otp": "OTP sent to your Aadhaar-linked mobile",
+    "acceptSign": "Accept and e-sign",
+    "signDsc": "Sign with DSC",
+    "sign": "Sign",
+    "signed": "Agreement signed; your rate card is loaded",
+    "waitCounter": "You can sign once your coordinator answers your proposals.",
+    "adminOnly": "Only the Partner Admin signs."
+  },
+  "pp09": {
+    "title": "Go-live setup",
+    "subApi": "Connect your system to Logisco in the sandbox.",
+    "subApp": "Set up the Logisco Partner App for your field staff.",
+    "notYet": "Setup opens after the agreement is signed.",
+    "training": "Training",
+    "video": {
+      "scan": "Scanning pieces",
+      "handover": "Hand-over to the next partner",
+      "seal": "Sealing bags and trucks",
+      "epod": "e-POD at delivery"
+    },
+    "languages": "English · हिन्दी",
+    "practiceCount": "Practice mode completed: {{n}} of {{total}} staff",
+    "ready": "Mark ready for trial",
+    "trialStarted": "Monitored trial started",
+    "needTests": "Run the sandbox test first; every step must pass.",
+    "needStaff": "Add at least one field staff member.",
+    "seeTrial": "See your trial",
+    "api": "API integration (sandbox)",
+    "generateKey": "Generate sandbox API key",
+    "webhook": "Webhook URL for job push",
+    "webhookHint": "HTTPS, e.g. https://api.yourcompany.in/logisco",
+    "save": "Save",
+    "runTest": "Run test",
+    "test": {
+      "receive": "Receive job",
+      "accept": "Accept",
+      "status": "Status updates",
+      "pod": "Proof of delivery"
+    },
+    "pass": "Pass",
+    "fail": "Fail",
+    "passed": "{{n}} of {{total}} passed",
+    "app": "Partner App",
+    "qr": "QR code to download the Partner App",
+    "download": "Scan to download the Android app",
+    "staff_one": "Field staff ({{count}})",
+    "staff_other": "Field staff ({{count}})",
+    "col": {
+      "name": "Name",
+      "role": "Role",
+      "id": "ID",
+      "practice": "Practice mode"
+    },
+    "role": {
+      "rider": "Rider",
+      "driver": "Driver",
+      "hub": "Hub staff"
+    },
+    "idKind": {
+      "aadhaar": "Aadhaar",
+      "dl": "Driving licence",
+      "voterId": "Voter ID"
+    },
+    "practiceDone": "Completed",
+    "markPractice": "Mark completed",
+    "addStaff": "Add field staff",
+    "mobile": "Mobile",
+    "idType": "ID type",
+    "idLast4": "ID last 4 digits",
+    "language": "App language",
+    "photo": "Photo",
+    "add": "Add",
+    "staffAdded": "{{name}} added; the app login goes to their mobile"
+  },
+  "pp10": {
+    "title": "Onboarding tracker",
+    "subtitle": "Every step to go-live. Target: 5 business days, then the trial.",
+    "note": {
+      "ref": "{{ref}}",
+      "flagged": "A document needs re-upload",
+      "conditions_one": "{{count}} open condition, due {{date}}",
+      "conditions_other": "{{count}} open conditions, first due {{date}}",
+      "bookAudit": "Book your hub audit",
+      "revise": "Revise the rates not accepted",
+      "sign": "Review and e-sign",
+      "bronze": "Live at Bronze"
+    },
+    "step": {
+      "application": "Application",
+      "fit": "Network fit",
+      "documents": "Documents and KYC",
+      "verification": "Verification / hub audit",
+      "agreement": "Rate card and agreement",
+      "setup": "Go-live setup",
+      "trial": "Monitored trial",
+      "live": "Live"
+    },
+    "state": {
+      "done": "Done",
+      "inProgress": "In progress",
+      "pending": "Pending",
+      "actionNeeded": "Action needed"
+    }
+  },
+  "erp13": {
+    "title": "Partner commercials",
+    "subtitle_one": "{{count}} partner needs attention",
+    "subtitle_other": "{{count}} partners need attention",
+    "queue": "Partners",
+    "agStatus": {
+      "none": "Not started",
+      "draft": "Draft",
+      "issued": "Issued for e-sign",
+      "negotiation": "Under negotiation",
+      "signed": "Signed"
+    },
+    "counters_one": "{{count}} counter-proposal",
+    "counters_other": "{{count}} counter-proposals",
+    "empty": "No partners at the agreement step.",
+    "noDraft": "Start from the partner's indicative rates.",
+    "draft": "Draft rate card",
+    "signed_one": "Signed {{at}} · {{count}} line in the rate engine",
+    "signed_other": "Signed {{at}} · {{count}} lines in the rate engine",
+    "issued": "Agreement issued for e-sign",
+    "issue": "Issue agreement",
+    "reissue": "Re-issue agreement",
+    "lines": "Rate lines",
+    "col": {
+      "line": "Leg · lane / cluster",
+      "rate": "Rate",
+      "counter": "Partner counter-proposal",
+      "margin": "AI margin check (target {{target}}%)",
+      "status": "Status"
+    },
+    "rateFor": "Rate for {{line}}",
+    "acceptCounter": "Accept",
+    "declineCounter": "Decline",
+    "noCheck": "No check",
+    "marginOk": "OK · {{pct}}%",
+    "marginBelow": "Below target · {{pct}}%",
+    "approvedBy": "Approved by {{name}}",
+    "approve": "Approve below target",
+    "needsPricing": "Needs Pricing approval",
+    "line": {
+      "accepted": "Accepted",
+      "notAccepted": "Not accepted"
+    },
+    "terms": "Terms",
+    "ticketAck": "Ticket acknowledgement (hours)",
+    "liabilityPerKg": "Liability ₹ per kg",
+    "liabilityMax": "Liability max ₹ per shipment",
+    "depositHint": "Optional"
+  },
+  "erp14": {
+    "title": "Trials and go-live",
+    "subtitle_one": "{{count}} partner in trial",
+    "subtitle_other": "{{count}} partners in trial",
+    "list": "Partners in trial",
+    "empty": "No trials.",
+    "decided": {
+      "live": "Went live at Bronze: {{name}}, {{at}}",
+      "extended": "Trial extended by {{name}}, {{at}}",
+      "declined": "Declined by {{name}}, {{at}}"
+    },
+    "decision": "Decision",
+    "notComplete": "The trial isn't complete yet.",
+    "simulateJob": "Simulate a trial job",
+    "d": {
+      "live": "Go live (Bronze)",
+      "extend": "Extend trial",
+      "decline": "Decline"
+    },
+    "reasonsRequired": "Reasons (required)",
+    "reasons": "Reasons",
+    "confirm": "Confirm decision",
+    "done": {
+      "live": "{{name}} is live at Bronze",
+      "extend": "{{name}}: trial extended",
+      "decline": "{{name}} declined"
+    },
+    "rule": "Score of {{pass}} or more → go live at Bronze; below, extend the trial or decline with reasons.",
+    "liveTrips": "Trips count as they arrive at the destination hub."
   }
 }

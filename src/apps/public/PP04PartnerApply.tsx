@@ -193,7 +193,7 @@ export default function PP04PartnerApply() {
     })
     useSession.getState().login('partnerPortal', r.userId)
     toast.success(t('pp04.submitted', { ref: r.applicationId }))
-    navigate('/partner/onboarding')
+    navigate('/partner/onboarding/application')
   }
 
   // Coverage preview: declared pincodes, lane end cities and hubs

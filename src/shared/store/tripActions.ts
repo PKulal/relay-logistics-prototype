@@ -7,6 +7,7 @@ import { etaAtRisk, loadedLegs, loadedPieces, tripEta, tripPosition, tripRoute }
 import { addDaysToDate, addHours } from '@shared/lib/time'
 import { makeHandoverCode } from '@shared/sim/handover'
 import type { DemoData, ExceptionKind, Id, IsoDateTime, ShipmentEvent, ShipmentException, Trip } from '@shared/types'
+import { recordTripForTrial } from './partnerAgreementActions'
 import { applyEvents } from './actions'
 import { eventIdFactory } from './booking'
 import { exceptionId } from './handoverActions'
@@ -129,7 +130,9 @@ export function arriveTrip(data: DemoData, tripId: Id, staffId: Id, at: IsoDateT
   const route = tripRoute(data, trip)
   const dest = route[route.length - 1]
   const events = legEvents(data, trip, () => ({ type: 'tripArrived', at, by: staffId, app: 'partnerApp', lat: dest.lat, lng: dest.lng }))
-  return applyEvents({ ...data, trips: { ...data.trips, [trip.id]: { ...trip, status: 'arrived', arrivedAt: at, positions: [...trip.positions, { at, lat: dest.lat, lng: dest.lng }] } } }, events, at)
+  const arrived: Trip = { ...trip, status: 'arrived', arrivedAt: at, positions: [...trip.positions, { at, lat: dest.lat, lng: dest.lng }] }
+  // A trip by a partner in its monitored trial is scored as a trial job (source §4 Step 7)
+  return recordTripForTrial(applyEvents({ ...data, trips: { ...data.trips, [trip.id]: arrived } }, events, at), arrived, at)
 }
 
 export interface ArrivalHandover {
