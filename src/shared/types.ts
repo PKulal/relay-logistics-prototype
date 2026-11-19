@@ -217,6 +217,8 @@ export interface Settings {
 // ─── Customers ─────────────────────────────────────────────────────────────────
 
 export type CustomerType = 'sme' | 'manufacturer' | 'distributor' | 'brand' | 'enterprise' | 'marketplace'
+/** Source §6: self-serve SME · inside sales · KAM · KAM + solutions team · API / ONDC self-serve */
+export type CustomerTrack = 'selfServe' | 'insideSales' | 'kam' | 'kamSolutions' | 'apiOndc'
 export type CustomerStatus =
   | 'lead'
   | 'qualified'
@@ -237,8 +239,8 @@ export interface Customer {
   cin?: string
   entityType: string
   type: CustomerType
-  /** Onboarding track, e.g. "enterprise" (KAM-led) or "selfServe" */
-  track: 'selfServe' | 'enterprise'
+  /** Onboarding track (source §6 customer types; ERP-27) */
+  track: CustomerTrack
   status: CustomerStatus
   billing: 'prepaid' | 'credit'
   creditLimit: number
@@ -260,6 +262,68 @@ export interface Customer {
   integrations: { tally: boolean }
   branding?: { logoUrl?: string; colour?: string }
   city: string
+  /** Onboarding record (CP-04 to CP-10, ERP-26/27/30); absent for accounts seeded live */
+  onboarding?: CustomerOnboarding
+}
+
+export type BusinessType = CustomerType
+export type LeadSource = 'website' | 'salesVisit' | 'referral' | 'ondc' | 'tender' | 'partnerReferral'
+export type SpendBand = 'lt50k' | '50kTo2l' | '2lTo10l' | '10lTo50l' | 'gt50l'
+export type CheckState = 'notStarted' | 'verified' | 'flagged'
+
+export interface Qualification {
+  shipmentsPerMonth: number
+  spendBand: SpendBand
+  /** Share of Parcel, 0–100; the rest is PTL */
+  parcelPct: number
+  lanes: { originPincode: string; destCity: string; perMonth: number }[]
+  specialHandling: ('fragile' | 'heavy' | 'appointment' | 'oda' | 'reverse')[]
+  payment: ('prepaid' | 'tbb' | 'toPay' | 'cod')[]
+}
+
+export interface KycRecord {
+  gstin: { state: CheckState; legalName?: string; tradeName?: string; address?: string; active?: boolean; registeredOn?: IsoDate; constitution?: string }
+  pan: { state: CheckState; value: string }
+  cin?: string
+  signatory?: { name: string; designation: string; email: string; mobile: string }
+  bank: { state: CheckState; holder?: string; account?: string; ifsc?: string; bankName?: string; branch?: string; type?: 'current' | 'savings'; nameReturned?: string; matchPct?: number }
+  /** notStarted → submitted: verified, or underReview when a check was flagged → verified after review */
+  status: 'notStarted' | 'underReview' | 'verified'
+  submittedAt?: IsoDateTime
+  reviewedBy?: Id
+}
+
+export interface CreditApplication {
+  requestedLimit: number
+  termsDays: 15 | 30 | 45
+  yearsInBusiness: number
+  gstConsent: boolean
+  depositWilling: boolean
+  submittedAt: IsoDateTime
+  status: 'underReview' | 'approved' | 'approvedLower' | 'declined'
+  /** Logisco's AI credit-risk score (never shown to the customer) */
+  score: number
+  scoreReasons: string[]
+  approvedLimit?: number
+  approvedTerms?: 15 | 30 | 45
+  deposit?: number
+  remarks?: string
+  decidedBy?: Id
+  decidedAt?: IsoDateTime
+  /** Customer accepted the terms → billing switches to TBB */
+  accepted?: boolean
+}
+
+export interface CustomerOnboarding {
+  source: LeadSource
+  referralCode?: string
+  industry: string
+  createdAt: IsoDateTime
+  privacyConsent: boolean
+  gstConsent: boolean
+  qualification?: Qualification
+  kyc?: KycRecord
+  credit?: CreditApplication
 }
 
 export type CustomerRole = 'admin' | 'dispatch' | 'finance'
@@ -328,13 +392,27 @@ export interface Sku {
   status: 'draft' | 'flagged' | 'frozen'
 }
 
+/** ERP-26 pipeline stages (source §6 phases) */
+export const LEAD_STAGES = ['new', 'qualified', 'kyc', 'credit', 'contract', 'pilot', 'live', 'lost'] as const
+export type LeadStage = (typeof LEAD_STAGES)[number]
+
 export interface Lead {
   id: Id
   company: string
-  source: string
+  gstin: string
+  source: LeadSource
+  industry: string
+  businessType: CustomerType
+  /** Declared shipments per month (from qualification) */
+  declaredVolume?: number
+  /** AI lead score from industry, lanes and declared volume (source §6 Step 1) */
   aiScore: number
-  stage: 'new' | 'contacted' | 'qualified' | 'proposal' | 'negotiation' | 'won' | 'lost'
-  ownerId: Id
+  stage: LeadStage
+  ownerId?: Id
+  customerId?: Id
+  contact: { name: string; email: string; mobile: string }
+  createdAt: IsoDateTime
+  activities: { at: IsoDateTime; by: Id; kind: 'call' | 'visit' | 'email' | 'note' | 'stage'; note: string }[]
 }
 
 // ─── Partners ──────────────────────────────────────────────────────────────────

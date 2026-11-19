@@ -37,8 +37,11 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 
 ## Phase 3 — Onboarding
 - [ ] Customer: CP-04 to CP-10; ERP-26, ERP-27 (Sales), ERP-30 (credit), ERP-22/23 (rate card)
+  - [x] Part 3a: CP-04 sign-up, CP-05 qualification, CP-06 KYC, CP-07 credit; ERP-26 pipeline, ERP-27 review (qualification, lane-cost, track, KYC), ERP-30 credit review; Demo toolbar "Manual onboarding approvals"
+  - [ ] Part 3b: CP-08 rate card and contract, CP-09 integration, CP-10 tracker and pilot; ERP-22/23 rate cards and approvals; ERP-27 issue contract, pilot plan, Mark live
 - [ ] Partner: PP-04 to PP-10; ERP-11 to ERP-14 (applications, KYC desk, commercials, trial)
 - [ ] Deccan Roadlines mid-trial; “complete third trip” demo action → go-live at Bronze
+- [ ] Hindi for the web portals: fill the missing Hindi strings in the Customer Portal, Partner Portal and ERP screens built so far (client §14: English + Hindi in every app); new screens ship with Hindi
 
 ## Phase 4 — Exceptions and money
 - [ ] Weight revision: PA-16 “Measure larger” → CP-19 / CP-20 → ERP Finance

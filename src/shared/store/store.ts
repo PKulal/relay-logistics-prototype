@@ -10,7 +10,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { advanceJourneys } from '@shared/sim/journey'
-import type { Consignee, DemoData, Id, IsoDateTime, ShipmentEvent } from '@shared/types'
+import type { Consignee, Customer, DemoData, Id, IsoDateTime, KycRecord, LeadStage, PickupLocation, Qualification, ShipmentEvent } from '@shared/types'
 import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
 import * as erp from './erpActions'
@@ -26,19 +26,23 @@ import type { Dispatch, InScan, ReceiveManifest, SealBag } from './hubActions'
 import * as trip from './tripActions'
 import * as dlv from './deliveryActions'
 import * as appt from './appointmentActions'
+import * as onb from './onboardingActions'
+import type { CreditDecision, CreditRequest, SignUpInput } from './onboardingActions'
 import type { AppointmentInput } from './appointmentActions'
 import type { CompleteDelivery, GiveToRider, ReceiveLoad } from './deliveryActions'
 import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 10
+export const STORE_VERSION = 11
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
   showSimulationLabels: boolean
   /** Demo toolbar: Partner App offline mode */
   offline: boolean
+  /** Demo toolbar: onboarding decisions wait for an ERP user instead of approving automatically */
+  manualApprovals: boolean
 }
 
 export interface DemoState {
@@ -92,6 +96,25 @@ export interface DemoState {
   completeDelivery: (x: CompleteDelivery) => void
   /** CP-18 / CP-17 delivery appointment; `by` is the customer user or "consignee" */
   bookAppointment: (lr: Id, a: AppointmentInput, by: Id) => void
+  /** Customer onboarding, Phases 1–2 (CP-04 to CP-07; ERP-26/27/30) */
+  signUp: (x: SignUpInput) => { customerId: Id; userId: Id }
+  saveQualification: (customerId: Id, q: Qualification, by: Id) => void
+  verifyGstin: (customerId: Id, cin?: string) => void
+  verifyPan: (customerId: Id, pan: string) => void
+  verifyBank: (customerId: Id, b: { holder: string; account: string; ifsc: string; type: 'current' | 'savings' }) => void
+  saveSignatory: (customerId: Id, s: NonNullable<KycRecord['signatory']>) => void
+  savePickupLocation: (customerId: Id, loc: Omit<PickupLocation, 'id' | 'customerId' | 'isDefault'> & { isDefault?: boolean }) => void
+  removePickupLocation: (id: Id) => void
+  submitKyc: (customerId: Id, by: Id) => void
+  clearKyc: (customerId: Id, by: Id) => void
+  submitCredit: (customerId: Id, r: CreditRequest, by: Id) => void
+  decideCredit: (customerId: Id, d: CreditDecision, by: Id) => void
+  acceptCredit: (customerId: Id, by: Id) => void
+  assignLead: (leadId: Id, ownerId: Id, by: Id) => void
+  moveLead: (leadId: Id, stage: LeadStage, by: Id) => void
+  logLeadActivity: (leadId: Id, kind: 'call' | 'visit' | 'email', note: string, by: Id) => void
+  autoDecide: (customerId: Id, kind: 'kyc' | 'credit') => void
+  setTrack: (customerId: Id, track: Customer['track'], by: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
   /** Restore the seed data in every app (other tabs follow via sync). */
   resetDemo: () => void
@@ -99,7 +122,7 @@ export interface DemoState {
 
 export type PersistedDemoState = Pick<DemoState, 'data' | 'demoNow' | 'flags'>
 
-export const initialFlags: DemoFlags = { showSimulationLabels: false, offline: false }
+export const initialFlags: DemoFlags = { showSimulationLabels: false, offline: false, manualApprovals: false }
 
 export function freshState(): PersistedDemoState {
   return { data: buildSeed(), demoNow: DEMO_START, flags: { ...initialFlags } }
@@ -166,6 +189,28 @@ export const useDemoStore = create<DemoState>()(
       startRun: (legIds, staffId) => set((s) => ({ data: dlv.startRun(s.data, legIds, staffId, s.demoNow) })),
       completeDelivery: (x) => set((s) => ({ data: dlv.completeDelivery(s.data, x, s.demoNow) })),
       bookAppointment: (lr, a, by) => set((s) => ({ data: appt.bookAppointment(s.data, lr, a, by, s.demoNow) })),
+      signUp: (x) => {
+        const r = onb.signUp(get().data, x, get().demoNow)
+        set({ data: r.data })
+        return { customerId: r.customerId, userId: r.userId }
+      },
+      saveQualification: (customerId, q, by) => set((s) => ({ data: onb.saveQualification(s.data, customerId, q, by, s.demoNow) })),
+      verifyGstin: (customerId, cin) => set((s) => ({ data: onb.verifyGstin(s.data, customerId, cin, s.demoNow) })),
+      verifyPan: (customerId, pan) => set((s) => ({ data: onb.verifyPan(s.data, customerId, pan, s.demoNow) })),
+      verifyBank: (customerId, b) => set((s) => ({ data: onb.verifyBank(s.data, customerId, b, s.demoNow) })),
+      saveSignatory: (customerId, sig) => set((s) => ({ data: onb.saveSignatory(s.data, customerId, sig, s.demoNow) })),
+      savePickupLocation: (customerId, loc) => set((s) => ({ data: onb.savePickupLocation(s.data, customerId, loc) })),
+      removePickupLocation: (id) => set((s) => ({ data: onb.removePickupLocation(s.data, id) })),
+      submitKyc: (customerId, by) => set((s) => ({ data: onb.submitKyc(s.data, customerId, by, s.demoNow) })),
+      clearKyc: (customerId, by) => set((s) => ({ data: onb.clearKyc(s.data, customerId, by, s.demoNow) })),
+      submitCredit: (customerId, r, by) => set((s) => ({ data: onb.submitCredit(s.data, customerId, r, by, s.demoNow) })),
+      decideCredit: (customerId, d, by) => set((s) => ({ data: onb.decideCredit(s.data, customerId, d, by, s.demoNow) })),
+      acceptCredit: (customerId, by) => set((s) => ({ data: onb.acceptCredit(s.data, customerId, by, s.demoNow) })),
+      assignLead: (leadId, ownerId, by) => set((s) => ({ data: onb.assignLead(s.data, leadId, ownerId, by, s.demoNow) })),
+      moveLead: (leadId, stage, by) => set((s) => ({ data: onb.moveLead(s.data, leadId, stage, by, s.demoNow) })),
+      logLeadActivity: (leadId, kind, note, by) => set((s) => ({ data: onb.logLeadActivity(s.data, leadId, kind, note, by, s.demoNow) })),
+      autoDecide: (customerId, kind) => set((s) => ({ data: onb.autoDecide(s.data, customerId, kind, s.demoNow) })),
+      setTrack: (customerId, track, by) => set((s) => ({ data: onb.setTrack(s.data, customerId, track, by, s.demoNow) })),
 
 
       setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),

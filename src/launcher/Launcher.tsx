@@ -64,6 +64,15 @@ export default function Launcher() {
             )
           })}
         </div>
+        {/* Public pages: no login */}
+        <div className="mt-8 flex flex-wrap gap-4 text-body">
+          <Link to="/signup" className="font-semibold text-primary hover:underline">
+            {t('launcher.signUp')}
+          </Link>
+          <Link to="/track" className="font-semibold text-primary hover:underline">
+            {t('launcher.track')}
+          </Link>
+        </div>
       </main>
     </div>
   )

@@ -13,7 +13,9 @@
     "subtitle": "Four apps, one shared set of demo data. Open them in separate tabs to watch changes flow between them.",
     "open": "Open",
     "continue": "Continue",
-    "signedInAs": "Signed in as {{name}}"
+    "signedInAs": "Signed in as {{name}}",
+    "signUp": "Sign up a new business",
+    "track": "Track a shipment"
   },
   "apps": {
     "customer": {
@@ -360,7 +362,8 @@
     "resetTitle": "Reset the demo?",
     "resetBody": "All four apps go back to the seed data and the clock returns to Mon 23-Nov 10:00. Bookings and actions made in the demo are lost. Logins stay.",
     "resetConfirm": "Reset demo",
-    "resetDone": "Demo data reset"
+    "resetDone": "Demo data reset",
+    "manualApprovals": "Manual onboarding approvals"
   },
   "service": {
     "parcel": "Parcel",
@@ -1890,5 +1893,430 @@
     "waBook": "Book delivery slot",
     "waConfirmed": "Delivery slot confirmed: {{date}} {{from}}–{{to}}",
     "waOut": "Your shipment is out for delivery today. Tap to call the agent (masked number)."
+  },
+  "customerType": {
+    "sme": "SME shipper",
+    "manufacturer": "Manufacturer",
+    "distributor": "Distributor",
+    "brand": "Brand with retail / modern trade",
+    "enterprise": "Enterprise",
+    "marketplace": "Marketplace / ONDC B2B seller"
+  },
+  "industry": {
+    "electricals": "Electricals & electronics",
+    "pharma": "Pharma",
+    "fmcg": "FMCG",
+    "auto": "Auto parts",
+    "textiles": "Textiles & apparel",
+    "industrial": "Industrial goods",
+    "ecommerce": "E-commerce",
+    "other": "Other"
+  },
+  "leadSource": {
+    "website": "Website",
+    "salesVisit": "Sales visit",
+    "referral": "Referral",
+    "ondc": "ONDC",
+    "tender": "Tender",
+    "partnerReferral": "Partner referral"
+  },
+  "track": {
+    "selfServe": "Self-serve SME",
+    "insideSales": "Inside sales",
+    "kam": "Key account manager",
+    "kamSolutions": "KAM + solutions team",
+    "apiOndc": "API / ONDC self-serve"
+  },
+  "customerStatus": {
+    "lead": "Lead",
+    "qualified": "Qualified",
+    "kyc": "KYC",
+    "credit": "Credit",
+    "contract": "Contract",
+    "integration": "Integration",
+    "pilot": "Pilot",
+    "live": "Live",
+    "onHold": "On hold"
+  },
+  "credit": {
+    "reason": {
+      "age": {
+        "long": "In business 10+ years",
+        "medium": "In business 5–10 years",
+        "short": "In business 2–5 years",
+        "new": "In business under 2 years"
+      },
+      "gst": {
+        "regular": "GST returns filed regularly",
+        "noConsent": "No consent to GST data",
+        "inactive": "GST registration not active"
+      },
+      "history": {
+        "known": "Payment history with Logisco",
+        "none": "No payment history yet"
+      },
+      "deposit": {
+        "yes": "Willing to give a deposit",
+        "no": "No deposit"
+      }
+    }
+  },
+  "onb": {
+    "steps": "Onboarding steps",
+    "step": {
+      "account": "Account",
+      "qualification": "Qualification",
+      "kyc": "KYC",
+      "credit": "Credit",
+      "contract": "Rate card and contract",
+      "integration": "Integration",
+      "pilot": "Pilot",
+      "live": "Live"
+    },
+    "next": "Rate card, contract, integration and pilot"
+  },
+  "cp04": {
+    "title": "Open a business account",
+    "subtitle": "Takes about 5 minutes. Logisco checks your GSTIN, then you continue with your shipping profile and KYC.",
+    "business": "Business details",
+    "legalName": "Company legal name",
+    "gstin": "GSTIN",
+    "gstinHint": "15 characters, e.g. 07AABCS1234F1Z5",
+    "gstinState": "Registered in {{state}}",
+    "state": "State",
+    "businessType": "Business type",
+    "industry": "Industry",
+    "city": "City",
+    "choose": "Choose…",
+    "contact": "Contact person (becomes the account Admin)",
+    "name": "Full name",
+    "designation": "Designation",
+    "email": "Work email",
+    "mobile": "Mobile number",
+    "sendOtp": "Send OTP",
+    "otp": "OTP",
+    "verify": "Verify",
+    "verified": "Verified",
+    "sourceConsent": "How you found us, and consent",
+    "source": "How did you hear about us?",
+    "referral": "Referral code",
+    "privacy": "I accept the Privacy Notice (DPDP Act) and agree that Logisco may contact me about this account.",
+    "gstConsent": "Logisco may use my GST filing data for credit scoring.",
+    "create": "Create account",
+    "created": "Account created. Next: your shipping profile.",
+    "haveAccount": "Already have an account? Log in",
+    "fix": "Please fix the highlighted fields.",
+    "err": {
+      "required": "This field is required.",
+      "tooLong": "Up to 120 characters.",
+      "gstin": "Enter a valid 15-character GSTIN.",
+      "gstinTaken": "An account already exists for this GSTIN. Ask your company admin to invite you.",
+      "email": "Enter a valid email address.",
+      "emailTaken": "This email is already used by another login.",
+      "mobile": "Enter a 10-digit mobile number.",
+      "verifyMobile": "Verify the mobile number with the OTP.",
+      "privacy": "Accept the Privacy Notice to continue."
+    }
+  },
+  "cp05": {
+    "title": "Your shipping profile",
+    "subtitle": "Logisco checks whether it can serve your lanes and how to onboard you.",
+    "profile": "Volumes",
+    "shipments": "Expected shipments per month",
+    "spend": "Expected monthly freight spend",
+    "spendBand": {
+      "lt50k": "Below ₹50,000",
+      "50kTo2l": "₹50,000 – ₹2 lakh",
+      "2lTo10l": "₹2 – 10 lakh",
+      "10lTo50l": "₹10 – 50 lakh",
+      "gt50l": "Above ₹50 lakh"
+    },
+    "mix": "Parcel / PTL mix",
+    "mixValue": "{{parcel}}% Parcel · {{ptl}}% PTL",
+    "lanes": "Top lanes (up to 5)",
+    "origin": "Origin pincode",
+    "dest": "Destination city",
+    "otherCity": "Another city (not listed)",
+    "perMonth": "Shipments a month",
+    "addLane": "Add lane",
+    "removeLane": "Remove lane {{n}}",
+    "needs": "Needs and preferences",
+    "handling": "Special handling",
+    "handlingOpt": {
+      "fragile": "Fragile",
+      "heavy": "Heavy / oversize",
+      "appointment": "Appointment delivery to DCs / modern trade",
+      "oda": "ODA locations",
+      "reverse": "Reverse pickups"
+    },
+    "payment": "Payment preference",
+    "paymentOpt": {
+      "prepaid": "Prepaid wallet",
+      "tbb": "Credit (TBB)",
+      "toPay": "To-Pay",
+      "cod": "COD"
+    },
+    "submit": "Check my lanes",
+    "update": "Update profile",
+    "saved": "Shipping profile saved",
+    "result": "Result",
+    "verdict": {
+      "serviceable": "Serviceable",
+      "oda": "Partly serviceable (ODA)",
+      "notServiceable": "Not serviceable"
+    },
+    "track": "Your onboarding track",
+    "kamNote": "Your account manager will call within 1 business day. You can start KYC now.",
+    "selfServeNote": "You can finish onboarding yourself, the same day.",
+    "continue": "Continue to KYC",
+    "err": {
+      "pincode": "Enter a 6-digit pincode.",
+      "positive": "Enter a number above 0.",
+      "payment": "Choose at least one."
+    }
+  },
+  "cp06": {
+    "title": "KYC verification",
+    "subtitle": "Usually done in under an hour. Each check runs instantly.",
+    "state": {
+      "notStarted": "Not started",
+      "verified": "Verified",
+      "flagged": "Flagged"
+    },
+    "s1": "1. Business identity",
+    "s2": "2. Authorised signatory",
+    "s3": "3. Bank account (refunds, COD remittance, claims)",
+    "s4": "4. Pickup addresses",
+    "cin": "CIN",
+    "cinHint": "21 characters, needed for a company",
+    "verifyGstin": "Verify GSTIN",
+    "legalName": "Legal name",
+    "tradeName": "Trade name",
+    "gstStatus": "GST status",
+    "active": "Active",
+    "cancelled": "Cancelled",
+    "registeredOn": "Registered on",
+    "constitution": "Constitution",
+    "address": "Registered address",
+    "pan": "PAN",
+    "panHint": "Filled from the GSTIN",
+    "verifyPan": "Verify PAN",
+    "panMismatch": "This PAN does not match the GSTIN. Logisco will review it.",
+    "sigName": "Signatory name",
+    "sigEmailHint": "Receives the contract for e-sign",
+    "saveSignatory": "Save signatory",
+    "sigSaved": "Signatory saved",
+    "holder": "Account holder name",
+    "holderHint": "Should match the legal name",
+    "ifsc": "IFSC",
+    "account": "Account number",
+    "confirmAccount": "Confirm account number",
+    "accountType": "Account type",
+    "accountTypes": {
+      "current": "Current",
+      "savings": "Savings"
+    },
+    "pennyDrop": "Verify with ₹1 (penny-drop)",
+    "bankOk": "{{bank}} returned “{{name}}” · name match {{pct}}%",
+    "bankFlagged": "The bank could not confirm the name (match {{pct}}%). Logisco will review it.",
+    "locName": "Location name",
+    "pincode": "Pincode",
+    "address1": "Address",
+    "address2": "Landmark (optional)",
+    "pin": "Pickup point",
+    "pinSuggested": "Suggested pin {{lat}}, {{lng}} — confirm it is right",
+    "confirmPin": "Confirm the pin",
+    "locContact": "Pickup contact",
+    "locMobile": "Pickup contact mobile",
+    "window": "Pickup window",
+    "from": "From",
+    "to": "To",
+    "days": "Working days",
+    "makeDefault": "Make this the default pickup location",
+    "default": "Default",
+    "addLocation": "Add pickup address",
+    "locationAdded": "Pickup address added",
+    "removeLocation": "Remove {{name}}",
+    "submit": "Submit KYC",
+    "submitted": "KYC submitted",
+    "todo": "Verify GSTIN, PAN and bank, save the signatory and add a pickup address.",
+    "verifiedBanner": "KYC verified",
+    "underReview": "Under review: Logisco is checking a flagged item. You will be told here when it is done.",
+    "continue": "Continue",
+    "err": {
+      "pan": "PAN looks like AAAAA9999A.",
+      "ifsc": "IFSC looks like HDFC0001234.",
+      "accountMatch": "The account numbers do not match.",
+      "pin": "Confirm the pickup pin.",
+      "window": "The window must end after it starts."
+    }
+  },
+  "cp07": {
+    "title": "Credit (TBB)",
+    "subtitle": "Takes 1–2 days. Logisco Finance decides the limit, payment terms and any deposit.",
+    "prepaid": "Your account starts on a prepaid wallet. After 3 months of good payment history a small credit limit can be offered.",
+    "limit": "Requested credit limit (₹)",
+    "limitHint": "At least ₹25,000",
+    "terms": "Payment terms",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "years": "Years in business",
+    "yearsHint": "From the GST registration date",
+    "deposit": "Security deposit or bank guarantee",
+    "depositOpt": {
+      "yes": "Willing",
+      "no": "Not willing"
+    },
+    "consent": "Logisco may use my GST filing data to assess credit.",
+    "submit": "Submit application",
+    "submitted": "Credit application submitted",
+    "status": "Status",
+    "statusValue": {
+      "underReview": "Under review",
+      "approved": "Approved",
+      "approvedLower": "Approved with a lower limit",
+      "declined": "Declined"
+    },
+    "reviewing": "Logisco Finance is reviewing {{limit}} on {{days}}-day terms.",
+    "approvedLimit": "Approved limit",
+    "fromInvoice_one": "{{count}} day from invoice",
+    "fromInvoice_other": "{{count}} days from invoice",
+    "depositAmount": "Security deposit",
+    "remarks": "Remarks",
+    "accept": "Accept terms",
+    "accepted": "Credit activated: bookings bill to your credit line (TBB)",
+    "continuePrepaid": "Continue on prepaid",
+    "onPrepaid": "Continuing on a prepaid wallet",
+    "err": {
+      "limit": "At least ₹25,000.",
+      "consent": "Consent is needed for the credit assessment."
+    }
+  },
+  "erp26": {
+    "title": "Leads and pipeline",
+    "subtitle": "{{count}} leads",
+    "filters": "Filters",
+    "board": "Pipeline by stage",
+    "source": "Source",
+    "allSources": "All sources",
+    "owner": "Owner",
+    "allOwners": "All owners",
+    "industry": "Industry",
+    "allIndustries": "All industries",
+    "empty": "No leads yet. A sign-up on the Customer Portal creates one.",
+    "stage": {
+      "new": "New",
+      "qualified": "Qualified",
+      "kyc": "KYC",
+      "credit": "Credit",
+      "contract": "Contract",
+      "pilot": "Pilot",
+      "live": "Live",
+      "lost": "Lost"
+    },
+    "perMonth_one": "{{count}} / month",
+    "perMonth_other": "{{count}} / month",
+    "unassigned": "Unassigned",
+    "gstin": "GSTIN",
+    "type": "Type and industry",
+    "score": "AI lead score",
+    "contact": "Contact",
+    "assigned": "Owner assigned",
+    "moveStage": "Stage",
+    "logActivity": "Log activity",
+    "activityKind": "Activity",
+    "note": "Note",
+    "add": "Add",
+    "kind": {
+      "call": "Call",
+      "visit": "Visit",
+      "email": "Email",
+      "note": "Note",
+      "stage": "Stage"
+    },
+    "system": "System",
+    "openReview": "Open onboarding review"
+  },
+  "erp27": {
+    "title": "Customer onboarding",
+    "subtitle": "New accounts and where they are in onboarding",
+    "empty": "No accounts in onboarding.",
+    "kycReview": "KYC to review",
+    "back": "Customer onboarding",
+    "qualification": "Qualification",
+    "notQualified": "Not qualified yet.",
+    "volume_one": "{{count}} shipment a month · {{spend}}",
+    "volume_other": "{{count}} shipments a month · {{spend}}",
+    "track": "Track",
+    "trackSet": "Track updated",
+    "billing": "Billing: {{billing}}",
+    "billingValue": {
+      "prepaid": "Prepaid wallet",
+      "credit": "Credit (TBB)"
+    },
+    "kam": "Account manager: {{name}}",
+    "laneCost": "Lane-cost preview",
+    "lane": "Lane",
+    "perMonth": "A month",
+    "serviceable": "Serviceable",
+    "margin": "Expected margin",
+    "laneCostNote": "Typical shipment on the standard rate card against current partner costs; target margin {{target}}%. Not shown to the customer.",
+    "kyc": "KYC results",
+    "kycNotStarted": "KYC not started.",
+    "kycStatus": {
+      "notStarted": "Not started",
+      "underReview": "Under review",
+      "verified": "Verified"
+    },
+    "check": {
+      "gstin": "GSTIN",
+      "pan": "PAN",
+      "cin": "CIN",
+      "bank": "Bank account",
+      "signatory": "Authorised signatory",
+      "addresses": "Pickup addresses"
+    },
+    "notNeeded": "Not needed",
+    "match": "name match {{pct}}%",
+    "locations_one": "{{count}} location",
+    "locations_other": "{{count}} locations",
+    "clear": "Checked: clear the review",
+    "cleared": "KYC verified",
+    "reviewedBy": "Reviewed by {{name}}",
+    "automatic": "Automatic rules",
+    "later": "Rate card to offer, contract issue, pilot plan and Mark live come with the next part of Phase 3.",
+    "sampleCol": "Typical shipment",
+    "sample": {
+      "parcel": "5 kg Standard parcel",
+      "ptl": "100 kg Express PTL"
+    }
+  },
+  "erp30": {
+    "title": "Credit review",
+    "subtitle": "Credit applications from onboarding customers",
+    "empty": "No credit applications.",
+    "score": "AI credit-risk score",
+    "risk": {
+      "low": "Low risk",
+      "medium": "Medium risk",
+      "high": "High risk"
+    },
+    "requested": "Requested {{limit}} on {{days}}-day terms",
+    "years_one": "{{count}} year in business",
+    "years_other": "{{count}} years in business",
+    "depositYes": "willing to give a deposit",
+    "depositNo": "no deposit",
+    "suggestion": "Rules suggest: {{status}}, {{limit}}",
+    "limit": "Approved limit (₹)",
+    "approve": "Approve",
+    "approveLower": "Approve lower",
+    "decline": "Decline",
+    "decided": "Decision saved: {{status}}",
+    "financeOnly": "Only Finance can decide.",
+    "acceptedByCustomer": "accepted by the customer",
+    "err": {
+      "limit": "Enter the approved limit.",
+      "lower": "A lower limit must be below the requested amount."
+    }
   }
 }

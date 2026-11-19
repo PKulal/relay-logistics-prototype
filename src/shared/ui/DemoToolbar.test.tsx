@@ -37,7 +37,7 @@ describe('DemoToolbar', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Open demo controls' }))
     fireEvent.click(screen.getByRole('switch', { name: 'Partner App offline' }))
     fireEvent.click(screen.getByRole('switch', { name: 'Show simulation labels' }))
-    expect(useDemoStore.getState().flags).toEqual({ offline: true, showSimulationLabels: true })
+    expect(useDemoStore.getState().flags).toEqual({ offline: true, showSimulationLabels: true, manualApprovals: false })
   })
 
   it('keeps scenario actions disabled until their phase', () => {

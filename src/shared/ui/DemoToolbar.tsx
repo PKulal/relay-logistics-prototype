@@ -3,7 +3,7 @@
  * Collapsed to a small pill (bottom centre, clear of the sidebar and toasts) by default. Deliberately styled apart from the apps
  * (dark with amber) so reviewers can tell demo controls from product UI.
  */
-import { CalendarClock, Clock, FlaskConical, Gauge, Repeat, RotateCcw, TriangleAlert, WifiOff, X, Tag } from 'lucide-react'
+import { CalendarClock, Clock, FlaskConical, Gauge, Repeat, RotateCcw, TriangleAlert, UserCheck, WifiOff, X, Tag } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
@@ -130,6 +130,7 @@ export function DemoToolbar() {
           {/* Switches */}
           <div className="flex flex-col gap-2">
             <SwitchRow icon={WifiOff} label={t('toolbar.offline')} checked={flags.offline} onChange={(v) => setFlag('offline', v)} />
+            <SwitchRow icon={UserCheck} label={t('toolbar.manualApprovals')} checked={flags.manualApprovals} onChange={(v) => setFlag('manualApprovals', v)} />
             <SwitchRow icon={Tag} label={t('toolbar.simLabels')} checked={flags.showSimulationLabels} onChange={(v) => setFlag('showSimulationLabels', v)} />
           </div>
 

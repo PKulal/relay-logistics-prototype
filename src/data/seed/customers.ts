@@ -15,7 +15,7 @@ export const customers: Customer[] = [
     cin: 'U31200DL2008PTC123456',
     entityType: 'Private Ltd',
     type: 'manufacturer',
-    track: 'enterprise',
+    track: 'kam',
     status: 'live',
     billing: 'credit',
     creditLimit: 500000,

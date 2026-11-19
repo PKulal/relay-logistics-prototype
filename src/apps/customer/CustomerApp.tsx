@@ -14,6 +14,12 @@ import CP13BookShipment from './CP13BookShipment'
 import CP14Confirmation from './CP14Confirmation'
 import CP16Shipments from './CP16Shipments'
 import CP17Shipment from './CP17Shipment'
+import CP05Qualification from './onboarding/CP05Qualification'
+import CP06Kyc from './onboarding/CP06Kyc'
+import CP07Credit from './onboarding/CP07Credit'
+import OnboardingNext from './onboarding/OnboardingNext'
+import OnboardingHome from './onboarding/OnboardingHome'
+import { isOnboarding } from './onboarding/steps'
 import { customerNav, type CustomerCtx } from './nav'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
@@ -30,7 +36,10 @@ export default function CustomerApp() {
   if (!user || !customer) return <Navigate to="/launch/customer" replace />
 
   const ctx: CustomerCtx = { role: user.role, customer }
-  const canBook = user.role === 'admin' || user.role === 'dispatch'
+  // Until the account is in pilot (CP-10), the dashboard and booking lead to the current onboarding step
+  const onboarding = isOnboarding(customer)
+  const canBook = (user.role === 'admin' || user.role === 'dispatch') && !onboarding
+  const screens = onboarding ? { ...SCREENS, 'CP-11': OnboardingHome, 'CP-13': OnboardingHome } : SCREENS
 
   return (
     <Routes>
@@ -52,10 +61,15 @@ export default function CustomerApp() {
           />
         }
       >
-        {navRoutes(customerNav, ctx, SCREENS)}
+        {navRoutes(customerNav, ctx, screens)}
         {/* Screens outside the menu (CP spec §4.3) */}
         <Route path="book/done/:lr" element={canBook ? <CP14Confirmation /> : <AccessDenied />} />
         <Route path="shipments/:lr" element={<CP17Shipment />} />
+        <Route path="onboarding" element={<OnboardingHome />} />
+        <Route path="onboarding/qualification" element={<CP05Qualification />} />
+        <Route path="onboarding/kyc" element={<CP06Kyc />} />
+        <Route path="onboarding/credit" element={<CP07Credit />} />
+        <Route path="onboarding/next" element={<OnboardingNext />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

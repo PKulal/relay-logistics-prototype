@@ -13,7 +13,7 @@ type C = Pick<Customer, 'id' | 'legalName' | 'shortName' | 'gstin' | 'type' | 'b
 const customer = (c: C): Customer => ({
   pan: c.gstin.slice(2, 12),
   entityType: 'Private Ltd',
-  track: c.type === 'sme' ? 'selfServe' : 'enterprise',
+  track: c.type === 'sme' ? 'selfServe' : c.type === 'marketplace' ? 'apiOndc' : 'insideSales',
   status: 'live',
   creditLimit: c.billing === 'credit' ? 300000 : 0,
   creditUsed: c.billing === 'credit' ? 96000 : 0,

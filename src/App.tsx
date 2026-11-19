@@ -6,7 +6,9 @@ import PartnerPortalApp from '@apps/partner-portal/PartnerPortalApp'
 import { DemoToolbar } from '@shared/ui/DemoToolbar'
 import { Toaster } from '@shared/ui/sonner'
 import { TooltipProvider } from '@shared/ui/tooltip'
+import CP04SignUp from '@apps/public/CP04SignUp'
 import CP18Track from '@apps/public/CP18Track'
+import { AutoApprover } from '@shared/sim/AutoApprover'
 import DemoSwitch from './launcher/DemoSwitch'
 import Launcher from './launcher/Launcher'
 import PersonaPicker from './launcher/PersonaPicker'
@@ -19,6 +21,7 @@ export default function App() {
         <Route path="/launch/:appId" element={<PersonaPicker />} />
         <Route path="/customer/*" element={<CustomerApp />} />
         <Route path="/partner/*" element={<PartnerPortalApp />} />
+        <Route path="/signup" element={<CP04SignUp />} />
         <Route path="/track" element={<CP18Track />} />
         <Route path="/track/:lr" element={<CP18Track />} />
         <Route path="/app/as/:staffId" element={<DemoSwitch />} />
@@ -27,6 +30,7 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <DemoToolbar />
+      <AutoApprover />
       <Toaster />
     </TooltipProvider>
   )
