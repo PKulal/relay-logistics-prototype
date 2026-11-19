@@ -121,6 +121,9 @@ export default function CP17Shipment() {
             {pendingRevision && (
               <p className="flex items-center gap-2 font-medium">
                 <TriangleAlert className="size-4 shrink-0 text-status-warning" aria-hidden /> {t('cp17.revisionPending', { amount: formatINR(pendingRevision.amountDiff) })}
+                <Link to={`/customer/exceptions/weight/${s.id}`} className="ml-auto text-primary hover:underline">
+                  {t('cp17.reviewRevision')}
+                </Link>
               </p>
             )}
             {openExceptions.map((x) => (
@@ -170,7 +173,7 @@ export default function CP17Shipment() {
               </ul>
             )}
             <p className="tabular mt-6 text-card-title">
-              {t('cp17.final')}: {formatINR(s.price.total + Object.values(data.weightRevisions).filter((w) => w.shipmentId === s.id && (w.status === 'accepted' || w.status === 'autoAccepted')).reduce((n, w) => n + w.amountDiff, 0))}
+              {t('cp17.final')}: {formatINR(s.price.total + Object.values(data.weightRevisions).filter((w) => w.shipmentId === s.id && (w.status === 'accepted' || w.status === 'autoAccepted' || w.status === 'upheld')).reduce((n, w) => n + w.amountDiff, 0))}
             </p>
           </section>
         </TabsContent>

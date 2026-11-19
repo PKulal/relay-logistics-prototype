@@ -50,7 +50,7 @@ public/brand/           logo
 3. **Business logic lives in `src/shared/engines/`** as pure functions with Vitest tests using the seed-data numbers (e.g. hero shipment total ₹3,628.26).
 4. **Time comes from `demoNow`** in the store, never `Date.now()`.
 5. **Simulated things are marked** with a `// SIMULATED:` comment (OTP, KYC checks, payment, e-sign, GPS, AI outputs) and wrapped in helpers in `src/shared/sim/` so they can be swapped for real services later.
-6. **Every user-facing string goes through i18n** (`t('…')`), English first; Hindi keys may be filled later.
+6. **Every user-facing string goes through i18n** (`t('…')`) in English **and** Hindi. `src/shared/i18n/i18n.test.ts` fails if a key or a `{{placeholder}}` is missing in `hi.json`. Reuse the terms `hi.json` already uses; keep acronyms and brand names (LR, GSTIN, COD, PTL, SLA, Logisco) in Latin script.
 7. Use shared UI components; style with design tokens and `var(--accent)`; no hard-coded colours in screens.
 8. Indian formats: `₹1,80,000.00` via `Intl.NumberFormat('en-IN')`, dates `23-Nov-2026`, 24-hour time.
 9. Keep screens realistic: loading skeleton, empty state, success toast, confirm dialog for money / destructive actions.

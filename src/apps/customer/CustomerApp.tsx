@@ -13,6 +13,8 @@ import CP12GetQuote from './CP12GetQuote'
 import CP13BookShipment from './CP13BookShipment'
 import CP14Confirmation from './CP14Confirmation'
 import CP16Shipments from './CP16Shipments'
+import CP19Exceptions from './CP19Exceptions'
+import CP20WeightDiscrepancy from './CP20WeightDiscrepancy'
 import CP17Shipment from './CP17Shipment'
 import CP05Qualification from './onboarding/CP05Qualification'
 import CP06Kyc from './onboarding/CP06Kyc'
@@ -25,7 +27,7 @@ import CP10Tracker from './onboarding/CP10Tracker'
 import { customerNav, type CustomerCtx } from './nav'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'CP-11': CP11Dashboard, 'CP-12': CP12GetQuote, 'CP-13': CP13BookShipment, 'CP-16': CP16Shipments }
+const SCREENS = { 'CP-11': CP11Dashboard, 'CP-12': CP12GetQuote, 'CP-13': CP13BookShipment, 'CP-16': CP16Shipments, 'CP-19': CP19Exceptions }
 
 /** Customer Portal (/customer) — B2B shippers. Spec: docs/01-customer-portal.md */
 export default function CustomerApp() {
@@ -67,6 +69,7 @@ export default function CustomerApp() {
         {/* Screens outside the menu (CP spec §4.3) */}
         <Route path="book/done/:lr" element={canBook ? <CP14Confirmation /> : <AccessDenied />} />
         <Route path="shipments/:lr" element={<CP17Shipment />} />
+        <Route path="exceptions/weight/:lr" element={<CP20WeightDiscrepancy />} />
         <Route path="onboarding" element={<CP10Tracker />} />
         <Route path="onboarding/qualification" element={<CP05Qualification />} />
         <Route path="onboarding/kyc" element={<CP06Kyc />} />

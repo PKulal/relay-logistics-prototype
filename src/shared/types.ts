@@ -963,15 +963,30 @@ export interface ShipmentException {
   customerConfirmed: boolean
 }
 
+export type WeightDisputeReason = 'dimensions' | 'weight' | 'wrongPiece' | 'skuFrozen' | 'other'
+
+/**
+ * Weight revision after pickup (source §7 Step 4; CP-20). The customer accepts
+ * the revised rate or disputes it; Finance decides a dispute (ERP-31).
+ */
 export interface WeightRevision {
   id: Id
   shipmentId: Id
+  /** Chargeable kg, booked vs verified */
   booked: number
   verified: number
+  /** Price difference including GST */
   amountDiff: number
   photos: string[]
   raisedAt: IsoDateTime
-  status: 'pending' | 'accepted' | 'disputed' | 'autoAccepted'
+  status: 'pending' | 'accepted' | 'disputed' | 'autoAccepted' | 'upheld' | 'reversed'
+  /** Who accepted (customer user), or 'system' for the 48-hour rule */
+  respondedBy?: Id
+  respondedAt?: IsoDateTime
+  dispute?: { reason: WeightDisputeReason; remarks: string; files: string[]; by: Id; at: IsoDateTime }
+  resolution?: { decision: 'upheld' | 'reversed'; note: string; by: Id; at: IsoDateTime }
+  /** How the difference was charged: prepaid wallet debit, or added to the credit invoice */
+  chargedTo?: 'wallet' | 'invoice'
 }
 
 export interface Ndr {

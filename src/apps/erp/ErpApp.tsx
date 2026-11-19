@@ -18,10 +18,11 @@ import ERP23Approvals from './ERP23Approvals'
 import ERP26Leads from './ERP26Leads'
 import ERP27OnboardingReview from './ERP27OnboardingReview'
 import ERP30CreditReview from './ERP30CreditReview'
+import ERP31Invoicing from './ERP31Invoicing'
 import { erpNav, type ErpCtx } from './nav'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'ERP-05': ERP05JobBoard, 'ERP-11': ERP11Applications, 'ERP-12': ERP12KycDesk, 'ERP-13': ERP13Commercials, 'ERP-14': ERP14Trials, 'ERP-22': ERP22RateCards, 'ERP-23': ERP23Approvals, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-30': ERP30CreditReview }
+const SCREENS = { 'ERP-05': ERP05JobBoard, 'ERP-11': ERP11Applications, 'ERP-12': ERP12KycDesk, 'ERP-13': ERP13Commercials, 'ERP-14': ERP14Trials, 'ERP-22': ERP22RateCards, 'ERP-23': ERP23Approvals, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-30': ERP30CreditReview, 'ERP-31': ERP31Invoicing }
 
 /** Logisco ERP + Control Tower (/erp) — Logisco staff. Spec: docs/04-erp-control-tower.md */
 export default function ErpApp() {

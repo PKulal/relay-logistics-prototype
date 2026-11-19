@@ -46,7 +46,7 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 - [x] Hindi for the web portals: fill the missing Hindi strings in the Customer Portal, Partner Portal and ERP screens built so far (client §14: English + Hindi in every app); new screens ship with Hindi (847 strings added; `src/shared/i18n/i18n.test.ts` fails if a key or placeholder is missing in Hindi)
 
 ## Phase 4 — Exceptions and money
-- [ ] Weight revision: PA-16 “Measure larger” → CP-19 / CP-20 → ERP Finance
+- [x] Weight revision: PA-16 “Measure larger” → CP-19 / CP-20 → ERP Finance (CP-19 exception queue, CP-20 accept / dispute with evidence and AI check, ERP-31 Weight disputes tab; 48-hour auto-accept on the demo clock)
 - [ ] NDR: PA-35 → CP-21 + WhatsApp preview (CP-18) → reattempt task back to PA
 - [ ] Control Tower: ERP-06 at-risk list, ERP-07 exceptions, ERP-08 reassign (000790 → QuickLink), ERP-09, ERP-10
 - [ ] Claims: CP-22 → ERP-36 / ERP-37 (liability engine) → PP-22 deduction

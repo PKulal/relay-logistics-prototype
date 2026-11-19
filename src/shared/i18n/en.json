@@ -1859,7 +1859,8 @@
     "deliveredAt": "Delivered at",
     "issues": "Short / damaged pieces",
     "noIssues": "None",
-    "cod": "COD collected"
+    "cod": "COD collected",
+    "reviewRevision": "Review"
   },
   "cp18": {
     "trackingPage": "Tracking page (no login)",
@@ -3350,5 +3351,153 @@
     },
     "rule": "Score of {{pass}} or more → go live at Bronze; below, extend the trial or decline with reasons.",
     "liveTrips": "Trips count as they arrive at the destination hub."
+  },
+  "cp19": {
+    "title": "Exceptions",
+    "subtitle_one": "{{count}} item needs your action",
+    "subtitle_other": "{{count}} items need your action",
+    "tab": {
+      "action": "Needs my action",
+      "ndr": "NDR",
+      "weight": "Weight disputes",
+      "hold": "On hold",
+      "claims": "Claims"
+    },
+    "col": {
+      "lr": "LR",
+      "type": "Exception type",
+      "raised": "Raised on",
+      "details": "Details",
+      "respondBy": "Respond by"
+    },
+    "type": {
+      "weightRevision": "Weight revision",
+      "weightDisputed": "Weight · under dispute",
+      "ndr": "NDR",
+      "ewbExpiry": "E-way bill expiry",
+      "claim": "Short / damaged delivery",
+      "pickupMissed": "Pickup missed",
+      "sealMismatch": "Seal mismatch",
+      "short": "Short delivery",
+      "excess": "Excess pieces",
+      "damage": "Damage",
+      "delay": "Delay",
+      "breakdown": "Vehicle breakdown",
+      "weightMismatch": "Weight mismatch"
+    },
+    "amount": "Revised by {{amount}}",
+    "takeAction": "Take action",
+    "view": "View",
+    "empty": "Nothing here",
+    "emptyBody": "Exceptions that need you appear here as soon as they happen."
+  },
+  "cp20": {
+    "back": "Exceptions",
+    "title": "Weight discrepancy",
+    "status": {
+      "pending": "Waiting for you",
+      "accepted": "Accepted",
+      "autoAccepted": "Accepted automatically",
+      "disputed": "Under dispute",
+      "upheld": "Revised weight upheld",
+      "reversed": "Booked weight accepted"
+    },
+    "respondBy": "Respond by",
+    "respond": "Your response",
+    "autoRule": "If you don't respond within {{hours}} hours, the revised rate is accepted automatically.",
+    "accept": "Accept revised rate (+ {{amount}})",
+    "dispute": "Raise dispute",
+    "reason": "Reason",
+    "reasons": {
+      "dimensions": "Dimensions measured incorrectly",
+      "weight": "Weight incorrect",
+      "wrongPiece": "Wrong piece measured",
+      "skuFrozen": "SKU weight is frozen",
+      "other": "Other"
+    },
+    "remarks": "Remarks",
+    "remarksCount": "{{n}} / {{max}} characters",
+    "files": "Supporting files (up to {{max}})",
+    "tooMany": "Only the first {{max}} files are kept",
+    "submitDispute": "Submit dispute",
+    "disputed": "Dispute raised. Logisco will review and respond.",
+    "confirmTitle": "Accept the revised rate of + {{amount}}?",
+    "confirmWallet": "The amount is debited from your wallet (balance {{balance}}).",
+    "confirmInvoice": "The amount is added to your next invoice.",
+    "confirm": "Accept",
+    "acceptedWallet": "Revised rate accepted; wallet debited",
+    "acceptedInvoice": "Revised rate accepted; added to your invoice",
+    "outcome": "Outcome",
+    "acceptedBy": "Accepted by {{name}}, {{at}}",
+    "autoAccepted": "Accepted automatically after 48 hours, {{at}}",
+    "charged": {
+      "wallet": "{{amount}} debited from your wallet.",
+      "invoice": "{{amount}} added to your invoice."
+    },
+    "yourDispute": "Dispute raised by {{name}}, {{at}}",
+    "underReview": "Logisco Finance is reviewing your dispute.",
+    "resolution": {
+      "upheld": "Decided {{at}}: the revised weight stands.",
+      "reversed": "Decided {{at}}: your booked weight is accepted; nothing extra to pay."
+    }
+  },
+  "weightEv": {
+    "booked": "Booked",
+    "verified": "Verified at pickup",
+    "actual": "Actual weight",
+    "volumetric": "Volumetric weight",
+    "cft": "CFT weight",
+    "chargeable": "Chargeable weight",
+    "amount": "Amount (incl. GST)",
+    "difference": "Difference: + {{kg}} chargeable · + {{amount}} incl. GST",
+    "evidence_one": "Evidence ({{count}} photo)",
+    "evidence_other": "Evidence ({{count}} photos)",
+    "noPhotos": "No photos were attached.",
+    "kindScale": "scale",
+    "kindTape": "tape",
+    "aiTitle": "AI weight check",
+    "verdict": {
+      "consistent": "Evidence supports the revision",
+      "review": "Needs a closer look"
+    },
+    "photoCoverage": "Photos for {{n}} of {{total}} re-measured pieces",
+    "flag": {
+      "photosMissing": "Some re-measured pieces have no scale or tape photo.",
+      "skuFrozenDiffers": "Frozen SKU dimensions differ from the measurement: {{skus}}.",
+      "largeJump": "The chargeable weight rose by more than 25%."
+    }
+  },
+  "erp31": {
+    "title": "Customer invoicing and collections",
+    "subtitle_one": "{{count}} weight dispute to decide",
+    "subtitle_other": "{{count}} weight disputes to decide",
+    "tab": {
+      "weight": "Weight disputes"
+    },
+    "empty": "No weight disputes.",
+    "billing": {
+      "prepaid": "Prepaid (wallet)",
+      "credit": "Credit (monthly invoice)"
+    },
+    "disputedBy": "Disputed by {{name}}, {{at}}",
+    "decision": "Decision",
+    "uphold": "Uphold the revised weight ({{kg}} kg): charge + {{amount}}",
+    "reverse": "Accept the customer's booked weight ({{kg}} kg): no extra charge",
+    "note": "Note to the customer",
+    "noteHint": "Shown on the customer's weight discrepancy screen",
+    "save": "Save decision",
+    "saved": "Decision saved; the customer has been told",
+    "financeOnly": "Only Finance decides weight disputes.",
+    "confirmUphold": "Uphold and charge + {{amount}}?",
+    "confirmReverse": "Accept the booked weight?",
+    "charge": {
+      "prepaid": "The amount is debited from the customer's wallet.",
+      "credit": "The amount is added to the customer's invoice."
+    },
+    "reverseBody": "The revision is cancelled. The booked weight is used for billing, including the partners' 3-way match.",
+    "decided": {
+      "upheld": "Upheld by {{name}}, {{at}}:",
+      "reversed": "Booked weight accepted by {{name}}, {{at}}:"
+    }
   }
 }

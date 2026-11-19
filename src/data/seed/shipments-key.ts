@@ -151,7 +151,9 @@ export function addKeyShipments(seed: DemoData, until: IsoDateTime): DemoData {
     const s = data.shipments['LGS-DEL-000784']
     const verified = s.pieces.map((p) => (['LGS-DEL-000784-03', 'LGS-DEL-000784-04'].includes(p.id) ? { id: p.id, l: 62, b: 42, h: 42, weight: p.weight } : { id: p.id, l: p.l, b: p.b, h: p.h, weight: p.weight }))
     const pickupLeg = data.legs[s.legIds[0]]
-    data = applyVerifiedWeights(data, s.id, verified, pickupLeg.staffId ?? 'system', findEvent(data, s.id, 'pickupConfirmed'))
+    // Scale photo for every carton, tape photo for the two re-measured ones (PA-16 evidence)
+    const photos = [...s.pieces.map((p) => `${p.id}-scale:Scale ${p.weight} kg`), 'LGS-DEL-000784-03-tape:Tape 62×42×42 cm', 'LGS-DEL-000784-04-tape:Tape 62×42×42 cm']
+    data = applyVerifiedWeights(data, s.id, verified, pickupLeg.staffId ?? 'system', findEvent(data, s.id, 'pickupConfirmed'), photos)
   }
 
   // ── LGS-MYS-000112: Kaveri Handicrafts parcel, Mysuru → Pune, ₹561.09 from the wallet.

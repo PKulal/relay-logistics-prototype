@@ -31,6 +31,8 @@ import type { CreditDecision, CreditRequest, DecisionKind, SignUpInput } from '.
 import * as ctr from './contractActions'
 import * as pon from './partnerOnboardingActions'
 import * as pag from './partnerAgreementActions'
+import * as wt from './weightActions'
+import type { DisputeInput } from './weightActions'
 import type { CommercialDecisionKind, LineEdit, NewStaff } from './partnerAgreementActions'
 import type { AuditItems, CheckInput, PartnerApplyInput, PartnerDecisionKind, VerificationDecision } from './partnerOnboardingActions'
 import type { IntegrationStep, RateEdit, SkuRow } from './contractActions'
@@ -40,7 +42,7 @@ import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 15
+export const STORE_VERSION = 16
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -163,6 +165,10 @@ export interface DemoState {
   simulateTrialJob: (partnerId: Id) => void
   decideTrial: (partnerId: Id, d: 'live' | 'extend' | 'decline', reasons: string, by: Id) => void
   autoDecideCommercial: (id: Id, kind: CommercialDecisionKind) => void
+  /** Weight revisions (CP-20, ERP-31) */
+  acceptRevision: (wrId: Id, by: Id) => void
+  disputeRevision: (wrId: Id, d: DisputeInput, by: Id) => void
+  resolveDispute: (wrId: Id, decision: 'upheld' | 'reversed', note: string, by: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -188,7 +194,8 @@ export const useDemoStore = create<DemoState>()(
         set((s) => {
           const demoNow = addMinutes(s.demoNow, minutes)
           // Background shipments move along their simulated journeys (ERP spec §11.1).
-          return { demoNow, data: advanceJourneys(s.data, s.demoNow, demoNow) }
+          // … and weight revisions left unanswered for 48 hours are accepted (CP-20 rule)
+          return { demoNow, data: wt.autoAcceptRevisions(advanceJourneys(s.data, s.demoNow, demoNow), demoNow) }
         })
       },
 
@@ -308,6 +315,9 @@ export const useDemoStore = create<DemoState>()(
       simulateTrialJob: (partnerId) => set((s) => ({ data: pag.simulateTrialJob(s.data, partnerId, s.demoNow) })),
       decideTrial: (partnerId, d, reasons, by) => set((s) => ({ data: pag.decideTrial(s.data, partnerId, d, reasons, by, s.demoNow) })),
       autoDecideCommercial: (id, kind) => set((s) => ({ data: pag.autoDecideCommercial(s.data, id, kind, s.demoNow) })),
+      acceptRevision: (wrId, by) => set((s) => ({ data: wt.acceptRevision(s.data, wrId, by, s.demoNow) })),
+      disputeRevision: (wrId, d, by) => set((s) => ({ data: wt.disputeRevision(s.data, wrId, d, by, s.demoNow) })),
+      resolveDispute: (wrId, decision, note, by) => set((s) => ({ data: wt.resolveDispute(s.data, wrId, decision, note, by, s.demoNow) })),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),
 
 
