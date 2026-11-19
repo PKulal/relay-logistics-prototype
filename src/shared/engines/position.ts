@@ -5,6 +5,7 @@
  * at the pickup point, at a hub, partway along the lane, or out for delivery.
  */
 import type { DemoData, IsoDateTime, Leg, Pincode, Shipment } from '@shared/types'
+import { tripPosition } from './trip'
 
 export interface Point {
   lat: number
@@ -59,8 +60,12 @@ export function shipmentPosition(data: DemoData, s: Shipment, now: IsoDateTime):
       return origin
     case 'atOriginHub':
       return originHub
-    case 'inTransit':
-      return lerp(originHub, destHub, progress(leg('lineHaul'), now))
+    case 'inTransit': {
+      // A started trip reports the truck's own (simulated) position
+      const lh = leg('lineHaul')
+      const trip = lh?.tripId ? data.trips[lh.tripId] : undefined
+      return trip?.startedAt ? tripPosition(data, trip, now) : lerp(originHub, destHub, progress(lh, now))
+    }
     case 'atDestinationHub':
       return destHub
     case 'outForDelivery':

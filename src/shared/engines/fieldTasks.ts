@@ -56,7 +56,12 @@ export function nextLegOf(data: DemoData, leg: Leg): Leg | undefined {
 
 /** A hub job whose goods are on their way in: the staff member's job is to receive them (PA-20). */
 export function isReceive(data: DemoData, leg: Leg): boolean {
-  return (leg.type === 'originHub' || leg.type === 'destHub' || leg.type === 'lineHaul') && leg.status === 'assigned' && prevLegOf(data, leg)?.status === 'inProgress'
+  return (leg.type === 'originHub' || leg.type === 'destHub' || leg.type === 'lineHaul') && leg.status === 'assigned' && underWay(prevLegOf(data, leg))
+}
+
+/** The leg before is moving the goods: in progress, or a truck still going after a halt or breakdown was flagged. */
+export function underWay(leg: Leg | undefined): boolean {
+  return !!leg && (leg.status === 'inProgress' || (leg.status === 'exception' && leg.type !== 'firstMile'))
 }
 
 function kindOf(data: DemoData, leg: Leg): TaskKind {

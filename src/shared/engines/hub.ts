@@ -5,7 +5,7 @@
  */
 import { istDate } from '@shared/lib/time'
 import type { Bag, DemoData, Id, IsoDateTime, Leg, Manifest, Shipment, ShipmentEvent, Trip } from '@shared/types'
-import { nextLegOf, prevLegOf } from './fieldTasks'
+import { nextLegOf, prevLegOf, underWay } from './fieldTasks'
 
 /** expected → (receive, PA-20) → toInScan → (PA-26) → toSort → (PA-27) → sorted → (PA-28) → sealed → (PA-29) → dispatched */
 export type HubStage = 'expected' | 'toInScan' | 'toSort' | 'sorted' | 'sealed' | 'dispatched'
@@ -114,7 +114,7 @@ export function hubItems(data: DemoData, hubId: Id, now: IsoDateTime): HubItem[]
     // Finished work leaves the shift view after its day; expected work shows on its day
     if (stage === 'dispatched' && istDate((out ?? events.at(-1))?.at ?? leg.updatedAt) !== today) continue
     // Expected = goods on their way: the leg before is under way, or it is a pickup due today
-    const onTheWay = from.status === 'inProgress' || (from.type === 'firstMile' && ['offered', 'accepted', 'assigned'].includes(from.status) && istDate(from.window.from) === today)
+    const onTheWay = underWay(from) || (from.type === 'firstMile' && ['offered', 'accepted', 'assigned'].includes(from.status) && istDate(from.window.from) === today)
     if (stage === 'expected' && !onTheWay) continue
 
     items.push({ leg, shipment: s, stage, pieceIds, from, eta: from.window.to, dest: destinationOf(data, leg) })

@@ -549,8 +549,16 @@ export interface Trip {
   departAt: IsoDateTime
   eta: IsoDateTime
   positions: { at: IsoDateTime; lat: number; lng: number }[]
-  halts: { at: IsoDateTime; minutes: number; reason: string; lat: number; lng: number }[]
+  /** PA-23 halts and breakdowns, with the expected duration */
+  halts: { at: IsoDateTime; minutes: number; reason: string; lat: number; lng: number; breakdown?: { issue: string; backupVehicle: boolean; photos: string[] } }[]
   status: 'planned' | 'loading' | 'inTransit' | 'arrived'
+  /** Line-haul legs the driver took from the hub (PA-20); background shipments move on their own */
+  loadedLegIds?: Id[]
+  /** PA-22 / PA-24: when the trip actually started and arrived */
+  startedAt?: IsoDateTime
+  arrivedAt?: IsoDateTime
+  /** PA-24 → PA-19: code the destination hub enters to take the load */
+  handoverCode?: string
 }
 
 export interface Bag {

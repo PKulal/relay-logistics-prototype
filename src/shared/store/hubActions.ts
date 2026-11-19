@@ -208,14 +208,19 @@ export function receiveManifest(data: DemoData, x: ReceiveManifest, at: IsoDateT
   if (!manifest || manifest.status !== 'dispatched' || manifest.handoverCode !== x.code) return data
   const bags = manifest.bagIds.map((id) => data.bags[id])
   let next = data
+  const taken: Id[] = []
   for (const { leg, pieceIds } of shipmentsInBags(data, bags)) {
     const truck = nextLegOf(data, leg)
     if (!truck) continue
+    taken.push(truck.id)
     const shipmentBags = bags.filter((b) => b.pieceIds.some((p) => pieceIds.includes(p)))
     const received = shipmentBags.filter((b) => x.bagIds.includes(b.id)).flatMap((b) => b.pieceIds.filter((p) => pieceIds.includes(p)))
     const broken = x.brokenSeals.filter((s) => s === manifest.doorSeal || shipmentBags.some((b) => b.sealNo === s))
     next = receiveHandover(next, { legId: truck.id, staffId: x.staffId, code: x.code, pieceIds: received, brokenSeals: broken, damagedPieceIds: [], photos: x.photos }, at)
   }
+  // The trip now carries these legs (PA-21 load, PA-22 start)
+  const trip = manifest.tripId ? next.trips[manifest.tripId] : undefined
+  if (trip) next = { ...next, trips: { ...next.trips, [trip.id]: { ...trip, loadedLegIds: [...new Set([...(trip.loadedLegIds ?? []), ...taken])] } } }
   return next
 }
 

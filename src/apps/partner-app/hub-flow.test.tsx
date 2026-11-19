@@ -117,9 +117,9 @@ describe('Partner App — the hero through NCR CrossDock (PA-25 to PA-29)', () =
     expect(screen.getByText('Waiting for Basavaraj H. to confirm…')).toBeInTheDocument()
     const code = screen.getByTestId('handover-code').textContent!.replace(' ', '')
 
-    // Basavaraj: the Trip tab lists a Receive task; PA-20 for the manifest
+    // Basavaraj: the Trip tab offers to receive the load; PA-20 for the manifest
     phone('FS-BASAVARAJ', '/app/trip')
-    expect(document.querySelector('a[href="/app/tasks/JOB-000781-L3"]')!.closest('article')).toHaveTextContent('Receive')
+    expect(screen.getByRole('link', { name: /Receive load · MAN-GGN-1123/ })).toHaveAttribute('href', '/app/receive/MAN-GGN-1123')
     phone('FS-BASAVARAJ', '/app/tasks/JOB-000781-L3')
     expect(screen.getByText('NCR CrossDock, Gurugram')).toBeInTheDocument()
     tap('Scan QR')

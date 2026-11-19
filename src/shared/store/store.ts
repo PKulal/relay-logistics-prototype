@@ -23,6 +23,8 @@ import * as hand from './handoverActions'
 import type { HandoverGive, HandoverReceive } from './handoverActions'
 import * as hub from './hubActions'
 import type { Dispatch, InScan, ReceiveManifest, SealBag } from './hubActions'
+import * as trip from './tripActions'
+import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
@@ -74,6 +76,11 @@ export interface DemoState {
   sealBag: (x: SealBag) => void
   dispatchManifest: (x: Dispatch) => void
   receiveManifest: (x: ReceiveManifest) => void
+  /** Partner App driver trip (PA-22 to PA-24) */
+  startTrip: (x: StartTrip) => void
+  reportHalt: (x: ReportHalt) => void
+  arriveTrip: (tripId: Id, staffId: Id) => void
+  handOverAtArrival: (x: ArrivalHandover) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
   /** Restore the seed data in every app (other tabs follow via sync). */
   resetDemo: () => void
@@ -139,6 +146,10 @@ export const useDemoStore = create<DemoState>()(
       sealBag: (x) => set((s) => ({ data: hub.sealBag(s.data, x, s.demoNow) })),
       dispatchManifest: (x) => set((s) => ({ data: hub.dispatchManifest(s.data, x, s.demoNow) })),
       receiveManifest: (x) => set((s) => ({ data: hub.receiveManifest(s.data, x, s.demoNow) })),
+      startTrip: (x) => set((s) => ({ data: trip.startTrip(s.data, x, s.demoNow) })),
+      reportHalt: (x) => set((s) => ({ data: trip.reportHalt(s.data, x, s.demoNow) })),
+      arriveTrip: (tripId, staffId) => set((s) => ({ data: trip.arriveTrip(s.data, tripId, staffId, s.demoNow) })),
+      handOverAtArrival: (x) => set((s) => ({ data: trip.handOverAtArrival(s.data, x, s.demoNow) })),
 
 
       setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),

@@ -85,6 +85,7 @@ export default function TaskScreen({ flow }: { flow?: 'pickup' }) {
     )
   }
   if (receive) return <PA20Receive leg={leg} />
+  if (leg.type === 'lineHaul') return <Navigate to="/app/trip" replace />
   if (isHubLeg(leg)) {
     // Hub jobs are worked by stage, not one shipment at a time
     const stage = hubItems(data, hubIdOfLeg(data, leg) ?? '', now).find((i) => i.leg.id === leg.id)?.stage

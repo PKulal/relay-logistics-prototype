@@ -17,6 +17,8 @@ import PA06Tasks from './PA06Tasks'
 import PA07ScanTab from './PA07ScanTab'
 import HubExceptions from './HubExceptions'
 import PA20ReceiveManifest from './PA20ReceiveManifest'
+import PA21Trip from './PA21Trip'
+import PA22StartTrip from './PA22StartTrip'
 import PA25HubHome from './PA25HubHome'
 import PA26InScan from './PA26InScan'
 import PA27Sort from './PA27Sort'
@@ -24,12 +26,12 @@ import PA28Bags from './PA28Bags'
 import PA29OutScan from './PA29OutScan'
 import TaskScreen from './TaskScreen'
 
-/** Built tab screens by screen id. Trip (PA-21) opens the task list (PA-06) until its own screen arrives. */
+/** Built tab screens by screen id. */
 const BUILT: Record<string, React.ReactNode> = {
   'PA-05': <PA05Home />,
   'PA-06': <PA06Tasks />,
   'PA-07': <PA07ScanTab />,
-  'PA-21': <PA06Tasks />,
+  'PA-21': <PA21Trip />,
   'PA-25': <PA25HubHome />,
   'PA-26': <PA26InScan />,
   'PA-29': <PA29OutScan />,
@@ -79,7 +81,12 @@ export default function PartnerAppApp() {
                 <Route path="outbound/:manifestId" element={<PA29OutScan />} />
               </>
             )}
-            {staff.role === 'driver' && <Route path="receive/:manifestId" element={<ReceiveManifestRoute />} />}
+            {staff.role === 'driver' && (
+              <>
+                <Route path="receive/:manifestId" element={<ReceiveManifestRoute />} />
+                <Route path="trip/start" element={<PA22StartTrip />} />
+              </>
+            )}
             <Route path={SOS_SCREEN.path} element={screen(SOS_SCREEN)} />
             <Route path={SYNC_SCREEN.path} element={screen(SYNC_SCREEN)} />
             {/* Another role's tab opened by URL */}
