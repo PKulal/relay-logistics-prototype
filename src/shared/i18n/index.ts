@@ -12,7 +12,7 @@ void i18n.use(initReactI18next).init({
     hi: { translation: hi },
   },
   lng: 'en',
-  fallbackLng: 'en', // Hindi keys may be filled later; missing ones show English
+  fallbackLng: 'en', // Safety net only: i18n.test.ts requires a Hindi string for every English key
   interpolation: { escapeValue: false }, // React already escapes
 })
 
