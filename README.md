@@ -25,3 +25,8 @@ Planning files for building the Logisco clickable prototype with Claude Code. No
 4. Then Phase 1 in a few sessions (store and seed data → engines with tests → launcher and app shells → demo toolbar).
 5. From Phase 2 on, use `/build-screen` with screen IDs, one small group at a time, in build-plan order.
 6. Commit after every item. If a session goes wrong, `git reset` and retry with a smaller ask.
+
+## Deploy (Vercel)
+1. Push this folder to a GitHub repository (`git remote add origin <repo-url>` then `git push -u origin master`).
+2. In Vercel, choose **Add New → Project**, import the repository and keep the defaults. `vercel.json` sets the Vite build (`npm run build` → `dist`) and sends every app URL (`/customer/...`, `/erp/...`) to `index.html`.
+3. No environment variables are needed: the prototype has no backend. Demo data lives in each browser; use **Reset demo** on the launcher to start over.
