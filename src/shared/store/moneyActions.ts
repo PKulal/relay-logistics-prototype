@@ -167,7 +167,8 @@ export function createRemittanceBatch(data: DemoData, customerId: Id, by: Id, at
   if (!recs.length) return { data }
   const id = remittanceNo(data)
   const gross = round2(recs.reduce((s, r) => s + r.amount, 0))
-  const date = recs.map(remitDate).sort()[0] < istDate(at) ? istDate(at) : recs.map(remitDate).sort()[0]
+  const first = recs.map((r) => remitDate(r, data.settings.codRemittanceDays)).sort()[0]
+  const date = first < istDate(at) ? istDate(at) : first
   // Shortages are deducted from the partner, never the shipper (source §9): net = gross
   const batch: CodRemittance = { id, customerId, date, recordIds: recs.map((r) => r.id), gross, deductions: 0, net: gross, status: 'pendingApproval', makerId: by }
   let next: DemoData = { ...data, codRemittances: { ...data.codRemittances, [id]: batch } }

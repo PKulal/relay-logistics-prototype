@@ -185,19 +185,19 @@ export const WALLET_QUICK_PICKS = [5000, 10000, 25000]
 
 // ── COD (CP-25, PA-36, ERP-34) ──────────────────────────────────────────────
 
-/** Source §9: remitted to the shipper at T+2 from delivery. */
+/** Source §9: remitted to the shipper at T+2 from delivery (ERP-44 setting codRemittanceDays). */
 export const COD_REMIT_DAYS = 2
-/** Source §9: the partner deposits COD within 24 hours. */
+/** Source §9: the partner deposits COD within 24 hours (ERP-44 setting codDepositHours). */
 export const COD_DEPOSIT_HOURS = 24
 
-export const remitDate = (r: CodRecord): IsoDate => addDaysToDate(istDate(r.deliveredAt ?? r.collectedAt ?? r.depositedAt!), COD_REMIT_DAYS)
+export const remitDate = (r: CodRecord, days = COD_REMIT_DAYS): IsoDate => addDaysToDate(istDate(r.deliveredAt ?? r.collectedAt ?? r.depositedAt!), days)
 const unremitted = (r: CodRecord) => r.status === 'collected' || r.status === 'atOffice' || r.status === 'deposited'
 
 /** CP-25 summary (and CP-11 "COD due"). */
 export function codSummary(data: DemoData, customerId: Id, now: IsoDateTime) {
   const month = istDate(now).slice(0, 7)
   const pending = Object.values(data.codRecords).filter((r) => r.customerId === customerId && unremitted(r))
-  const dates = pending.map(remitDate).sort()
+  const dates = pending.map((r) => remitDate(r, data.settings.codRemittanceDays)).sort()
   return {
     pending: round2(pending.reduce((s, r) => s + r.amount, 0)),
     nextRemittance: dates[0] && dates[0] < istDate(now) ? istDate(now) : dates[0],
@@ -220,7 +220,7 @@ export function notDeposited(data: DemoData, now: IsoDateTime) {
     .map(([partnerId, rs]) => {
       const oldest = rs.map((r) => r.collectedAt!).sort()[0]
       const hours = Math.floor(minutesBetween(oldest, now) / 60)
-      return { partnerId, records: rs, amount: round2(rs.reduce((s, r) => s + r.amount, 0)), hours, late: hours > COD_DEPOSIT_HOURS }
+      return { partnerId, records: rs, amount: round2(rs.reduce((s, r) => s + r.amount, 0)), hours, late: hours > data.settings.codDepositHours }
     })
     .sort((a, b) => b.hours - a.hours)
 }
@@ -235,7 +235,7 @@ export function depositedNotRemitted(data: DemoData) {
   const by = new Map<Id, CodRecord[]>()
   for (const r of Object.values(data.codRecords)) if (r.status === 'deposited' && !inBatch.has(r.id)) by.set(r.customerId, [...(by.get(r.customerId) ?? []), r])
   return [...by.entries()]
-    .map(([customerId, rs]) => ({ customerId, records: rs, amount: round2(rs.reduce((s, r) => s + r.amount, 0)), remitBy: rs.map(remitDate).sort()[0] }))
+    .map(([customerId, rs]) => ({ customerId, records: rs, amount: round2(rs.reduce((s, r) => s + r.amount, 0)), remitBy: rs.map((r) => remitDate(r, data.settings.codRemittanceDays)).sort()[0] }))
     .sort((a, b) => a.remitBy.localeCompare(b.remitBy))
 }
 

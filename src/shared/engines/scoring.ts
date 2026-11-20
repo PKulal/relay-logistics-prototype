@@ -35,17 +35,21 @@ export const totalOf = (k: WeeklyScore['kpis'], profile: WeeklyScore['profile'])
 
 export const TIERS: Tier[] = ['platinum', 'gold', 'silver', 'bronze', 'probation']
 export const BAND_FLOOR: Record<Tier, number> = { platinum: 90, gold: 80, silver: 70, bronze: 60, probation: 0 }
-export const band = (score: number): Tier => TIERS.find((t) => score >= BAND_FLOOR[t])!
+/** Tier for a score; `floors` = the ERP-44 tier bands (data.settings.tierBands) */
+export const band = (score: number, floors: Record<Tier, number> = BAND_FLOOR): Tier => TIERS.find((t) => score >= floors[t])!
+
+/** ERP-44 tier bands as floors (Probation below Bronze). */
+export const floorsOf = (bands: { platinum: number; gold: number; silver: number; bronze: number }): Record<Tier, number> => ({ ...bands, probation: 0 })
 const rank = (t: Tier) => TIERS.indexOf(t)
 
 /** The tier engine (source §5.3). `prevTotal` is the week before, for Platinum's 2-week grace. */
-export function proposeTier(current: Tier, total: number, prevTotal?: number): { tier: Tier; rule: TierRule } {
-  const target = band(total)
+export function proposeTier(current: Tier, total: number, prevTotal?: number, floors: Record<Tier, number> = BAND_FLOOR): { tier: Tier; rule: TierRule } {
+  const target = band(total, floors)
   if (rank(target) < rank(current)) return { tier: target, rule: 'up' }
   if (target === current) return { tier: current, rule: current === 'probation' ? 'suspensionReview' : 'same' }
   switch (current) {
     case 'platinum':
-      return prevTotal !== undefined && prevTotal < BAND_FLOOR.platinum ? { tier: 'gold', rule: 'platinumDown' } : { tier: 'platinum', rule: 'platinumGrace' }
+      return prevTotal !== undefined && prevTotal < floors.platinum ? { tier: 'gold', rule: 'platinumDown' } : { tier: 'platinum', rule: 'platinumGrace' }
     case 'gold':
       return { tier: target, rule: 'improvementPlan' }
     case 'silver':
@@ -96,7 +100,7 @@ export function runRows(data: DemoData, week: IsoDate): RunRow[] {
       const partner = data.partners[w.partnerId]
       const prev = scoresOf(data, w.partnerId).filter((x) => x.week < week).at(-1)
       const current = (w.published ? w.tierBefore : partner.tier) ?? 'bronze'
-      const p = w.published && w.rule ? { tier: w.tierAfter!, rule: w.rule } : proposeTier(current, w.total, prev?.total)
+      const p = w.published && w.rule ? { tier: w.tierAfter!, rule: w.rule } : proposeTier(current, w.total, prev?.total, floorsOf(data.settings.tierBands))
       return { score: w, partner, points: points(w.kpis, w.profile), current, proposed: p.tier, rule: p.rule, final: w.override?.tier ?? p.tier }
     })
     .sort((a, b) => Number(b.final !== b.current) - Number(a.final !== a.current) || a.score.total - b.score.total)
@@ -110,10 +114,10 @@ export function weakestKpis(w: WeeklyScore, n = 2): KpiKey[] {
 }
 
 /** Points to the next tier up, if any. */
-export function toNextTier(score: number, tier: Tier | null): { next: Tier; points: number } | undefined {
+export function toNextTier(score: number, tier: Tier | null, floors: Record<Tier, number> = BAND_FLOOR): { next: Tier; points: number } | undefined {
   const t = tier ?? 'bronze'
   const i = rank(t)
   if (i === 0) return undefined
   const next = TIERS[i - 1]
-  return { next, points: r1(Math.max(0, BAND_FLOOR[next] - score)) }
+  return { next, points: r1(Math.max(0, floors[next] - score)) }
 }

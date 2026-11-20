@@ -10,7 +10,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { advanceJourneys } from '@shared/sim/journey'
-import type { FieldStaff, JobPushEvent, PartnerIntegration, ApiKey, WebhookEvent, LegType, Rfq, SettingsChange, SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
+import type { ErpRole, PermLevel, FieldStaff, JobPushEvent, PartnerIntegration, ApiKey, WebhookEvent, LegType, Rfq, SettingsChange, SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
 import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
 import * as erp from './erpActions'
@@ -45,6 +45,8 @@ import type { NewRfq } from './departmentActions'
 import * as cs from './customerSettingsActions'
 import * as ps from './partnerSettingsActions'
 import * as fa from './fieldAppActions'
+import * as adm from './adminActions'
+import type { SettingsError, SettingsPatch, StaffInput as StaffUserInput, StaffUserError } from './adminActions'
 import type { HubInput, PortalUserError, PortalUserInput, StaffEdit, StaffError, StaffInput, VehicleError, VehicleInput } from './partnerSettingsActions'
 import type { ConsigneeInput, LocationInput, SkuInput, TicketInput, UserError, UserInput } from './customerSettingsActions'
 import type { CapacityEdit, CoverageChange, LaneEdit, NewPincode, PincodeEdit } from './networkActions'
@@ -335,6 +337,12 @@ export interface DemoState {
   watchVideo: (staffId: Id, videoId: string) => void
   passPractice: (staffId: Id, taskId: string) => void
   completeTraining: (staffId: Id) => void
+  /** ERP administration (ERP-42, ERP-44) */
+  addStaffUser: (x: StaffUserInput, by: Id) => { id?: Id; error?: StaffUserError }
+  updateStaffUser: (id: Id, x: Omit<StaffUserInput, 'email'>, by: Id) => { error?: StaffUserError }
+  setStaffUserEnabled: (id: Id, enabled: boolean, by: Id) => { error?: StaffUserError }
+  setRolePermission: (role: ErpRole, screenId: string, level: PermLevel | undefined, by: Id) => void
+  updateSettings: (patch: SettingsPatch, by: Id) => { error?: SettingsError }
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -693,6 +701,11 @@ export const useDemoStore = create<DemoState>()(
           watchVideo: (staffId: Id, videoId: string) => upd((d) => fa.watchVideo(d, staffId, videoId)),
           passPractice: (staffId: Id, taskId: string) => upd((d) => fa.passPractice(d, staffId, taskId)),
           completeTraining: (staffId: Id) => upd((d, now) => fa.completeTraining(d, staffId, now)),
+          addStaffUser: (x: StaffUserInput, by: Id) => run((d, now) => adm.addStaffUser(d, x, by, now)),
+          updateStaffUser: (id: Id, x: Omit<StaffUserInput, 'email'>, by: Id) => run((d, now) => adm.updateStaffUser(d, id, x, by, now)),
+          setStaffUserEnabled: (id: Id, enabled: boolean, by: Id) => run((d, now) => adm.setStaffUserEnabled(d, id, enabled, by, now)),
+          setRolePermission: (role: ErpRole, screenId: string, level: PermLevel | undefined, by: Id) => upd((d, now) => adm.setRolePermission(d, role, screenId, level, by, now)),
+          updateSettings: (patch: SettingsPatch, by: Id) => run((d, now) => adm.updateSettings(d, patch, by, now)),
         }
       })(),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),

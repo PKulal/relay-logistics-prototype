@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { cn } from '@/shared/lib/utils'
-import { COD_DEPOSIT_HOURS, depositedNotRemitted, notDeposited, shortages } from '@shared/engines/receivables'
+import { depositedNotRemitted, notDeposited, shortages } from '@shared/engines/receivables'
 import { useData, useDemoNow } from '@shared/hooks/useDemo'
 import { formatDate, formatINR } from '@shared/lib/format'
 import { useDemoStore } from '@shared/store'
@@ -47,7 +47,7 @@ export default function ERP34CodRecon() {
 
   return (
     <div className="flex flex-col gap-4">
-      <PageHeader title={t('erp34.title')} subtitle={t('erp34.subtitle', { hours: COD_DEPOSIT_HOURS })} className="mb-0" />
+      <PageHeader title={t('erp34.title')} subtitle={t('erp34.subtitle', { hours: data.settings.codDepositHours })} className="mb-0" />
 
       <Panel title={t('erp34.held')} empty={held.length === 0} emptyText={t('erp34.heldEmpty')}>
         <table className="w-full text-table [&_td]:pr-3 [&_th]:pr-3" data-testid="not-deposited">

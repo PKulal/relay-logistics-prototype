@@ -5,7 +5,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
-import { BENEFITS, scoresOf, toNextTier } from '@shared/engines/scoring'
+import { BENEFITS, floorsOf, scoresOf, toNextTier } from '@shared/engines/scoring'
 import { useData } from '@shared/hooks/useDemo'
 import { formatDate, formatDateTime, formatWeek } from '@shared/lib/format'
 import { useDemoStore } from '@shared/store'
@@ -22,7 +22,7 @@ export default function PP24Tier() {
   const tier = partner.tier ?? 'bronze'
   const history = scoresOf(data, partner.id).slice(-12).reverse()
   const latest = history[0]
-  const next = toNextTier(latest?.total ?? partner.score, tier)
+  const next = toNextTier(latest?.total ?? partner.score, tier, floorsOf(data.settings.tierBands))
   const plan = Object.values(data.improvementPlans)
     .filter((p) => p.partnerId === partner.id)
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0]

@@ -95,7 +95,7 @@ export function acceptMatchedLine(data: DemoData, invoiceId: Id, legId: Id, by: 
 /** PP-26 "Dispute line": reason and evidence → Logisco dispute desk (48-hour SLA). */
 export function disputeLine(data: DemoData, invoiceId: Id, legId: Id, reason: string, files: string[], by: Id, at: IsoDateTime): DemoData {
   if (!reason.trim()) return data
-  const next = updateLine(data, invoiceId, legId, (l) => (l.result === 'mismatch' && l.final === undefined && !l.dispute ? { ...l, partner: 'disputed', dispute: { reason: reason.trim(), files, at, by, dueAt: disputeDue(at) } } : undefined))
+  const next = updateLine(data, invoiceId, legId, (l) => (l.result === 'mismatch' && l.final === undefined && !l.dispute ? { ...l, partner: 'disputed', dispute: { reason: reason.trim(), files, at, by, dueAt: disputeDue(at, data.settings.partnerDisputeSlaHours) } } : undefined))
   if (!next) return data
   const inv = data.partnerInvoices[invoiceId]
   return notify(next, toFinance, 'Partner dispute (48 h)', `${inv.id} · ${legId} · ${data.partners[inv.partnerId].shortName}`, `/erp/finance/payables?invoice=${encodeURIComponent(invoiceId)}`, at)

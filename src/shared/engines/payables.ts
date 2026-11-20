@@ -144,7 +144,8 @@ export function openDisputes(data: DemoData, now: IsoDateTime): OpenDispute[] {
     )
     .sort((a, b) => a.hoursLeft - b.hoursLeft)
 }
-export const disputeDue = (at: IsoDateTime) => addHours(at, DISPUTE_SLA_HOURS)
+/** ERP-44 setting partnerDisputeSlaHours (48 h, source §9) */
+export const disputeDue = (at: IsoDateTime, hours = DISPUTE_SLA_HOURS) => addHours(at, hours)
 
 // ── Self-billing run (ERP-32) ───────────────────────────────────────────────
 

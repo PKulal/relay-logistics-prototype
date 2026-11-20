@@ -28,14 +28,14 @@ export function exportInvoiceLines(data: DemoData, inv: Invoice, t: TFunction) {
 }
 
 /** All COD records of the customer, or one remittance's. */
-export function exportCodReport(records: CodRecord[], t: TFunction, name: string) {
+export function exportCodReport(records: CodRecord[], t: TFunction, name: string, remitDays: number) {
   const rows = records.map((r) => ({
     [t('cp25.col.lr')]: r.shipmentId,
     [t('cp25.col.delivered')]: r.deliveredAt ? formatDateTime(r.deliveredAt) : '',
     [t('cp25.col.cod')]: r.amount,
     [t('cp25.col.status')]: t(`cp25.rec.${r.status}`),
     [t('cp25.col.remittance')]: r.remittanceId ?? '',
-    [t('cp25.col.remitDate')]: r.remittedAt ? formatDate(r.remittedAt) : formatDate(remitDate(r)),
+    [t('cp25.col.remitDate')]: r.remittedAt ? formatDate(r.remittedAt) : formatDate(remitDate(r, remitDays)),
   }))
   save(rows, 'COD', `${name}.xlsx`)
 }

@@ -6619,5 +6619,200 @@
     "storageNote": "Synced photos are cleared after 7 days.",
     "version": "App version {{version}}",
     "logoutBlocked": "Send waiting items before logging out."
+  },
+  "erp42": {
+    "title": "Users, roles and access",
+    "subtitle": "Staff users, their role and region, and what each role can open. Every save is logged.",
+    "viewOnly": "View only. The Super Admin changes users and roles.",
+    "tab": {
+      "users": "Users",
+      "roles": "Role editor"
+    },
+    "twoFactor": "Two-factor login is mandatory for every staff user (single sign-on).",
+    "add": "Add user",
+    "col": {
+      "name": "Name",
+      "role": "Role",
+      "regions": "Region scope",
+      "twoFactor": "Two-factor",
+      "status": "Status",
+      "actions": "Actions",
+      "screen": "Screen"
+    },
+    "allRegions": "All regions",
+    "on": "On",
+    "st": {
+      "active": "Active",
+      "disabled": "Disabled"
+    },
+    "editOne": "Edit {{name}}",
+    "enable": "Enable",
+    "disable": "Disable",
+    "enabled": "{{name}} can log in again",
+    "disabled": "{{name}} is disabled",
+    "disableTitle": "Disable {{name}}?",
+    "disableBody": "They are signed out and can't log in until enabled again.",
+    "saved": "{{name}} saved",
+    "added": "{{name}} added; sign-in link sent",
+    "f": {
+      "name": "Name",
+      "email": "Work email",
+      "title": "Title / department",
+      "role": "Role",
+      "regions": "Region scope"
+    },
+    "emailHint": "A logisco.in address",
+    "regionsHint": "None ticked = all regions",
+    "err": {
+      "required": "Fill in name, title and a logisco.in email.",
+      "emailTaken": "This email already has a user.",
+      "lastSuperAdmin": "At least one active Super Admin must remain.",
+      "self": "You can't disable yourself."
+    },
+    "role": "Role",
+    "rolesNote": "None hides the screen and blocks its link; View, Act and Approve open it. Act and Approve are recorded for the access review.",
+    "lvl": {
+      "none": "None",
+      "view": "View",
+      "act": "Act",
+      "approve": "Approve"
+    },
+    "changed": "Changed",
+    "permSaved": "{{role}} · {{screen}}: {{level}}"
+  },
+  "erp43": {
+    "title": "Audit and AI logs",
+    "subtitle": "Every user action and every AI decision with its reason.",
+    "tab": {
+      "audit": "Audit log",
+      "ai": "AI decision log",
+      "models": "Model review"
+    },
+    "allApps": "All apps",
+    "app": {
+      "customer": "Customer Portal",
+      "partnerPortal": "Partner Portal",
+      "partnerApp": "Partner App",
+      "erp": "ERP"
+    },
+    "search": "Search user, action or record",
+    "export": "Export CSV",
+    "noAudit": "No actions logged yet",
+    "noAi": "No AI decisions logged yet",
+    "showing": "Showing {{shown}} of {{total}}",
+    "col": {
+      "time": "Time",
+      "user": "User",
+      "app": "App",
+      "action": "Action",
+      "record": "Record",
+      "change": "Before / after",
+      "before": "Before",
+      "after": "After",
+      "model": "Model",
+      "decision": "Decision",
+      "reason": "Reason",
+      "confidence": "Confidence",
+      "accepted": "Accepted by person",
+      "logged": "Decisions logged",
+      "accuracy": "Accuracy last month",
+      "fairness": "Fairness checks",
+      "nextReview": "Next review"
+    },
+    "allModels": "All models",
+    "kind": {
+      "legAssignment": "Partner assignment",
+      "marginCheck": "Margin check",
+      "etaPrediction": "ETA prediction"
+    },
+    "d": {
+      "assigned": "Assigned to {{partner}}",
+      "ok": "Gross margin {{pct}}%: above target",
+      "below": "Gross margin {{pct}}%: below target",
+      "eta": "ETA updated"
+    },
+    "r": {
+      "assigned_one": "Best of {{count}} eligible partner (score {{score}})",
+      "assigned_other": "Best of {{count}} eligible partners (score {{score}})",
+      "margin": "Target {{target}}%"
+    },
+    "m": {
+      "legAssignment": {
+        "accuracy": "94% kept without a manual override",
+        "fairness": "Trial and Bronze partners still get work (volume share checked)"
+      },
+      "marginCheck": {
+        "accuracy": "98% of quotes within ±1 pt of the realised margin",
+        "fairness": "Same rules for every customer type"
+      },
+      "etaPrediction": {
+        "accuracy": "91% within 2 h",
+        "fairness": "Checked by region: no lane below 85%"
+      },
+      "creditRisk": {
+        "accuracy": "Default rate 1.2% on approved limits",
+        "fairness": "No use of owner name, religion or region"
+      },
+      "leadScore": {
+        "accuracy": "68% of top-scored leads converted",
+        "fairness": "SME and enterprise scored on the same inputs"
+      },
+      "skuOutlier": {
+        "accuracy": "2 of 2 flags confirmed by customers",
+        "fairness": "Not applicable"
+      }
+    },
+    "modelsNote": "Models are reviewed monthly. Accuracy and fairness figures are sample values until live monitoring is connected."
+  },
+  "erp44": {
+    "title": "System settings",
+    "subtitle": "Values the rules use in every app. Saving takes effect at once and is logged.",
+    "viewOnly": "View only. The Super Admin changes system settings.",
+    "saved": "Settings saved; every app uses the new values now",
+    "g": {
+      "compliance": "Compliance",
+      "pricing": "Pricing",
+      "operations": "Operations",
+      "finance": "Finance",
+      "claims": "Claims",
+      "partners": "Partners",
+      "language": "Language"
+    },
+    "f": {
+      "ewayBillThreshold": "E-way bill threshold, inter-state (₹)",
+      "ewayBillKmPerDay": "E-way bill validity (km per day)",
+      "volumetricDivisor": "Volumetric divisor (Parcel)",
+      "cftFactor": "CFT factor (PTL)",
+      "targetMarginPct": "Target gross margin (%)",
+      "riskBufferPct": "Risk buffer (%)",
+      "partnerAcceptanceMinutes": "Partner acceptance timer (min)",
+      "arrivalGeofenceM": "Arrival geo-fence (m)",
+      "weightTolerancePct": "Weight tolerance (%)",
+      "weightToleranceKg": "Weight tolerance (kg)",
+      "ndrMaxAttempts": "NDR maximum attempts",
+      "codDepositHours": "COD deposit window (h)",
+      "codRemittanceDays": "COD remittance (T + days)",
+      "partnerDisputeSlaHours": "Partner dispute SLA (h)",
+      "earlyPayFeePct": "Early-pay fee (%)",
+      "gstPct": "GST on freight (%)",
+      "claimSettlementDays": "Claim settlement target (days)",
+      "claimWindowDays": "Claim window (days)",
+      "trialPassMark": "Trial pass mark",
+      "probationVolumeCutPct": "Probation volume cut (%)",
+      "tierBands": "Tier bands"
+    },
+    "band": {
+      "platinum": "Platinum from",
+      "gold": "Gold from",
+      "silver": "Silver from",
+      "bronze": "Bronze from"
+    },
+    "windows": "Pickup cut-off {{cutoff}} and the leg hand-over windows change with a second approval.",
+    "toLegRules": "Open leg rules",
+    "languageNote": "Every screen, message and AI reply is in both. More languages can be added without code changes.",
+    "err": {
+      "range": "{{field}} is outside the allowed range.",
+      "order": "Tier bands must go down from Platinum to Bronze, between 1 and 100."
+    }
   }
 }

@@ -13,7 +13,7 @@ import { Line, LineChart, ResponsiveContainer, Tooltip as ChartTooltip, XAxis, Y
 import * as XLSX from 'xlsx'
 import { cn } from '@/shared/lib/utils'
 import { liveKpis, type KpiDetail } from '@shared/engines/liveScore'
-import { band, KPI_KEYS, kpiPct, points, profileOf, scoresOf, WEIGHTS } from '@shared/engines/scoring'
+import { band, floorsOf, KPI_KEYS, kpiPct, points, profileOf, scoresOf, WEIGHTS } from '@shared/engines/scoring'
 import { useData, useDemoNow } from '@shared/hooks/useDemo'
 import { formatDate, formatWeek } from '@shared/lib/format'
 import { addDaysToDate, istDate } from '@shared/lib/time'
@@ -102,7 +102,7 @@ export default function PP23Scorecard() {
           <div className="h-2 w-full overflow-hidden rounded-full bg-muted" aria-hidden>
             <div className="h-full rounded-full bg-primary" style={{ width: `${Math.min(100, total)}%` }} />
           </div>
-          <TierBadge tier={band(total)} />
+          <TierBadge tier={band(total, floorsOf(data.settings.tierBands))} />
           {period === 'this' && <p className="text-center text-caption text-muted-foreground">{t('pp23.liveNote')}</p>}
         </section>
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3" data-testid="kpis">

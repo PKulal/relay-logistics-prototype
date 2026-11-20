@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { cn } from '@/shared/lib/utils'
-import { COD_DEPOSIT_HOURS, cashInHand } from '@shared/engines/receivables'
+import { cashInHand } from '@shared/engines/receivables'
 import { useData, useDemoNow } from '@shared/hooks/useDemo'
 import { formatINR, formatTime } from '@shared/lib/format'
 import { minutesBetween } from '@shared/lib/time'
@@ -61,7 +61,7 @@ export default function PA36CodDeposit() {
                   <li key={r.id} className="flex items-center justify-between py-2" aria-label={r.shipmentId}>
                     <span>
                       <span className="tabular block font-medium">{r.shipmentId}</span>
-                      <span className={cn('text-[13px] text-muted-foreground', hours > COD_DEPOSIT_HOURS && 'font-semibold text-status-danger')}>{t('pa36.since', { time: formatTime(r.collectedAt!), hours })}</span>
+                      <span className={cn('text-[13px] text-muted-foreground', hours > data.settings.codDepositHours && 'font-semibold text-status-danger')}>{t('pa36.since', { time: formatTime(r.collectedAt!), hours })}</span>
                     </span>
                     <span className="tabular font-semibold">{formatINR(r.amount)}</span>
                   </li>
@@ -76,7 +76,7 @@ export default function PA36CodDeposit() {
                 {formatINR(total)}
               </span>
             </p>
-            <p className="mt-1 text-[13px] text-muted-foreground">{t('pa36.rule', { hours: COD_DEPOSIT_HOURS })}</p>
+            <p className="mt-1 text-[13px] text-muted-foreground">{t('pa36.rule', { hours: data.settings.codDepositHours })}</p>
           </Card>
 
           <Card title={t('pa36.to')}>

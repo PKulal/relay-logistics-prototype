@@ -1642,7 +1642,15 @@ export interface StaffUser {
   title: string
   role: ErpRole
   email: string
+  /** ERP-42: disabled staff can't log in. Default active. */
+  status?: 'active' | 'disabled'
+  /** ERP-42 region scope (assumed); empty or absent = all regions */
+  regions?: string[]
+  addedAt?: IsoDateTime
 }
+
+/** ERP-42 role editor: per-screen access. View opens the screen; Act and Approve are recorded for the access review. */
+export type PermLevel = 'none' | 'view' | 'act' | 'approve'
 
 // ─── Cross-cutting ─────────────────────────────────────────────────────────────
 
@@ -1760,6 +1768,8 @@ export interface DemoData {
   docRenewals: Record<Id, DocRenewal>
   /** PA-13 work saved on phones while offline */
   syncQueue: Record<Id, SyncItem>
+  /** ERP-42 role editor overrides: role → screen id → level (screens not listed keep the default) */
+  rolePermissions: Partial<Record<ErpRole, Record<string, PermLevel>>>
   auditLog: Record<Id, AuditLog>
   /** Next serial per LR origin code, e.g. { DEL: 781 } → next Delhi LR is LGS-DEL-000781 */
   lrSerials: Record<string, number>

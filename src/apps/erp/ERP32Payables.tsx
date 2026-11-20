@@ -11,7 +11,7 @@ import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { cn } from '@/shared/lib/utils'
 import { lineResult } from '@apps/partner-portal/financeText'
-import { DISPUTE_SLA_HOURS, invoicePayable, matchStatus, openDisputes, selfBillingPreview } from '@shared/engines/payables'
+import { invoicePayable, matchStatus, openDisputes, selfBillingPreview } from '@shared/engines/payables'
 import { useData, useDemoNow } from '@shared/hooks/useDemo'
 import { formatDate, formatINR, formatKg } from '@shared/lib/format'
 import { useDemoStore } from '@shared/store'
@@ -46,7 +46,7 @@ export default function ERP32Payables() {
 
   return (
     <div className="flex flex-col gap-4">
-      <PageHeader title={t('erp32.title')} subtitle={t('erp32.subtitle', { hours: DISPUTE_SLA_HOURS })} className="mb-0" />
+      <PageHeader title={t('erp32.title')} subtitle={t('erp32.subtitle', { hours: data.settings.partnerDisputeSlaHours })} className="mb-0" />
 
       <section className="overflow-x-auto rounded-xl border bg-card shadow-card" aria-label={t('erp32.disputes')}>
         <h2 className="px-4 pt-4 font-heading text-section font-semibold">{t('erp32.disputes')}</h2>

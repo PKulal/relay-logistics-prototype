@@ -61,7 +61,7 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 - [x] Network: ERP-18 to ERP-21; PP-18 capacity, PP-19 coverage
 - [x] Pricing: ERP-24 margin monitor, ERP-25 simulator
 - [x] Leadership ERP-04; Sales ERP-28, ERP-29; light departments ERP-39 to ERP-41; ERP-45 placeholders
-- [ ] Settings and admin: CP-28 to CP-37, PP-29 to PP-38, PA-08 to PA-13, PA-36, ERP-42 to ERP-44
+- [x] Settings and admin: CP-28 to CP-37, PP-29 to PP-38, PA-08 to PA-13, PA-36, ERP-42 to ERP-44 (CP-35, PP-37, PA-11 AI assistants come with the next item; per-event notification channels, tracking-page branding, recurring pickups, partner support tickets, rate-revision requests, bulk vehicle upload and approval limits left out: no basis in the client document)
 - [ ] AI assistants (scripted intents) in all four apps; AI decision log entries
 
 ## Phase 6 — Polish and QA

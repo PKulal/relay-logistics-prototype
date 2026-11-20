@@ -46,7 +46,7 @@ export default function CP25Cod() {
           title={open.id}
           subtitle={t('cp25.detailSub', { date: formatDate(open.date), net: formatINR(open.net), utr: open.utr ?? '—' })}
           actions={
-            <Button variant="outline" onClick={() => exportCodReport(recs, t, open.id)}>
+            <Button variant="outline" onClick={() => exportCodReport(recs, t, open.id, data.settings.codRemittanceDays)}>
               <FileSpreadsheet /> {t('cp25.report')}
             </Button>
           }
@@ -64,7 +64,7 @@ export default function CP25Cod() {
         subtitle={t('cp25.subtitle')}
         actions={
           records.length > 0 && (
-            <Button variant="outline" onClick={() => exportCodReport(records, t, `cod-remittance-${customer.shortName.split(' ')[0].toLowerCase()}`)}>
+            <Button variant="outline" onClick={() => exportCodReport(records, t, `cod-remittance-${customer.shortName.split(' ')[0].toLowerCase()}`, data.settings.codRemittanceDays)}>
               <FileSpreadsheet /> {t('cp25.report')}
             </Button>
           )
