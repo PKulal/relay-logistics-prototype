@@ -7,29 +7,20 @@
  */
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Navigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useParams } from 'react-router-dom'
 import { useData } from '@shared/hooks/useDemo'
 import { useDemoStore } from '@shared/store'
 import { isReceive } from '@shared/engines/fieldTasks'
 import { hubIdOfLeg, hubItems, isHubLeg, type HubStage } from '@shared/engines/hub'
 import { useDemoNow } from '@shared/hooks/useDemo'
 import { prevLegOf } from '@shared/engines/fieldTasks'
-import { NotFound, ScreenPlaceholder } from '@shared/ui/Page'
+import { NotFound } from '@shared/ui/Page'
 import PA14PickupDetail from './PA14PickupDetail'
 import PA19HandOver from './PA19HandOver'
 import PA20Receive from './PA20Receive'
 import PA20ReceiveManifest from './PA20ReceiveManifest'
 import PickupFlow from './PickupFlow'
 import { useFieldSession } from './useFieldSession'
-
-/** Screen ids for tasks whose screens come later in Phase 2 (build plan). */
-const LATER: Record<string, string> = {
-  handover: 'PA-19',
-  lineHaul: 'PA-21',
-  originHub: 'PA-25',
-  destHub: 'PA-25',
-  lastMile: 'PA-31',
-}
 
 const STAGE_PATH: Record<HubStage, string> = {
   expected: '/app',
@@ -94,10 +85,17 @@ export default function TaskScreen({ flow }: { flow?: 'pickup' }) {
     return <Navigate to={STAGE_PATH[stage ?? 'dispatched']} replace />
   }
 
-  const screenId = leg.type === 'firstMile' ? LATER.handover : LATER[leg.type]
+  // Anything else (e.g. a pickup that failed, or a closed job): its status and the way back
   return (
-    <div className="p-4">
-      <ScreenPlaceholder screenId={`${screenId} · ${leg.id}`} title={t(`pa.later.${leg.type === 'firstMile' ? 'handover' : leg.type}`)} phase={2} />
+    <div className="flex flex-col gap-3 p-4">
+      <h1 className="font-heading text-[20px] font-bold">{leg.id}</h1>
+      <p className="rounded-2xl border bg-card p-4">
+        <span className="tabular block font-semibold">{leg.shipmentId}</span>
+        <span className="block">{t(`legType.${leg.type}`)} · {t(`status.leg.${leg.status}`)}</span>
+      </p>
+      <Link to="/app" className="font-medium text-primary hover:underline">
+        {t('pa.backHome')}
+      </Link>
     </div>
   )
 }

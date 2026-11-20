@@ -344,7 +344,8 @@
       "destHub": "Hub work",
       "lastMile": "Delivery"
     },
-    "ndr": "Cannot deliver"
+    "ndr": "Cannot deliver",
+    "backHome": "Back to Home"
   },
   "toolbar": {
     "demo": "Demo",

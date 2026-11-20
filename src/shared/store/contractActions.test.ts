@@ -28,8 +28,8 @@ describe('rate cards (ERP-22 / ERP-23)', () => {
     const m = cardMargins(st().data, st().data.rateCards['RC-STANDARD'])
     expect(m.ptl.length).toBeGreaterThan(0)
     expect(m.ptl.every((l) => typeof l.m?.marginPct === 'number')).toBe(true)
-    // Long-distance single parcels are below target with the seed partner costs (agreed: numbers kept)
-    expect(m.parcel.find((l) => l.zone === 'D' && l.tier === 'standard')?.m?.belowTarget).toBe(true)
+    // Parcels move in bags with per-parcel hub and line-haul rates (Phase 6 tuning of invented rates), so a zone D standard parcel clears the target
+    expect(m.parcel.find((l) => l.zone === 'D' && l.tier === 'standard')?.m?.belowTarget).toBe(false)
   })
 
   it('a negotiated card with lines below target needs the Pricing Head; approve → live', () => {

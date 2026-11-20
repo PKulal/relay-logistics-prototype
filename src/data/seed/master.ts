@@ -202,10 +202,20 @@ const mile = (partnerId: string, cluster: string, legType: 'firstMile' | 'lastMi
 ]
 const hub = (partnerId: string, hubId: string, perKg: number) =>
   (['originHub', 'destHub'] as const).map((legType) =>
-    line({ partnerId, legType, laneOrCluster: hubId, rate: perKg, unit: 'perKg', minimum: 150 }),
+    line({ partnerId, legType, laneOrCluster: hubId, serviceKind: 'ptl', rate: perKg, unit: 'perKg', minimum: 150 }),
   )
-const lineHaul = (partnerId: string, laneId: string, perKg: number) =>
-  line({ partnerId, legType: 'lineHaul', laneOrCluster: laneId, rate: perKg, unit: 'perKg', minKg: 50 })
+const lineHaul = (partnerId: string, laneId: string, perKg: number, parcelToo = false) =>
+  line({ partnerId, legType: 'lineHaul', laneOrCluster: laneId, serviceKind: parcelToo ? undefined : 'ptl', rate: perKg, unit: 'perKg', minKg: 50 })
+
+/**
+ * INVENTED parcel lines (bagged parcels): a flat handling charge per parcel at
+ * each hub and the same line-haul ₹ / kg with a 5 kg minimum. Without them a
+ * 7 kg parcel would pay the PTL hub minimums and the 50 kg line-haul minimum.
+ * Appended after the seed-data.md lines so existing rate-line ids don't move.
+ */
+const hubParcel = (partnerId: string, hubId: string) =>
+  (['originHub', 'destHub'] as const).map((legType) => line({ partnerId, legType, laneOrCluster: hubId, serviceKind: 'parcel', rate: 14, unit: 'perShipment' }))
+const lineHaulParcel = (partnerId: string, laneId: string, perKg: number) => line({ partnerId, legType: 'lineHaul', laneOrCluster: laneId, serviceKind: 'parcel', rate: perKg, unit: 'perKg', minKg: 5 })
 
 export const partnerRates: PartnerRateLine[] = [
   // Delhi NCR first / last mile
@@ -230,8 +240,9 @@ export const partnerRates: PartnerRateLine[] = [
   ...hub('P-PEENYA', 'HUB-BLR', 1),
   ...hub('P-BHIWANDI', 'HUB-BOM', 1.1),
   // Line-haul: Deccan ₹9.00 / kg, min 50 kg on Delhi → Hubballi
-  lineHaul('P-DECCAN', 'LN-DEL-HBL', 9),
-  lineHaul('P-DECCAN', 'LN-HBL-DEL', 8.5),
+  // Deccan bills parcels on the same 50 kg minimum (the ₹72 overbilling demo on LGS-DEL-000786)
+  lineHaul('P-DECCAN', 'LN-DEL-HBL', 9, true),
+  lineHaul('P-DECCAN', 'LN-HBL-DEL', 8.5, true),
   lineHaul('P-SURYA', 'LN-DEL-BLR', 9.5),
   lineHaul('P-SURYA', 'LN-BLR-DEL', 9),
   lineHaul('P-SURYA', 'LN-BOM-BLR', 6.5),
@@ -240,6 +251,19 @@ export const partnerRates: PartnerRateLine[] = [
   lineHaul('P-WESTLINE', 'LN-BOM-DEL', 7),
   lineHaul('P-WESTLINE', 'LN-BOM-BLR', 6),
   lineHaul('P-WESTLINE', 'LN-BLR-BOM', 6),
+  // Parcels (INVENTED, see hubParcel)
+  ...hubParcel('P-NCRXD', 'HUB-GGN'),
+  ...hubParcel('P-HUBLIWH', 'HUB-HBL'),
+  ...hubParcel('P-PEENYA', 'HUB-BLR'),
+  ...hubParcel('P-BHIWANDI', 'HUB-BOM'),
+  lineHaulParcel('P-SURYA', 'LN-DEL-BLR', 9.5),
+  lineHaulParcel('P-SURYA', 'LN-BLR-DEL', 9),
+  lineHaulParcel('P-SURYA', 'LN-BOM-BLR', 6.5),
+  lineHaulParcel('P-SURYA', 'LN-BLR-BOM', 6.5),
+  lineHaulParcel('P-WESTLINE', 'LN-DEL-BOM', 7.5),
+  lineHaulParcel('P-WESTLINE', 'LN-BOM-DEL', 7),
+  lineHaulParcel('P-WESTLINE', 'LN-BOM-BLR', 6),
+  lineHaulParcel('P-WESTLINE', 'LN-BLR-BOM', 6),
 ]
 
 // ─── Settings (ERP-44) — seed-data.md §9 ───
