@@ -643,6 +643,21 @@ export interface CustomerAnalytics {
   lanes: { origin: string; dest: string; destState: string; service: Service | 'parcel'; shipments: number; avgTransit: number; promised: number; onTimePct: number; damagePct: number; costPerKg: number; co2: number }[]
 }
 
+/** ERP-38 claim filed with Logisco's insurer (source §11 Dept 10; §13 Insurance API). */
+export interface InsurerClaim {
+  id: Id
+  claimIds: Id[]
+  insurer: string
+  policyNo: string
+  amount: number
+  filedAt: IsoDateTime
+  filedBy: Id
+  status: 'filed' | 'underSurvey' | 'approved' | 'paid' | 'rejected'
+  approvedAmount?: number
+  utr?: string
+  log: { at: IsoDateTime; by: Id; text: string }[]
+}
+
 /** CP-15 bulk booking batch (batch history). */
 export interface BulkBatch {
   id: Id
@@ -1798,6 +1813,8 @@ export interface DemoData {
   docRenewals: Record<Id, DocRenewal>
   /** PA-13 work saved on phones while offline */
   syncQueue: Record<Id, SyncItem>
+  /** ERP-38 insurer claims */
+  insurerClaims: Record<Id, InsurerClaim>
   /** CP-27 analytics history by customer */
   customerAnalytics: Record<Id, CustomerAnalytics>
   /** CP-15 bulk booking batches */

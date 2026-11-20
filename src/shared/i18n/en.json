@@ -7544,5 +7544,196 @@
     "raised": "{{id}} raised against the previous leg",
     "nothingAtHub": "No shipments at this hub yet.",
     "fromPortal": "Raised by the hub supervisor (Partner Portal)"
+  },
+  "erp02": {
+    "hello": "Good morning, {{name}}",
+    "subtitle": "{{role}} · {{date}}",
+    "act": "Needs action",
+    "approvals": "Approvals waiting",
+    "noApprovals": "Nothing waiting for your approval.",
+    "approvalsCount_one": "Approvals inbox, {{count}} waiting",
+    "approvalsCount_other": "Approvals inbox, {{count}} waiting",
+    "kind": {
+      "rateCard": "Rate card",
+      "settings": "Leg rules",
+      "coverage": "Coverage change",
+      "credit": "Credit",
+      "payoutBatch": "Payout batch",
+      "codRemittance": "COD remittance",
+      "closeCase": "Close partner case",
+      "claim": "Claim",
+      "kyc": "Partner KYC"
+    },
+    "card": {
+      "atRisk": "Shipments at risk",
+      "exceptions": "Open exceptions",
+      "sos": "Active SOS",
+      "payouts": "Payout batches to approve",
+      "overdue": "Accounts overdue",
+      "cod": "COD remittances to approve",
+      "applications": "Applications in progress",
+      "trials": "Partners in trial",
+      "probation": "Partners on Probation",
+      "rateCards": "Rate cards waiting",
+      "lanesBelow": "Lanes below target",
+      "leads": "New leads",
+      "rfqs": "RFQs due this week",
+      "tickets": "Open tickets",
+      "ndr": "NDR follow-ups",
+      "gaps": "Coverage gaps",
+      "coverage": "Coverage requests",
+      "claims": "Open claims",
+      "insurer": "Insurer claims open",
+      "ewb": "E-way bills expiring < 24 h",
+      "dpdp": "DPDP requests open",
+      "manifests": "Manifests not dispatched",
+      "kyc": "KYC to audit",
+      "users": "Staff users",
+      "auditToday": "Actions logged today"
+    }
+  },
+  "erp15": {
+    "title": "Partner directory",
+    "subtitle_one": "{{count}} partner",
+    "subtitle_other": "{{count}} partners",
+    "search": "Search partner, city or type",
+    "col": {
+      "partner": "Partner",
+      "type": "Type",
+      "tier": "Tier / score",
+      "legs": "Legs",
+      "coverage": "Cities / lanes",
+      "capacity": "Capacity used today",
+      "status": "Status",
+      "docs": "Docs expiring",
+      "job": "Job",
+      "leg": "Leg",
+      "window": "Due",
+      "payout": "Payout",
+      "gross": "Earnings",
+      "deductions": "Deductions",
+      "net": "Net",
+      "due": "Due"
+    },
+    "coverage": "{{cities}} cities · {{lanes}} lanes",
+    "st": {
+      "onboarding": "Onboarding",
+      "trial": "Trial",
+      "live": "Live",
+      "probation": "Probation",
+      "suspended": "Suspended",
+      "offboarded": "Offboarded"
+    },
+    "back": "All partners",
+    "churn": "Churn risk",
+    "risk": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "why": {
+      "scoreDown": "score falling",
+      "disputes": "open disputes",
+      "suspension": "case open",
+      "lowLoad": "little work",
+      "probation": "on Probation"
+    },
+    "plan": "Improvement plan",
+    "suspension": "Suspension review",
+    "tab": {
+      "overview": "Overview",
+      "performance": "Performance",
+      "jobs": "Jobs",
+      "money": "Money",
+      "documents": "Documents",
+      "contract": "Contract"
+    },
+    "contacts": "Contacts",
+    "coordinator": "Logisco coordinator: {{name}}",
+    "coverageTitle": "Coverage and capacity",
+    "capacityIs": "Declared capacity {{n}} jobs a day",
+    "noScores": "No published scores yet.",
+    "tierHistory": "Tier history",
+    "noContract": "Agreement not signed yet"
+  },
+  "erp35": {
+    "title": "Accounting",
+    "subtitle": "P&L by lane and shipment, GL posting, GST input credit and the cash forecast.",
+    "export": "Export Excel",
+    "pnl": "P&L",
+    "tab": {
+      "lanes": "By lane",
+      "shipments": "By shipment"
+    },
+    "col": {
+      "lane": "Lane",
+      "lr": "LR",
+      "revenue": "Revenue",
+      "legCosts": "Leg costs",
+      "claims": "Claims",
+      "margin": "Margin",
+      "month": "Month",
+      "invoices": "Partner invoices",
+      "books": "GST in books",
+      "gstr2b": "GSTR-2B",
+      "status": "Status"
+    },
+    "gl": "Daily GL posting",
+    "entries_one": "{{count}} entry",
+    "entries_other": "{{count}} entries",
+    "gs": {
+      "posted": "Posted",
+      "scheduled": "Tonight 23:30"
+    },
+    "itc": "GST input credit vs GSTR-2B",
+    "matched": "Matched",
+    "diff": "Short {{amount}}",
+    "cash": "Cash forecast · next 30 days",
+    "in": "Money in",
+    "out": "Money out",
+    "balance": "Running balance",
+    "cashNote": "AI projection from invoices due, scheduled payouts and COD remittances."
+  },
+  "erp38": {
+    "title": "Insurer claims",
+    "subtitle": "Claims filed with Logisco's insurer and their recovery.",
+    "file_one": "File {{count}} claim",
+    "file_other": "File {{count}} claims",
+    "k": {
+      "open": "Open with insurer",
+      "paid": "Recovered",
+      "rejected": "Rejected"
+    },
+    "empty": "No insurer claims yet",
+    "col": {
+      "no": "Insurer claim",
+      "claims": "Linked claims",
+      "amount": "Amount",
+      "filed": "Filed",
+      "status": "Status",
+      "action": "Action"
+    },
+    "st": {
+      "filed": "Filed",
+      "underSurvey": "Under survey",
+      "approved": "Approved",
+      "paid": "Paid",
+      "rejected": "Rejected"
+    },
+    "to": {
+      "underSurvey": "Surveyor appointed",
+      "approved": "Approve",
+      "paid": "Mark paid",
+      "rejected": "Reject"
+    },
+    "approvedAmt": "approved {{amount}}",
+    "fileTitle": "File with the insurer",
+    "fileNow": "File claim",
+    "filed": "{{id}} filed through the insurance API",
+    "moveTitle": "{{id}} → {{status}}",
+    "approvedLabel": "Approved amount (₹)",
+    "reason": "Reason",
+    "note": "Note",
+    "moved": "{{id}}: {{status}}"
   }
 }

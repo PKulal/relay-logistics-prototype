@@ -7544,5 +7544,196 @@
     "raised": "{{id}} पिछले लेग पर दर्ज",
     "nothingAtHub": "इस हब पर अभी कोई शिपमेंट नहीं।",
     "fromPortal": "हब सुपरवाइज़र ने दर्ज किया (पार्टनर पोर्टल)"
+  },
+  "erp02": {
+    "hello": "नमस्ते, {{name}}",
+    "subtitle": "{{role}} · {{date}}",
+    "act": "कार्रवाई ज़रूरी",
+    "approvals": "मंज़ूरी बाकी",
+    "noApprovals": "आपकी मंज़ूरी के लिए कुछ बाकी नहीं।",
+    "approvalsCount_one": "मंज़ूरी इनबॉक्स, {{count}} बाकी",
+    "approvalsCount_other": "मंज़ूरी इनबॉक्स, {{count}} बाकी",
+    "kind": {
+      "rateCard": "रेट कार्ड",
+      "settings": "लेग नियम",
+      "coverage": "कवरेज बदलाव",
+      "credit": "क्रेडिट",
+      "payoutBatch": "पेआउट बैच",
+      "codRemittance": "COD रेमिटेंस",
+      "closeCase": "पार्टनर केस बंद करना",
+      "claim": "क्लेम",
+      "kyc": "पार्टनर KYC"
+    },
+    "card": {
+      "atRisk": "जोखिम वाले शिपमेंट",
+      "exceptions": "खुली समस्याएँ",
+      "sos": "सक्रिय SOS",
+      "payouts": "मंज़ूरी को पेआउट बैच",
+      "overdue": "बकाया अकाउंट",
+      "cod": "मंज़ूरी को COD रेमिटेंस",
+      "applications": "जारी आवेदन",
+      "trials": "ट्रायल वाले पार्टनर",
+      "probation": "प्रोबेशन वाले पार्टनर",
+      "rateCards": "बाकी रेट कार्ड",
+      "lanesBelow": "लक्ष्य से नीचे लेन",
+      "leads": "नए लीड",
+      "rfqs": "इस हफ़्ते के RFQ",
+      "tickets": "खुले टिकट",
+      "ndr": "NDR फ़ॉलो-अप",
+      "gaps": "कवरेज की कमी",
+      "coverage": "कवरेज अनुरोध",
+      "claims": "खुले क्लेम",
+      "insurer": "खुले बीमा क्लेम",
+      "ewb": "24 घंटे में समाप्त ई-वे बिल",
+      "dpdp": "खुले DPDP अनुरोध",
+      "manifests": "रवाना न हुए मैनिफ़ेस्ट",
+      "kyc": "ऑडिट को KYC",
+      "users": "स्टाफ़ यूज़र",
+      "auditToday": "आज लॉग हुई कार्रवाइयाँ"
+    }
+  },
+  "erp15": {
+    "title": "पार्टनर डायरेक्टरी",
+    "subtitle_one": "{{count}} पार्टनर",
+    "subtitle_other": "{{count}} पार्टनर",
+    "search": "पार्टनर, शहर या प्रकार खोजें",
+    "col": {
+      "partner": "पार्टनर",
+      "type": "प्रकार",
+      "tier": "टियर / स्कोर",
+      "legs": "लेग",
+      "coverage": "शहर / लेन",
+      "capacity": "आज इस्तेमाल क्षमता",
+      "status": "स्थिति",
+      "docs": "समाप्त होने वाले दस्तावेज़",
+      "job": "जॉब",
+      "leg": "लेग",
+      "window": "तक",
+      "payout": "पेआउट",
+      "gross": "कमाई",
+      "deductions": "कटौती",
+      "net": "शुद्ध",
+      "due": "देय"
+    },
+    "coverage": "{{cities}} शहर · {{lanes}} लेन",
+    "st": {
+      "onboarding": "ऑनबोर्डिंग",
+      "trial": "ट्रायल",
+      "live": "लाइव",
+      "probation": "प्रोबेशन",
+      "suspended": "सस्पेंड",
+      "offboarded": "ऑफ़बोर्ड"
+    },
+    "back": "सभी पार्टनर",
+    "churn": "छोड़ने का जोखिम",
+    "risk": {
+      "low": "कम",
+      "medium": "मध्यम",
+      "high": "ज़्यादा"
+    },
+    "why": {
+      "scoreDown": "स्कोर गिर रहा",
+      "disputes": "खुले विवाद",
+      "suspension": "केस खुला",
+      "lowLoad": "कम काम",
+      "probation": "प्रोबेशन पर"
+    },
+    "plan": "सुधार योजना",
+    "suspension": "सस्पेंशन समीक्षा",
+    "tab": {
+      "overview": "सारांश",
+      "performance": "प्रदर्शन",
+      "jobs": "जॉब",
+      "money": "पैसा",
+      "documents": "दस्तावेज़",
+      "contract": "कॉन्ट्रैक्ट"
+    },
+    "contacts": "संपर्क",
+    "coordinator": "Logisco कोऑर्डिनेटर: {{name}}",
+    "coverageTitle": "कवरेज और क्षमता",
+    "capacityIs": "घोषित क्षमता रोज़ {{n}} जॉब",
+    "noScores": "अभी कोई प्रकाशित स्कोर नहीं।",
+    "tierHistory": "टियर इतिहास",
+    "noContract": "एग्रीमेंट अभी साइन नहीं हुआ"
+  },
+  "erp35": {
+    "title": "अकाउंटिंग",
+    "subtitle": "लेन और शिपमेंट के हिसाब से P&L, GL पोस्टिंग, GST इनपुट क्रेडिट और नकदी का अनुमान।",
+    "export": "Excel एक्सपोर्ट करें",
+    "pnl": "P&L",
+    "tab": {
+      "lanes": "लेन के हिसाब से",
+      "shipments": "शिपमेंट के हिसाब से"
+    },
+    "col": {
+      "lane": "लेन",
+      "lr": "LR",
+      "revenue": "आय",
+      "legCosts": "लेग लागत",
+      "claims": "क्लेम",
+      "margin": "मार्जिन",
+      "month": "महीना",
+      "invoices": "पार्टनर इनवॉइस",
+      "books": "खातों में GST",
+      "gstr2b": "GSTR-2B",
+      "status": "स्थिति"
+    },
+    "gl": "रोज़ की GL पोस्टिंग",
+    "entries_one": "{{count}} एंट्री",
+    "entries_other": "{{count}} एंट्री",
+    "gs": {
+      "posted": "पोस्ट हुई",
+      "scheduled": "आज रात 23:30"
+    },
+    "itc": "GST इनपुट क्रेडिट बनाम GSTR-2B",
+    "matched": "मेल खाता",
+    "diff": "{{amount}} कम",
+    "cash": "नकदी का अनुमान · अगले 30 दिन",
+    "in": "आने वाला पैसा",
+    "out": "जाने वाला पैसा",
+    "balance": "चालू बैलेंस",
+    "cashNote": "देय इनवॉइस, तय पेआउट और COD रेमिटेंस से AI अनुमान।"
+  },
+  "erp38": {
+    "title": "बीमा क्लेम",
+    "subtitle": "Logisco की बीमा कंपनी के पास दर्ज क्लेम और उनकी वसूली।",
+    "file_one": "{{count}} क्लेम दर्ज करें",
+    "file_other": "{{count}} क्लेम दर्ज करें",
+    "k": {
+      "open": "बीमा कंपनी के पास खुले",
+      "paid": "वसूल हुए",
+      "rejected": "नामंज़ूर"
+    },
+    "empty": "अभी कोई बीमा क्लेम नहीं",
+    "col": {
+      "no": "बीमा क्लेम",
+      "claims": "जुड़े क्लेम",
+      "amount": "रकम",
+      "filed": "दर्ज",
+      "status": "स्थिति",
+      "action": "कार्रवाई"
+    },
+    "st": {
+      "filed": "दर्ज",
+      "underSurvey": "सर्वे में",
+      "approved": "मंज़ूर",
+      "paid": "भुगतान हुआ",
+      "rejected": "नामंज़ूर"
+    },
+    "to": {
+      "underSurvey": "सर्वेयर नियुक्त",
+      "approved": "मंज़ूर करें",
+      "paid": "भुगतान मार्क करें",
+      "rejected": "नामंज़ूर करें"
+    },
+    "approvedAmt": "{{amount}} मंज़ूर",
+    "fileTitle": "बीमा कंपनी के पास दर्ज करें",
+    "fileNow": "क्लेम दर्ज करें",
+    "filed": "{{id}} बीमा API से दर्ज",
+    "moveTitle": "{{id}} → {{status}}",
+    "approvedLabel": "मंज़ूर रकम (₹)",
+    "reason": "कारण",
+    "note": "टिप्पणी",
+    "moved": "{{id}}: {{status}}"
   }
 }

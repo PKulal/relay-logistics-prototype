@@ -10,7 +10,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { advanceJourneys } from '@shared/sim/journey'
-import type { AppKey, ErpRole, PermLevel, FieldStaff, JobPushEvent, PartnerIntegration, ApiKey, WebhookEvent, LegType, Rfq, SettingsChange, SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
+import type { InsurerClaim, AppKey, ErpRole, PermLevel, FieldStaff, JobPushEvent, PartnerIntegration, ApiKey, WebhookEvent, LegType, Rfq, SettingsChange, SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
 import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
 import * as erp from './erpActions'
@@ -49,6 +49,7 @@ import * as adm from './adminActions'
 import * as ai from './aiLogActions'
 import * as auth from './authActions'
 import * as pops from './partnerOpsActions'
+import * as ins from './insurerActions'
 import type { SettingsError, SettingsPatch, StaffInput as StaffUserInput, StaffUserError } from './adminActions'
 import type { HubInput, PortalUserError, PortalUserInput, StaffEdit, StaffError, StaffInput, VehicleError, VehicleInput } from './partnerSettingsActions'
 import type { ConsigneeInput, LocationInput, SkuInput, TicketInput, UserError, UserInput } from './customerSettingsActions'
@@ -355,6 +356,8 @@ export interface DemoState {
   recordPasswordReset: (app: AppKey, userId: Id) => void
   recordBulkBatch: (customerId: Id, file: string, rows: number, lrs: Id[], errors: number, by: Id) => Id
   changeTripVehicle: (tripId: Id, vehicleId: Id, driverId: Id, by: Id) => void
+  fileInsurerClaim: (claimIds: Id[], by: Id) => Id | undefined
+  advanceInsurerClaim: (id: Id, to: InsurerClaim['status'], note: string, by: Id, approvedAmount?: number) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -725,6 +728,8 @@ export const useDemoStore = create<DemoState>()(
           recordPasswordReset: (app: AppKey, userId: Id) => upd((d, now) => auth.recordPasswordReset(d, app, userId, now)),
           recordBulkBatch: (customerId: Id, file: string, rows: number, lrs: Id[], errors: number, by: Id) => run((d, now) => cs.recordBulkBatch(d, customerId, file, rows, lrs, errors, by, now)).id,
           changeTripVehicle: (tripId: Id, vehicleId: Id, driverId: Id, by: Id) => upd((d, now) => pops.changeTripVehicle(d, tripId, vehicleId, driverId, by, now)),
+          fileInsurerClaim: (claimIds: Id[], by: Id) => run((d, now) => ins.fileInsurerClaim(d, claimIds, by, now)).id,
+          advanceInsurerClaim: (id: Id, to: InsurerClaim['status'], note: string, by: Id, approvedAmount?: number) => upd((d, now) => ins.advanceInsurerClaim(d, id, to, note, by, now, approvedAmount)),
         }
       })(),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),

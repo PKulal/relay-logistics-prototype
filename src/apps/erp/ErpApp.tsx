@@ -6,7 +6,8 @@ import { visibleNav } from '@shared/nav'
 import { navRoutes } from '@shared/shell/routes'
 import { WebShell } from '@shared/shell/WebShell'
 import { useSessionUser } from '@shared/store/session'
-import { NotFound, ScreenPlaceholder } from '@shared/ui/Page'
+import { NotFound } from '@shared/ui/Page'
+import { Button } from '@shared/ui/button'
 import ERP03Shipment360 from './ERP03Shipment360'
 import ERP04Command from './ERP04Command'
 import ERP05JobBoard from './ERP05JobBoard'
@@ -48,12 +49,18 @@ import { withPermissions } from './access'
 import ERP42Access from './ERP42Access'
 import ERP43Logs from './ERP43Logs'
 import ERP44Settings from './ERP44Settings'
+import ERP02Home from './ERP02Home'
+import ERP15Partners from './ERP15Partners'
+import ERP35Accounting from './ERP35Accounting'
+import ERP38InsurerClaims from './ERP38InsurerClaims'
+import { approvals } from '@shared/engines/erpHome'
+import { CheckSquare } from 'lucide-react'
 import { unreadCount } from '@shared/engines/notifications'
 import { NotificationCentre } from '@shared/ui/NotificationCentre'
 import { AssistantLauncher } from '@shared/ui/Assistant'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'ERP-04': ERP04Command, 'ERP-05': ERP05JobBoard, 'ERP-06': ERP06AtRisk, 'ERP-07': ERP07Exceptions, 'ERP-09': ERP09PartnerHealth, 'ERP-10': ERP10DailyPack, 'ERP-11': ERP11Applications, 'ERP-12': ERP12KycDesk, 'ERP-13': ERP13Commercials, 'ERP-14': ERP14Trials, 'ERP-16': ERP16Scoring, 'ERP-17': ERP17Suspensions, 'ERP-18': ERP18Pincodes, 'ERP-19': ERP19Lanes, 'ERP-20': ERP20LegRules, 'ERP-21': ERP21Gaps, 'ERP-22': ERP22RateCards, 'ERP-23': ERP23Approvals, 'ERP-24': ERP24MarginMonitor, 'ERP-25': ERP25Simulator, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-28': ERP28Accounts, 'ERP-29': ERP29Rfqs, 'ERP-30': ERP30CreditReview, 'ERP-31': ERP31Invoicing, 'ERP-32': ERP32Payables, 'ERP-33': ERP33Payouts, 'ERP-34': ERP34CodRecon, 'ERP-36': ERP36ClaimsDesk, 'ERP-39': ERP39CustomerSuccess, 'ERP-40': ERP40HubOps, 'ERP-41': ERP41Compliance, 'ERP-42': ERP42Access, 'ERP-43': ERP43Logs, 'ERP-44': ERP44Settings, 'ERP-45': ERP45Department }
+const SCREENS = { 'ERP-04': ERP04Command, 'ERP-05': ERP05JobBoard, 'ERP-06': ERP06AtRisk, 'ERP-07': ERP07Exceptions, 'ERP-09': ERP09PartnerHealth, 'ERP-10': ERP10DailyPack, 'ERP-11': ERP11Applications, 'ERP-12': ERP12KycDesk, 'ERP-13': ERP13Commercials, 'ERP-14': ERP14Trials, 'ERP-16': ERP16Scoring, 'ERP-17': ERP17Suspensions, 'ERP-18': ERP18Pincodes, 'ERP-19': ERP19Lanes, 'ERP-20': ERP20LegRules, 'ERP-21': ERP21Gaps, 'ERP-22': ERP22RateCards, 'ERP-23': ERP23Approvals, 'ERP-24': ERP24MarginMonitor, 'ERP-25': ERP25Simulator, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-28': ERP28Accounts, 'ERP-29': ERP29Rfqs, 'ERP-30': ERP30CreditReview, 'ERP-31': ERP31Invoicing, 'ERP-32': ERP32Payables, 'ERP-33': ERP33Payouts, 'ERP-34': ERP34CodRecon, 'ERP-36': ERP36ClaimsDesk, 'ERP-39': ERP39CustomerSuccess, 'ERP-40': ERP40HubOps, 'ERP-41': ERP41Compliance, 'ERP-42': ERP42Access, 'ERP-43': ERP43Logs, 'ERP-44': ERP44Settings, 'ERP-15': ERP15Partners, 'ERP-35': ERP35Accounting, 'ERP-38': ERP38InsurerClaims, 'ERP-45': ERP45Department }
 
 /** Logisco ERP + Control Tower (/erp) — Logisco staff. Spec: docs/04-erp-control-tower.md */
 export default function ErpApp() {
@@ -62,6 +69,7 @@ export default function ErpApp() {
   const userId = useSessionUser('erp')
   const user = useData((d) => (userId ? d.staff[userId] : undefined))
   const shipments = useData((d) => d.shipments)
+  const data = useData((d) => d)
   const perms = useData((d) => (user ? d.rolePermissions[user.role] : undefined))
   const notifications = useData((d) => d.notifications)
 
@@ -83,6 +91,7 @@ export default function ErpApp() {
             nav={visibleNav(nav, ctx)}
             unread={unreadCount(notifications, viewer)}
             assistant={<AssistantLauncher ctx={{ app: 'erp', userId: user.id, role: user.role }} />}
+            headerActions={<ApprovalsButton count={approvals(data, user.role).length} />}
             orgName={t('apps.erp.short')}
             user={{ name: user.name, roleLabel: user.title }}
             searchPlaceholderKey="search.placeholder.erp"
@@ -101,9 +110,10 @@ export default function ErpApp() {
         {/* ERP-02 home (not built yet): Control Tower roles start on the live job board (ERP-05 "home for CT roles") */}
         <Route
           index
-          element={user.role === 'controlTower' ? <Navigate to="control-tower/jobs" replace /> : user.role === 'leadership' ? <Navigate to="leadership" replace /> : <ScreenPlaceholder screenId="ERP-02" title={t('nav.erp.home')} phase={2} />}
+          element={user.role === 'controlTower' ? <Navigate to="control-tower/jobs" replace /> : user.role === 'leadership' ? <Navigate to="leadership" replace /> : <ERP02Home />}
         />
         {/* ERP-03 Shipment 360 is opened from search and lists, not the menu; every role can open it */}
+        <Route path="home" element={<ERP02Home />} />
         <Route path="shipments/:lr" element={<ERP03Shipment360 />} />
         <Route path="control-tower/reassign/:legId" element={<ERP08Reassign />} />
         <Route path="claims/:id" element={<ERP37Claim />} />
@@ -114,5 +124,21 @@ export default function ErpApp() {
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
+  )
+}
+
+/** ERP-02 approvals inbox: items waiting for this role's approval (maker-checker); opens Home. */
+function ApprovalsButton({ count }: { count: number }) {
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  return (
+    <Button variant="ghost" size="icon" className="relative" aria-label={t('erp02.approvalsCount', { count })} onClick={() => navigate('/erp/home')}>
+      <CheckSquare />
+      {count > 0 && (
+        <span className="tabular absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-amber px-1 text-[10px] font-semibold text-ink" aria-hidden>
+          {count}
+        </span>
+      )}
+    </Button>
   )
 }

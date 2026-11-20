@@ -234,6 +234,8 @@ function makeTab() {
     recordPasswordReset: () => {},
     recordBulkBatch: () => '',
     changeTripVehicle: () => {},
+    fileInsurerClaim: () => undefined,
+    advanceInsurerClaim: () => {},
     createNegotiatedCard: () => '',
     editRateCard: () => {},
     submitRateCard: () => {},

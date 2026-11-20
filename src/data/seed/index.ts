@@ -104,6 +104,7 @@ export function buildBaseSeed(): DemoData {
     rolePermissions: {},
     bulkBatches: {},
     customerAnalytics: {},
+    insurerClaims: {},
     auditLog: {},
 
     // Next Delhi booking becomes LGS-DEL-000781 (the hero). nextLr() skips numbers already used.

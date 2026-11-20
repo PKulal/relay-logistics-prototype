@@ -5,7 +5,7 @@
  * per shipment are the samples for the quarter.
  */
 import { addDaysToDate } from '@shared/lib/time'
-import type { CustomerAnalytics, DemoData } from '@shared/types'
+import type { CustomerAnalytics, DemoData, InsurerClaim } from '@shared/types'
 
 /** Monday of the demo week is 23-Nov-2026; 13 weeks back is the quarter. */
 const weeks = (base: number, onTime: number[]) =>
@@ -33,4 +33,17 @@ const KAVERI: CustomerAnalytics = {
   ],
 }
 
-export const addAnalyticsSeed = (data: DemoData): DemoData => ({ ...data, customerAnalytics: { ...data.customerAnalytics, 'C-SHARMA': SHARMA, 'C-KAVERI': KAVERI } })
+/** ERP-38: CLM-2026-0142's ₹20,000 insurer share was filed as INS-88213 when the claim settled (seed-data.md §4). */
+const INS_88213: InsurerClaim = {
+  id: 'INS-88213',
+  claimIds: ['CLM-2026-0142'],
+  insurer: 'Shield General Insurance', // INVENTED
+  policyNo: 'GIT/2026/LGS/00417', // INVENTED
+  amount: 20000,
+  filedAt: '2026-11-19T16:00:00+05:30',
+  filedBy: 'LS-FARHAN',
+  status: 'filed',
+  log: [{ at: '2026-11-19T16:00:00+05:30', by: 'LS-FARHAN', text: 'Filed through the insurance API' }],
+}
+
+export const addAnalyticsSeed = (data: DemoData): DemoData => ({ ...data, customerAnalytics: { ...data.customerAnalytics, 'C-SHARMA': SHARMA, 'C-KAVERI': KAVERI }, insurerClaims: { ...data.insurerClaims, 'INS-88213': INS_88213 } })
