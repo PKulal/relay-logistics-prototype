@@ -2,7 +2,7 @@
  * PA-05 Home (today) — docs/03-partner-app.md §6.1.
  * Today's work at a glance and the next task. Content by role.
  */
-import { Banknote, ChevronRight } from 'lucide-react'
+import { Banknote, ChevronRight, GraduationCap } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -26,6 +26,18 @@ export default function PA05Home() {
   return (
     <div className="flex flex-col gap-4 p-4">
       <h1 className="font-heading text-[22px] font-bold">{t('pa05.hello', { name: staff.name.split(' ')[0] })}</h1>
+
+      {/* PA-10: prompted until training is complete */}
+      {!staff.trained && (
+        <Link to="/app/training" className="flex min-h-12 items-center gap-3 rounded-2xl border border-brand-amber bg-status-warning-bg p-4">
+          <GraduationCap className="size-6 shrink-0 text-status-warning" aria-hidden />
+          <span className="flex-1">
+            <span className="block font-bold">{t('pa10.prompt')}</span>
+            <span className="block text-caption">{t('pa10.promptBody')}</span>
+          </span>
+          <ChevronRight className="size-5" aria-hidden />
+        </Link>
+      )}
 
       {/* Next task */}
       <section aria-labelledby="next-h" className="flex flex-col gap-2">

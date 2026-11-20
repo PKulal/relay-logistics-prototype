@@ -32,5 +32,5 @@ export const LIST_PATH: Record<FieldRole, string> = { rider: '/app/tasks', drive
 
 /** Opened from the SOS button in the top bar */
 export const SOS_SCREEN = { path: 'sos', labelKey: 'nav.pa.sos', screenId: 'PA-12', phase: 4 }
-/** Opened from the sync indicator */
+/** Opened from the sync indicator and More → Settings */
 export const SYNC_SCREEN = { path: 'sync', labelKey: 'nav.pa.sync', screenId: 'PA-13', phase: 5 }

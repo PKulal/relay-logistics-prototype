@@ -44,6 +44,7 @@ import * as dept from './departmentActions'
 import type { NewRfq } from './departmentActions'
 import * as cs from './customerSettingsActions'
 import * as ps from './partnerSettingsActions'
+import * as fa from './fieldAppActions'
 import type { HubInput, PortalUserError, PortalUserInput, StaffEdit, StaffError, StaffInput, VehicleError, VehicleInput } from './partnerSettingsActions'
 import type { ConsigneeInput, LocationInput, SkuInput, TicketInput, UserError, UserInput } from './customerSettingsActions'
 import type { CapacityEdit, CoverageChange, LaneEdit, NewPincode, PincodeEdit } from './networkActions'
@@ -327,6 +328,13 @@ export interface DemoState {
   setJobWebhook: (partnerId: Id, url: string, events: JobPushEvent[], by: Id) => { saved: boolean; secret?: string }
   testJobWebhook: (partnerId: Id) => { status?: number; ms?: number }
   saveStatusMapping: (partnerId: Id, mapping: PartnerIntegration['statusMapping'], by: Id) => void
+  /** Partner App personal (PA-10, PA-13) */
+  syncNow: (staffId: Id) => void
+  setFieldLanguage: (staffId: Id, language: FieldStaff['language']) => void
+  setVoicePrompts: (staffId: Id, on: boolean) => void
+  watchVideo: (staffId: Id, videoId: string) => void
+  passPractice: (staffId: Id, taskId: string) => void
+  completeTraining: (staffId: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -679,12 +687,23 @@ export const useDemoStore = create<DemoState>()(
           },
           testJobWebhook: (partnerId: Id) => run((d, now) => ps.testJobWebhook(d, partnerId, now)),
           saveStatusMapping: (partnerId: Id, mapping: PartnerIntegration['statusMapping'], by: Id) => upd((d, now) => ps.saveStatusMapping(d, partnerId, mapping, by, now)),
+          syncNow: (staffId: Id) => upd((d, now) => fa.syncNow(d, staffId, !get().flags.offline, now)),
+          setFieldLanguage: (staffId: Id, language: FieldStaff['language']) => upd((d) => fa.setFieldLanguage(d, staffId, language)),
+          setVoicePrompts: (staffId: Id, on: boolean) => upd((d) => fa.setVoicePrompts(d, staffId, on)),
+          watchVideo: (staffId: Id, videoId: string) => upd((d) => fa.watchVideo(d, staffId, videoId)),
+          passPractice: (staffId: Id, taskId: string) => upd((d) => fa.passPractice(d, staffId, taskId)),
+          completeTraining: (staffId: Id) => upd((d, now) => fa.completeTraining(d, staffId, now)),
         }
       })(),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),
 
 
-      setFlag: (flag, value) => set((s) => ({ flags: { ...s.flags, [flag]: value } })),
+      setFlag: (flag, value) =>
+        set((s) => ({
+          flags: { ...s.flags, [flag]: value },
+          // PA-13: back online → every phone's queue is sent
+          ...(flag === 'offline' && !value && s.flags.offline ? { data: fa.syncNow(s.data, undefined, true, s.demoNow) } : {}),
+        })),
 
       resetDemo: () => set(freshState()),
     }),
@@ -698,3 +717,10 @@ export const useDemoStore = create<DemoState>()(
     },
   ),
 )
+
+// PA-13 (SIMULATED offline): while the Partner App is offline, its new events are also listed in the phone's sync queue
+useDemoStore.subscribe((s, prev) => {
+  if (!s.flags.offline || s.data.events === prev.data.events) return
+  const next = fa.queueOfflineEvents(prev.data, s.data, s.demoNow)
+  if (next !== s.data) useDemoStore.setState({ data: next })
+})

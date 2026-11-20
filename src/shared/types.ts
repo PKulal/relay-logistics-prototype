@@ -620,6 +620,23 @@ export interface PartnerIntegration {
   errors: { at: IsoDateTime; call: string; reason: string }[]
 }
 
+/**
+ * PA-13 sync queue (source §5.1: works offline, syncs when connected). Work
+ * done while the phone is offline is listed here until it reaches the server.
+ */
+export interface SyncItem {
+  id: Id
+  staffId: Id
+  eventId: Id
+  shipmentId: Id
+  legId?: Id
+  type: EventType
+  photos: number
+  savedAt: IsoDateTime
+  status: 'waiting' | 'failed'
+  attempts: number
+}
+
 /** PP-32 renewal upload: the new expiry is applied at once and stays Under review until Logisco's check (SIMULATED). */
 export interface DocRenewal {
   /** Register row id, e.g. "VH:V-DL01LT4521:insurance" */
@@ -858,6 +875,10 @@ export interface FieldStaff {
   licenceNo?: string
   policeVerifiedOn?: IsoDate
   appLinkSentAt?: IsoDateTime
+  /** PA-10 progress: videos watched and practice tasks passed (source §4 Step 6) */
+  training?: { videos: string[]; practice: string[]; completedAt?: IsoDateTime }
+  /** PA-13 Hindi voice prompts (source §5.1). Default on. */
+  voicePrompts?: boolean
 }
 
 export interface Vehicle {
@@ -1737,6 +1758,8 @@ export interface DemoData {
   aiDecisions: Record<Id, AiDecision>
   /** PP-32 renewal uploads */
   docRenewals: Record<Id, DocRenewal>
+  /** PA-13 work saved on phones while offline */
+  syncQueue: Record<Id, SyncItem>
   auditLog: Record<Id, AuditLog>
   /** Next serial per LR origin code, e.g. { DEL: 781 } → next Delhi LR is LGS-DEL-000781 */
   lrSerials: Record<string, number>

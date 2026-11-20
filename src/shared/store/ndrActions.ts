@@ -103,6 +103,8 @@ export function respondNdr(data: DemoData, lr: Id, c: NdrChoice, by: Id, at: Iso
   if (by === 'consignee' || by === 'system')
     for (const u of shipperUsers(next, lr)) next = notify(next, { app: 'customer', userId: u.id }, by === 'consignee' ? 'The consignee answered the failed delivery' : 'Failed delivery: applied automatically', `${lr} · ${what}`, `/customer/exceptions/ndr/${lr}`, at)
   next = notify(next, { app: 'partnerPortal', partnerId: leg.partnerId }, c.kind === 'rto' ? 'Shipment to be returned' : 'Reattempt scheduled', `${lr} · ${what}`, `/partner/jobs/${leg.id}`, at)
+  // PA-08: the rider who attempted it sees the customer's choice
+  if (leg.staffId) next = notify(next, { app: 'partnerApp', userId: leg.staffId }, c.kind === 'rto' ? 'Return to origin' : 'Customer chose reattempt', `${lr} · ${what}`, '/app', at)
   return audit(next, { userId: by, app: 'customer', action: `ndr.${c.kind}`, recordId: record.id, at, after: c })
 }
 

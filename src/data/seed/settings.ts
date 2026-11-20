@@ -96,6 +96,8 @@ function addPartnerSettings(data: DemoData): DemoData {
       return [id, { ...f, status: f.status ?? 'active', licenceNo, policeVerifiedOn: f.policeVerified ? (f.policeVerifiedOn ?? '2026-03-08') : undefined }]
     }),
   )
+  // PA-10: one SwiftCity rider is still in training (videos started, practice not done)
+  if (fieldStaff['FS-SWC-DEEPAK']) fieldStaff['FS-SWC-DEEPAK'] = { ...fieldStaff['FS-SWC-DEEPAK'], trained: false, training: { videos: ['scan'], practice: [] } }
   const partnerUsers = { ...data.partnerUsers }
   const logins: Record<string, string> = { 'PU-VIKRAM': AT('2026-11-23', '09:05'), 'PU-NEHA': AT('2026-11-23', '08:50'), 'PU-ANIL': AT('2026-11-22', '18:10') }
   for (const u of Object.values(partnerUsers)) partnerUsers[u.id] = { ...u, status: 'active', lastLoginAt: logins[u.id], language: u.id === 'PU-NEHA' ? 'hi' : 'en' }

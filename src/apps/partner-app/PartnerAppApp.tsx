@@ -2,10 +2,12 @@
  * Partner App (/app) — riders, drivers and hub staff, inside a phone frame.
  * Spec: docs/03-partner-app.md. App shell = PA-04 (top bar, offline banner, bottom tabs by role).
  */
-import { CloudOff, RefreshCw, Siren } from 'lucide-react'
+import { Bell, CloudOff, RefreshCw, Siren } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, Navigate, NavLink, Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom'
 import { cn } from '@/shared/lib/utils'
+import { queueOf } from '@shared/engines/fieldDay'
+import { unreadCount } from '@shared/engines/notifications'
 import { useData, useFlags } from '@shared/hooks/useDemo'
 import { useSessionUser } from '@shared/store/session'
 import { LanguageToggle } from '@shared/ui/LanguageToggle'
@@ -34,6 +36,11 @@ import PA27Sort from './PA27Sort'
 import PA28Bags from './PA28Bags'
 import PA29OutScan from './PA29OutScan'
 import TaskScreen from './TaskScreen'
+import PA08Notifications from './PA08Notifications'
+import PA09MyDay from './PA09MyDay'
+import PA10Training, { PA10Practice } from './PA10Training'
+import PA13Settings from './PA13Settings'
+import PAMore from './PAMore'
 
 /** Built tab screens by screen id. */
 const BUILT: Record<string, React.ReactNode> = {
@@ -44,6 +51,8 @@ const BUILT: Record<string, React.ReactNode> = {
   'PA-25': <PA25HubHome />,
   'PA-26': <PA26InScan />,
   'PA-29': <PA29OutScan />,
+  'PA-09': <PA09MyDay />,
+  'PA-08, PA-10 to PA-13': <PAMore />,
 }
 
 export default function PartnerAppApp() {
@@ -52,7 +61,8 @@ export default function PartnerAppApp() {
   const staff = useData((d) => (userId ? d.fieldStaff[userId] : undefined))
   const partner = useData((d) => (staff ? d.partners[staff.partnerId] : undefined))
 
-  if (!staff || !partner) return <Navigate to="/launch/partner-app" replace />
+  // PP-29: deactivated or blocked staff have no app access
+  if (!staff || !partner || (staff.status ?? 'active') !== 'active') return <Navigate to="/launch/partner-app" replace />
 
   const tabs = TABS[staff.role]
   const screen = (s: Pick<Tab, 'screenId' | 'labelKey' | 'phase'>) => (
@@ -76,7 +86,7 @@ export default function PartnerAppApp() {
       </div>
       <PhoneFrame>
         <Routes>
-          <Route element={<PhoneShell tabs={tabs} />}>
+          <Route element={<PhoneShell tabs={tabs} staffId={staff.id} />}>
             {tabs.map((tab) =>
               tab.path === '' ? <Route key="home" index element={BUILT[tab.screenId] ?? screen(tab)} /> : <Route key={tab.path} path={tab.path} element={BUILT[tab.screenId] ?? screen(tab)} />,
             )}
@@ -109,7 +119,11 @@ export default function PartnerAppApp() {
               </>
             )}
             <Route path={SOS_SCREEN.path} element={<PA12Sos />} />
-            <Route path={SYNC_SCREEN.path} element={screen(SYNC_SCREEN)} />
+            <Route path={SYNC_SCREEN.path} element={<PA13Settings />} />
+            <Route path="notifications" element={<PA08Notifications />} />
+            <Route path="training" element={<PA10Training />} />
+            <Route path="training/:taskId" element={<PA10Practice />} />
+            {staff.role === 'hub' && <Route path="my-day" element={<PA09MyDay />} />}
             {/* Another role's tab opened by URL */}
             <Route
               path="*"
@@ -126,10 +140,13 @@ export default function PartnerAppApp() {
   )
 }
 
-function PhoneShell({ tabs }: { tabs: Tab[] }) {
+function PhoneShell({ tabs, staffId }: { tabs: Tab[]; staffId: string }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { offline } = useFlags()
+  const data = useData((d) => d)
+  const pending = queueOf(data, staffId).length
+  const unread = unreadCount(data.notifications, { app: 'partnerApp', userId: staffId })
 
   return (
     <>
@@ -142,9 +159,22 @@ function PhoneShell({ tabs }: { tabs: Tab[] }) {
           aria-label={t('pa.syncQueue')}
         >
           {offline ? <CloudOff className="size-4" aria-hidden /> : <RefreshCw className="size-4" aria-hidden />}
-          {offline ? t('pa.offline') : t('pa.synced')}
+          {pending > 0 ? t('pa13.pending', { count: pending }) : offline ? t('pa.offline') : t('pa.synced')}
         </button>
-        <LanguageToggle compact className="ml-auto min-h-12 min-w-12 justify-center text-primary-foreground hover:bg-white/15" />
+        <button
+          type="button"
+          onClick={() => navigate('/app/notifications')}
+          className="relative ml-auto inline-flex min-h-12 min-w-12 items-center justify-center"
+          aria-label={unread ? t('header.notificationsUnread', { count: unread }) : t('header.notifications')}
+        >
+          <Bell className="size-5" aria-hidden />
+          {unread > 0 && (
+            <span className="tabular absolute top-2 right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-status-danger px-1 text-[10px] font-bold text-white" aria-hidden>
+              {unread > 9 ? '9+' : unread}
+            </span>
+          )}
+        </button>
+        <LanguageToggle compact className="min-h-12 min-w-12 justify-center text-primary-foreground hover:bg-white/15" />
         <button
           type="button"
           onClick={() => navigate('/app/sos')}

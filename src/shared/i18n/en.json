@@ -6478,5 +6478,146 @@
   },
   "pp36": {
     "subtitle": "Your language for the portal and messages."
+  },
+  "pa08": {
+    "title": "Notifications",
+    "empty": "No notifications",
+    "k": {
+      "newTask": "New task: {{lr}}",
+      "slotChanged": "Task changed: new slot",
+      "taskRemoved": "Task removed",
+      "reattempt": "Customer chose reattempt",
+      "rto": "Return to origin",
+      "syncFailed": "Sync failed"
+    }
+  },
+  "pa09": {
+    "title": "My day",
+    "today": "Today",
+    "done": "Tasks done",
+    "onTime": "On time",
+    "failed": "Failed",
+    "distance": "Distance",
+    "compliance": "Scan and photo compliance",
+    "complianceHint": "Hand-overs today with every scan and photo",
+    "cod": "COD in hand",
+    "week": "This week",
+    "weekTotal_one": "{{count}} task done this week",
+    "weekTotal_other": "{{count}} tasks done this week"
+  },
+  "pa10": {
+    "title": "Training",
+    "status": {
+      "done": "Trained",
+      "inProgress": "In progress",
+      "notStarted": "Not started"
+    },
+    "videos": "Videos",
+    "videosCount": "Videos · {{watched}} of {{total}} watched",
+    "watched": "Watched",
+    "video": {
+      "scan": "How to scan",
+      "handover": "Hand-over and seal",
+      "delivery": "Delivery and e-POD",
+      "failed": "Failed delivery",
+      "cod": "Collecting COD",
+      "trip": "Line-haul trip and halts",
+      "bags": "Bags and seals at the hub"
+    },
+    "videoBody": {
+      "scan": "Scan every piece label; the app shows what is left.",
+      "handover": "Scan the pieces or seal, then share the hand-over code. Custody moves only when both sides scan.",
+      "delivery": "Check the pieces, take the OTP or a signature, and a photo of the goods at the door.",
+      "failed": "Pick the reason, take a photo and call the customer from the app before marking it failed.",
+      "cod": "Collect the exact amount by cash or UPI and deposit cash at the office within 24 hours.",
+      "trip": "Check the seals at loading, report halts and breakdowns, and hand over at the destination hub.",
+      "bags": "In-scan, sort, bag and seal; the seal number goes on the manifest."
+    },
+    "progress": "Video progress",
+    "done": "Done",
+    "close": "Close",
+    "practice": "Practice tasks",
+    "practiceNote": "Practice uses a dummy shipment. Nothing is sent to customers.",
+    "task": {
+      "pickup": "Practice pickup",
+      "handover": "Practice hand-over",
+      "delivery": "Practice delivery",
+      "tripReceive": "Practice loading check",
+      "hubInScan": "Practice in-scan",
+      "hubBag": "Practice bag and seal"
+    },
+    "complete": "Mark training complete",
+    "completed": "Training complete; your office can now see it",
+    "prompt": "Finish your training",
+    "promptBody": "Short videos and practice tasks before your first job.",
+    "unknown": "Practice task not found",
+    "watermark": "Practice",
+    "banner": "Practice mode: dummy shipment",
+    "steps": "Steps",
+    "step": {
+      "scan": "Scan the pieces",
+      "photo": "Take a photo",
+      "code": "Enter the hand-over code",
+      "seal": "Enter the seal number",
+      "otp": "Enter the delivery OTP",
+      "sign": "Take the signature"
+    },
+    "hint": {
+      "scan": "Scan both practice labels.",
+      "photo": "Take a clear photo of the goods.",
+      "code": "The practice code is {{code}}.",
+      "seal": "The practice seal is {{seal}}.",
+      "otp": "The practice OTP is {{otp}}.",
+      "sign": "Ask the receiver to sign in the box."
+    },
+    "photo": "Practice photo",
+    "sign": "Receiver signature",
+    "next": "Next",
+    "finish": "Finish practice",
+    "passed": "{{task}} passed"
+  },
+  "pa13": {
+    "title": "Settings and sync",
+    "language": "Language",
+    "voice": "Voice prompts",
+    "voiceHint": "Spoken steps in your language",
+    "queue": "Waiting to send",
+    "online": "Online",
+    "empty": "Everything is sent",
+    "photos_one": "{{count}} photo",
+    "photos_other": "{{count}} photos",
+    "ev": {
+      "pickupArrived": "Arrived at pickup",
+      "pickupConfirmed": "Pickup scan",
+      "pickupFailed": "Pickup failed",
+      "handoverGiven": "Hand-over given",
+      "handoverReceived": "Hand-over received",
+      "hubInScan": "Hub in-scan",
+      "bagSealed": "Bag sealed",
+      "hubOutScan": "Hub out-scan",
+      "tripStarted": "Trip started",
+      "haltReported": "Halt reported",
+      "tripArrived": "Trip arrived",
+      "runStarted": "Run started",
+      "delivered": "Delivered",
+      "deliveryFailed": "Delivery failed",
+      "exceptionReported": "Problem reported"
+    },
+    "st": {
+      "waiting": "Waiting",
+      "sending": "Sending",
+      "failed": "Failed"
+    },
+    "syncNow": "Sync now",
+    "sent_one": "{{count}} item sent",
+    "sent_other": "{{count}} items sent",
+    "failed": "No network. Items stay on the phone and go when you're back online.",
+    "pending_one": "{{count}} waiting",
+    "pending_other": "{{count}} waiting",
+    "device": "Device",
+    "storage": "Photos on this phone: {{mb}} MB",
+    "storageNote": "Synced photos are cleared after 7 days.",
+    "version": "App version {{version}}",
+    "logoutBlocked": "Send waiting items before logging out."
   }
 }

@@ -64,7 +64,8 @@ export function personasFor(app: AppKey, data: DemoData): Persona[] {
     case 'partnerApp':
       return order(
         app,
-        Object.values(data.fieldStaff).map((s) => ({
+        // PP-29: deactivated or blocked staff have no app access
+        Object.values(data.fieldStaff).filter((s) => (s.status ?? 'active') === 'active').map((s) => ({
           id: s.id,
           app,
           name: s.name,

@@ -65,8 +65,13 @@ export function assignLegs(data: DemoData, legIds: Id[], staffId: Id, vehicleId:
 
 /** Take a job off its staff member: back to Accepted. */
 export function unassignLeg(data: DemoData, legId: Id, userId: Id, now: IsoDateTime): DemoData {
-  if (data.legs[legId]?.status !== 'assigned') return data
-  return applyEvents(data, legEvents(data, [legId], () => ({ type: 'legUnassigned', at: now, by: userId, app: 'partnerPortal' })), now)
+  const leg = data.legs[legId]
+  if (leg?.status !== 'assigned') return data
+  const next = applyEvents(data, legEvents(data, [legId], () => ({ type: 'legUnassigned', at: now, by: userId, app: 'partnerPortal' })), now)
+  if (!leg.staffId) return next
+  // PA-08: the person loses the task
+  const nid = `NTF-${String(Object.keys(next.notifications).length + 1).padStart(5, '0')}`
+  return { ...next, notifications: { ...next.notifications, [nid]: { id: nid, audience: { app: 'partnerApp', userId: leg.staffId }, title: 'Task removed', body: `${legId} · ${leg.shipmentId}`, link: '/app', at: now, read: false } } }
 }
 
 export type ProblemKind = 'breakdown' | 'vehicleDelay' | 'consigneeIssue' | 'damageFound' | 'other'
