@@ -90,7 +90,8 @@ export function receiveLoad(data: DemoData, x: ReceiveLoad, at: IsoDateTime): De
 
 /**
  * PA-31 "Start run": loaded shipments → Out for Delivery. Each consignee gets
- * the delivery window with the rider's masked number (SIMULATED WhatsApp, §7 Step 8).
+ * the delivery window with the rider's masked number (SIMULATED WhatsApp, §7 Step 8),
+ * unless the shipper turned consignee messages off (CP-34).
  */
 export function startRun(data: DemoData, legIds: Id[], staffId: Id, at: IsoDateTime): DemoData {
   const events: ShipmentEvent[] = []
@@ -99,7 +100,7 @@ export function startRun(data: DemoData, legIds: Id[], staffId: Id, at: IsoDateT
     if (!leg || leg.type !== 'lastMile' || leg.status !== 'assigned') continue
     if (!Object.values(data.events).some((e) => e.legId === legId && e.type === 'handoverReceived')) continue
     const id = eventIdFactory(withEvents(data, events), leg.shipmentId)()
-    events.push({ id, shipmentId: leg.shipmentId, legId, type: 'runStarted', at, by: staffId, app: 'partnerApp', note: `Delivery window ${leg.window.from.slice(11, 16)}–${leg.window.to.slice(11, 16)} sent to consignee with masked rider contact` })
+    events.push({ id, shipmentId: leg.shipmentId, legId, type: 'runStarted', at, by: staffId, app: 'partnerApp', note: `Delivery window ${leg.window.from.slice(11, 16)}–${leg.window.to.slice(11, 16)} ${data.customers[data.shipments[leg.shipmentId].customerId]?.consigneeMessages === false ? 'set; consignee messages are off (CP-34)' : 'sent to consignee with masked rider contact'}` })
   }
   return applyEvents(dropSim(data, events.map((e) => e.shipmentId)), events, at)
 }

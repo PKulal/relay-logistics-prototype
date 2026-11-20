@@ -308,8 +308,25 @@ export interface Customer {
   bank?: { name: string; branch: string; ifsc: string; account: string }
   signatory?: { name: string; designation: string; email: string; mobile: string }
   /** CP-09 (source §6 Step 6): ERP connector, API key, ONDC link, Excel template */
-  integrations: { tally: boolean; erp?: 'tally' | 'sap' | 'zoho'; apiKey?: string; ondcSellerId?: string; templateDownloaded?: boolean }
+  integrations: {
+    tally: boolean
+    erp?: 'tally' | 'sap' | 'zoho'
+    apiKey?: string
+    ondcSellerId?: string
+    templateDownloaded?: boolean
+    /** CP-32 */
+    erpSync?: { lastAt: IsoDateTime; everyMinutes: number }
+    apiKeys?: ApiKey[]
+    webhooks?: Webhook[]
+  }
   branding?: { logoUrl?: string; colour?: string }
+  /** CP-33 billing settings */
+  billingPrefs?: { address: string; frequency: 'perShipment' | 'monthly'; emails: string; poMandatory: boolean }
+  /** CP-33 KYC documents on file */
+  kycDocs?: { kind: 'gst' | 'pan' | 'coi' | 'cheque'; file: string; uploadedAt: IsoDateTime; expiresOn?: IsoDate }[]
+  reKycDue?: IsoDate
+  /** CP-34 (source §13): tracking, appointment and delivery messages to receivers. Default on. */
+  consigneeMessages?: boolean
   city: string
   /** Onboarding record (CP-04 to CP-10, ERP-26/27/30); absent for accounts seeded live */
   onboarding?: CustomerOnboarding
@@ -397,6 +414,30 @@ export interface ContractRecord {
 
 export type CustomerRole = 'admin' | 'dispatch' | 'finance'
 
+/** CP-32 API key. The full key is shown once at creation; only the last 4 are kept. */
+export interface ApiKey {
+  id: Id
+  name: string
+  env: 'sandbox' | 'production'
+  last4: string
+  createdAt: IsoDateTime
+  lastUsedAt?: IsoDateTime
+  revokedAt?: IsoDateTime
+}
+
+export const WEBHOOK_EVENTS = ['booked', 'pickedUp', 'inTransit', 'outForDelivery', 'delivered', 'ndr', 'exception', 'invoice'] as const
+export type WebhookEvent = (typeof WEBHOOK_EVENTS)[number]
+
+export interface Webhook {
+  id: Id
+  url: string
+  events: WebhookEvent[]
+  secretLast4: string
+  createdAt: IsoDateTime
+  /** SIMULATED test delivery */
+  lastTest?: { at: IsoDateTime; status: number }
+}
+
 export interface CustomerUser {
   id: Id
   customerId: Id
@@ -405,8 +446,13 @@ export interface CustomerUser {
   email: string
   mobile: string
   role: CustomerRole
+  /** Pickup locations this user can book from; empty = all (CP-28) */
   locationIds: Id[]
   language: 'en' | 'hi'
+  /** CP-28: Invited until first login. Default active. */
+  status?: 'active' | 'invited' | 'disabled'
+  invitedAt?: IsoDateTime
+  lastLoginAt?: IsoDateTime
 }
 
 export interface PickupLocation {
@@ -421,6 +467,8 @@ export interface PickupLocation {
   window: { from: string; to: string } // "HH:mm"
   days: string // e.g. "Mon–Sat"
   isDefault: boolean
+  /** CP-29: inactive locations can't be booked from. Default true. */
+  active?: boolean
 }
 
 /** CP-13 Step 2 consignee types */
@@ -445,6 +493,10 @@ export interface Consignee {
   appointmentRequired: boolean
   /** Shown in the address book (CP-30). False = kept only for the shipments that used it. Default true. */
   saved?: boolean
+  /** CP-30: pre-selected when booking to this consignee */
+  defaultService?: 'parcel' | PtlService
+  /** CP-30: holidays / receiving hours, used for appointment slots */
+  receivingHours?: string
 }
 
 export interface Sku {
@@ -458,6 +510,7 @@ export interface Sku {
   weight: number
   hsn: string
   unitValue: number
+  /** frozen = verified by Logisco; flagged = AI outlier; draft = with Logisco for review */
   status: 'draft' | 'flagged' | 'frozen'
 }
 
@@ -1385,7 +1438,7 @@ export interface PayoutBatch {
   releasedAt?: IsoDateTime
 }
 
-export type TicketCategory = 'pickup' | 'delivery' | 'billing' | 'damage' | 'tracking' | 'other'
+export type TicketCategory = 'shipment' | 'pickup' | 'delivery' | 'billing' | 'damage' | 'tracking' | 'account' | 'integration' | 'other'
 
 /** Customer support ticket (ERP-39; CP-37). */
 export interface Ticket {
@@ -1401,8 +1454,10 @@ export interface Ticket {
   /** Response SLA */
   dueAt?: IsoDateTime
   ownerId?: Id
-  status: 'open' | 'inProgress' | 'resolved' | 'closed'
-  thread: { at: IsoDateTime; by: Id; text: string }[]
+  /** waiting = Logisco replied and waits for the customer (CP-37 "Waiting for you") */
+  status: 'open' | 'inProgress' | 'waiting' | 'resolved' | 'closed'
+  thread: { at: IsoDateTime; by: Id; text: string; attachment?: string }[]
+  invoiceId?: Id
 }
 
 /** ERP-28 quarterly business review. */

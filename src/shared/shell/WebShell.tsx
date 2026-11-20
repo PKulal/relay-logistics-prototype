@@ -3,7 +3,7 @@
  * collapsible to 64 px, content area. Customer Portal and Partner Portal use a
  * white sidebar; the ERP uses charcoal (§2).
  */
-import { Bell, ChevronDown, CircleHelp, LogOut, PanelLeftClose, PanelLeftOpen, Repeat, Search, SquareArrowOutUpRight } from 'lucide-react'
+import { Bell, ChevronDown, CircleHelp, LogOut, PanelLeftClose, PanelLeftOpen, Repeat, Search, SlidersHorizontal, SquareArrowOutUpRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
@@ -44,9 +44,13 @@ interface WebShellProps<Ctx> {
   /** Header search. Without it, search shows a "coming later" message. */
   onSearch?: (query: string) => void
   dark?: boolean
+  /** Unread notifications for the bell; the bell opens <app>/notifications */
+  unread?: number
+  /** Profile menu → Preferences (CP-34, PP-36) */
+  preferencesPath?: string
 }
 
-export function WebShell<Ctx>({ app, nav, orgName, orgBadge, user, headerActions, helpPath = 'help', searchPlaceholderKey, onSearch, dark }: WebShellProps<Ctx>) {
+export function WebShell<Ctx>({ app, nav, orgName, orgBadge, user, headerActions, helpPath = 'help', searchPlaceholderKey, onSearch, dark, unread = 0, preferencesPath }: WebShellProps<Ctx>) {
   const { t } = useTranslation()
   const meta = appByKey(app)
   const navigate = useNavigate()
@@ -107,8 +111,13 @@ export function WebShell<Ctx>({ app, nav, orgName, orgBadge, user, headerActions
         <div className="ml-auto flex items-center gap-1">
           {headerActions}
           <LanguageToggle />
-          <Button variant="ghost" size="icon" aria-label={t('header.notifications')} onClick={() => toast.info(t('header.notificationsSoon'))}>
+          <Button variant="ghost" size="icon" className="relative" aria-label={unread ? t('header.notificationsUnread', { count: unread }) : t('header.notifications')} onClick={() => navigate(`${meta.path}/notifications`)}>
             <Bell />
+            {unread > 0 && (
+              <span className="tabular absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-status-danger px-1 text-[10px] font-semibold text-white" aria-hidden>
+                {unread > 9 ? '9+' : unread}
+              </span>
+            )}
           </Button>
           <Button variant="ghost" size="icon" aria-label={t('header.help')} onClick={() => navigate(`${meta.path}/${helpPath}`)}>
             <CircleHelp />
@@ -132,6 +141,11 @@ export function WebShell<Ctx>({ app, nav, orgName, orgBadge, user, headerActions
                 <span className="block text-caption font-normal text-muted-foreground">{user.roleLabel}</span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
+              {preferencesPath && (
+                <DropdownMenuItem onSelect={() => navigate(`${meta.path}/${preferencesPath}`)}>
+                  <SlidersHorizontal /> {t('header.preferences')}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem onSelect={() => navigate(`/launch/${meta.id}`)}>
                 <Repeat /> {t('header.switchPersona')}
               </DropdownMenuItem>

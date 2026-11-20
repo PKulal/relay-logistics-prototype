@@ -10,7 +10,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { advanceJourneys } from '@shared/sim/journey'
-import type { LegType, Rfq, SettingsChange, SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
+import type { ApiKey, WebhookEvent, LegType, Rfq, SettingsChange, SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
 import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
 import * as erp from './erpActions'
@@ -42,6 +42,8 @@ import * as sc from './scoringActions'
 import * as net from './networkActions'
 import * as dept from './departmentActions'
 import type { NewRfq } from './departmentActions'
+import * as cs from './customerSettingsActions'
+import type { ConsigneeInput, LocationInput, SkuInput, TicketInput, UserError, UserInput } from './customerSettingsActions'
 import type { CapacityEdit, CoverageChange, LaneEdit, NewPincode, PincodeEdit } from './networkActions'
 import type { HubReport, PickupFailed, TicketResolution } from './exceptionActions'
 import type { PartnerCodDeposit, UploadInvoice } from './payoutActions'
@@ -60,7 +62,7 @@ import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 25
+export const STORE_VERSION = 26
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -271,6 +273,37 @@ export interface DemoState {
   replyTicket: (id: Id, text: string, resolve: boolean, by: Id) => void
   confirmSlot: (lr: Id, slot: { date: IsoDate; from: string; to: string }, by: Id) => void
   closeDpdpRequest: (id: Id, by: Id) => void
+  /** Customer Portal settings and support (CP-28 to CP-34, CP-36, CP-37) */
+  inviteCustomerUser: (customerId: Id, x: UserInput, by: Id) => { id?: Id; error?: UserError }
+  updateCustomerUser: (id: Id, x: Omit<UserInput, 'email'>, by: Id) => { error?: UserError }
+  setCustomerUserEnabled: (id: Id, enabled: boolean, by: Id) => { error?: UserError }
+  resendInvite: (id: Id, by: Id) => void
+  recordCustomerLogin: (id: Id) => void
+  upsertPickupLocation: (customerId: Id, x: LocationInput, id: Id | undefined, by: Id) => { id?: Id; error?: 'required' | 'notServiceable' }
+  setLocationActive: (id: Id, active: boolean, by: Id) => void
+  setDefaultLocation: (id: Id, by: Id) => void
+  saveAddress: (customerId: Id, x: ConsigneeInput, id: Id | undefined, by: Id) => { id?: Id; error?: 'required' | 'notServiceable' }
+  removeAddress: (id: Id, by: Id) => void
+  importAddresses: (customerId: Id, rows: ConsigneeInput[], by: Id) => { added: number; skipped: number }
+  saveSku: (customerId: Id, x: SkuInput, id: Id | undefined, by: Id) => { id?: Id; error?: 'required' | 'codeTaken' }
+  acceptSkuFlag: (id: Id, by: Id) => void
+  importSkus: (customerId: Id, rows: SkuInput[], by: Id) => { added: number; flagged: number; skipped: number }
+  createApiKey: (customerId: Id, name: string, env: ApiKey['env'], by: Id) => string | undefined
+  revokeApiKey: (customerId: Id, keyId: Id, by: Id) => void
+  addWebhook: (customerId: Id, url: string, events: WebhookEvent[], by: Id) => string | undefined
+  removeWebhook: (customerId: Id, id: Id, by: Id) => void
+  regenerateSecret: (customerId: Id, id: Id, by: Id) => string | undefined
+  testWebhook: (customerId: Id, id: Id) => { status?: number; ms?: number }
+  setErpConnector: (customerId: Id, erp: 'tally' | 'sap' | 'zoho' | undefined, by: Id) => void
+  setOndcLink: (customerId: Id, sellerId: string | undefined, by: Id) => void
+  saveBillingPrefs: (customerId: Id, prefs: NonNullable<Customer['billingPrefs']>, by: Id) => void
+  changeBank: (customerId: Id, b: { holder: string; account: string; ifsc: string }, by: Id) => { ok: boolean; matchPct: number; nameReturned: string }
+  replaceKycDoc: (customerId: Id, kind: NonNullable<Customer['kycDocs']>[number]['kind'], file: string, by: Id) => void
+  setUserLanguage: (userId: Id, language: 'en' | 'hi') => void
+  setConsigneeMessages: (customerId: Id, on: boolean, by: Id) => void
+  raiseTicket: (customerId: Id, x: TicketInput, by: Id) => Id | undefined
+  customerReplyTicket: (id: Id, text: string, attachment: string | undefined, by: Id) => void
+  confirmResolved: (id: Id, by: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -560,6 +593,47 @@ export const useDemoStore = create<DemoState>()(
       replyTicket: (id, text, resolve, by) => set((s) => ({ data: dept.replyTicket(s.data, id, text, resolve, by, s.demoNow) })),
       confirmSlot: (lr, slot, by) => set((s) => ({ data: dept.confirmSlot(s.data, lr, slot, by, s.demoNow) })),
       closeDpdpRequest: (id, by) => set((s) => ({ data: dept.closeDpdpRequest(s.data, id, by, s.demoNow) })),
+      ...(() => {
+        // Run a pure action against the current data; keep what it returns besides the data
+        const run = <R extends { data: DemoData }>(fn: (d: DemoData, now: IsoDateTime) => R): Omit<R, 'data'> => {
+          const { data, ...rest } = fn(get().data, get().demoNow)
+          set({ data })
+          return rest
+        }
+        const upd = (fn: (d: DemoData, now: IsoDateTime) => DemoData) => set((s) => ({ data: fn(s.data, s.demoNow) }))
+        return {
+          inviteCustomerUser: (customerId: Id, x: UserInput, by: Id) => run((d, now) => cs.inviteCustomerUser(d, customerId, x, by, now)),
+          updateCustomerUser: (id: Id, x: Omit<UserInput, 'email'>, by: Id) => run((d, now) => cs.updateCustomerUser(d, id, x, by, now)),
+          setCustomerUserEnabled: (id: Id, enabled: boolean, by: Id) => run((d, now) => cs.setCustomerUserEnabled(d, id, enabled, by, now)),
+          resendInvite: (id: Id, by: Id) => upd((d, now) => cs.resendInvite(d, id, by, now)),
+          recordCustomerLogin: (id: Id) => upd((d, now) => cs.recordCustomerLogin(d, id, now)),
+          upsertPickupLocation: (customerId: Id, x: LocationInput, id: Id | undefined, by: Id) => run((d, now) => cs.savePickupLocation(d, customerId, x, id, by, now)),
+          setLocationActive: (id: Id, active: boolean, by: Id) => upd((d, now) => cs.setLocationActive(d, id, active, by, now)),
+          setDefaultLocation: (id: Id, by: Id) => upd((d, now) => cs.setDefaultLocation(d, id, by, now)),
+          saveAddress: (customerId: Id, x: ConsigneeInput, id: Id | undefined, by: Id) => run((d, now) => cs.saveAddress(d, customerId, x, id, by, now)),
+          removeAddress: (id: Id, by: Id) => upd((d, now) => cs.removeAddress(d, id, by, now)),
+          importAddresses: (customerId: Id, rows: ConsigneeInput[], by: Id) => run((d, now) => cs.importAddresses(d, customerId, rows, by, now)),
+          saveSku: (customerId: Id, x: SkuInput, id: Id | undefined, by: Id) => run((d, now) => cs.saveSku(d, customerId, x, id, by, now)),
+          acceptSkuFlag: (id: Id, by: Id) => upd((d, now) => cs.acceptSkuFlag(d, id, by, now)),
+          importSkus: (customerId: Id, rows: SkuInput[], by: Id) => run((d, now) => cs.importSkus(d, customerId, rows, by, now)),
+          createApiKey: (customerId: Id, name: string, env: ApiKey['env'], by: Id) => run((d, now) => cs.createApiKey(d, customerId, name, env, by, now)).key,
+          revokeApiKey: (customerId: Id, keyId: Id, by: Id) => upd((d, now) => cs.revokeApiKey(d, customerId, keyId, by, now)),
+          addWebhook: (customerId: Id, url: string, events: WebhookEvent[], by: Id) => run((d, now) => cs.addWebhook(d, customerId, url, events, by, now)).secret,
+          removeWebhook: (customerId: Id, id: Id, by: Id) => upd((d, now) => cs.removeWebhook(d, customerId, id, by, now)),
+          regenerateSecret: (customerId: Id, id: Id, by: Id) => run((d, now) => cs.regenerateSecret(d, customerId, id, by, now)).secret,
+          testWebhook: (customerId: Id, id: Id) => run((d, now) => cs.testWebhook(d, customerId, id, now)),
+          setErpConnector: (customerId: Id, erpKind: 'tally' | 'sap' | 'zoho' | undefined, by: Id) => upd((d, now) => cs.setErpConnector(d, customerId, erpKind, by, now)),
+          setOndcLink: (customerId: Id, sellerId: string | undefined, by: Id) => upd((d, now) => cs.setOndcLink(d, customerId, sellerId, by, now)),
+          saveBillingPrefs: (customerId: Id, prefs: NonNullable<Customer['billingPrefs']>, by: Id) => upd((d, now) => cs.saveBillingPrefs(d, customerId, prefs, by, now)),
+          changeBank: (customerId: Id, b: { holder: string; account: string; ifsc: string }, by: Id) => run((d, now) => cs.changeBank(d, customerId, b, by, now)),
+          replaceKycDoc: (customerId: Id, kind: NonNullable<Customer['kycDocs']>[number]['kind'], file: string, by: Id) => upd((d, now) => cs.replaceKycDoc(d, customerId, kind, file, by, now)),
+          setUserLanguage: (userId: Id, language: 'en' | 'hi') => upd((d) => cs.setUserLanguage(d, userId, language)),
+          setConsigneeMessages: (customerId: Id, on: boolean, by: Id) => upd((d, now) => cs.setConsigneeMessages(d, customerId, on, by, now)),
+          raiseTicket: (customerId: Id, x: TicketInput, by: Id) => run((d, now) => cs.raiseTicket(d, customerId, x, by, now)).id,
+          customerReplyTicket: (id: Id, text: string, attachment: string | undefined, by: Id) => upd((d, now) => cs.customerReplyTicket(d, id, text, attachment, by, now)),
+          confirmResolved: (id: Id, by: Id) => upd((d, now) => cs.confirmResolved(d, id, by, now)),
+        }
+      })(),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),
 
 

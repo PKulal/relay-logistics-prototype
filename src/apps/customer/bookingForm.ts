@@ -3,6 +3,7 @@
  * a booking. Pure functions (no React), unit-tested in bookingForm.test.ts.
  */
 import { bookingChecks, type BookingBlock } from '@shared/engines/bookingChecks'
+import { bookableLocations } from '@shared/engines/customerSettings'
 import { ewayBillCheck } from '@shared/engines/ewayBill'
 import type { QuoteInput } from '@shared/engines/quote'
 import { pickupDates, pickupSlots } from '@shared/engines/schedule'
@@ -81,8 +82,8 @@ const blankConsignee = (): ConsigneeFields => ({
   appointmentRequired: false,
 })
 
-export function emptyBooking(data: DemoData, customer: Customer, now: IsoDateTime): BookingForm {
-  const locations = Object.values(data.pickupLocations).filter((l) => l.customerId === customer.id)
+export function emptyBooking(data: DemoData, customer: Customer, now: IsoDateTime, user?: CustomerUser): BookingForm {
+  const locations = bookableLocations(data, customer, user)
   const loc = locations.find((l) => l.isDefault) ?? locations[0]
   const form: BookingForm = {
     locationId: loc?.id ?? '',

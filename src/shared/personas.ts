@@ -36,7 +36,8 @@ export function personasFor(app: AppKey, data: DemoData): Persona[] {
     case 'customer':
       return order(
         app,
-        Object.values(data.customerUsers).map((u) => ({
+        // CP-28: disabled users can't log in
+        Object.values(data.customerUsers).filter((u) => u.status !== 'disabled').map((u) => ({
           id: u.id,
           app,
           name: u.name,

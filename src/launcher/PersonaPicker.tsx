@@ -12,6 +12,7 @@ import { APPS, type AppId } from '@shared/apps'
 import { useData } from '@shared/hooks/useDemo'
 import { personasFor, type Persona } from '@shared/personas'
 import { DEMO_LOGIN_OTP, sendOtp, verifyLoginOtp } from '@shared/sim/otp'
+import { useDemoStore } from '@shared/store'
 import { useSession } from '@shared/store/session'
 import { Button } from '@shared/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@shared/ui/dialog'
@@ -128,6 +129,8 @@ function LoginDialog({ persona, appPath, onClose }: { persona: Persona; appPath:
       return
     }
     login(persona.app, persona.id)
+    // CP-28: an invited user becomes active on first login
+    if (persona.app === 'customer') useDemoStore.getState().recordCustomerLogin(persona.id)
     toast.success(t('login.welcome', { name: persona.name }))
     navigate(appPath)
   }

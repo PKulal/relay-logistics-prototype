@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import { cn } from '@/shared/lib/utils'
 import { NoPartnerError } from '@shared/engines/assignment'
 import { computeEta, earliestPickupDate, pickupDates, pickupSlots } from '@shared/engines/schedule'
+import { bookableLocations } from '@shared/engines/customerSettings'
 import { useData, useDemoNow } from '@shared/hooks/useDemo'
 import { formatDate, formatDateLong, formatINR, formatKg } from '@shared/lib/format'
 import { simulateLatency } from '@shared/sim/latency'
@@ -65,7 +66,7 @@ export default function CP13BookShipment() {
   const store = useDemoStore
 
   const [form, setForm] = useState<BookingForm>(() => {
-    const base = emptyBooking(data, customer, demoNow)
+    const base = emptyBooking(data, customer, demoNow, user)
     const state = location.state as { quote?: QuoteForm; repeat?: string } | null
     if (state?.quote) return fromQuote(data, customer.id, base, state.quote, demoNow)
     if (state?.repeat && data.shipments[state.repeat]) return fromShipment(data, base, data.shipments[state.repeat], demoNow)
@@ -222,10 +223,11 @@ interface StepProps {
 
 function PickupStep({ form, set, setForm, err }: StepProps) {
   const { t } = useTranslation()
-  const { customer } = useCustomerSession()
+  const { user, customer } = useCustomerSession()
   const data = useData((d) => d)
   const now = useDemoNow()
-  const locations = Object.values(data.pickupLocations).filter((l) => l.customerId === customer.id)
+  // CP-29 / CP-28: active locations the user has access to
+  const locations = bookableLocations(data, customer, user)
   const loc = data.pickupLocations[form.locationId]
   const cutoff = data.settings.pickupCutoff
   const slots = loc ? pickupSlots(loc.window, form.pickupDate, now, cutoff) : []
@@ -330,7 +332,7 @@ function ConsigneeStep({ form, setForm, err }: StepProps) {
                   className="w-full px-3 py-2 text-left hover:bg-accent"
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => {
-                    setForm!((f) => withConsignee(f, m))
+                    setForm!((f) => ({ ...withConsignee(f, m), ...(m.defaultService ? { service: m.defaultService } : {}) })) // CP-30 default service
                     setSearch('')
                     setOpen(false)
                   }}

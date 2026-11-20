@@ -60,11 +60,11 @@ export function draftProposal(data: DemoData, id: Id, by: Id, at: IsoDateTime): 
 export function replyTicket(data: DemoData, id: Id, text: string, resolve: boolean, by: Id, at: IsoDateTime): DemoData {
   const t = data.tickets[id]
   if (!t || !text.trim() || t.status === 'closed') return data
-  const ticket = { ...t, ownerId: t.ownerId ?? by, status: resolve ? ('resolved' as const) : ('inProgress' as const), thread: [...t.thread, { at, by, text: text.trim() }], dueAt: t.dueAt ?? ticketDue(t.createdAt ?? at, t.category) }
+  const ticket = { ...t, ownerId: t.ownerId ?? by, status: resolve ? ('resolved' as const) : ('waiting' as const), thread: [...t.thread, { at, by, text: text.trim() }], dueAt: t.dueAt ?? ticketDue(t.createdAt ?? at, t.category) }
   let next: DemoData = { ...data, tickets: { ...data.tickets, [id]: ticket } }
   if (t.customerId) {
     const nid = `NTF-${String(Object.keys(next.notifications).length + 1).padStart(5, '0')}`
-    next = { ...next, notifications: { ...next.notifications, [nid]: { id: nid, audience: { app: 'customer', customerId: t.customerId }, title: resolve ? `Ticket ${id} resolved` : `Reply on ${id}`, body: text.trim(), link: '/customer/support', at, read: false } } }
+    next = { ...next, notifications: { ...next.notifications, [nid]: { id: nid, audience: { app: 'customer', customerId: t.customerId }, title: resolve ? `Ticket ${id} resolved` : `Reply on ${id}`, body: text.trim(), link: `/customer/help?ticket=${id}`, at, read: false } } }
   }
   return audit(next, { userId: by, app: 'erp', action: resolve ? 'ticket.resolve' : 'ticket.reply', recordId: id, at })
 }

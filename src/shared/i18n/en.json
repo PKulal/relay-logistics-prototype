@@ -6,7 +6,8 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "switchLanguage": "Switch language",
-    "simulated": "Simulated"
+    "simulated": "Simulated",
+    "save": "Save"
   },
   "launcher": {
     "title": "Choose an app",
@@ -61,7 +62,10 @@
     "help": "Help",
     "switchPersona": "Switch persona",
     "launcher": "Launcher",
-    "logout": "Log out"
+    "logout": "Log out",
+    "notificationsUnread_one": "Notifications, {{count}} unread",
+    "notificationsUnread_other": "Notifications, {{count}} unread",
+    "preferences": "Preferences"
   },
   "search": {
     "label": "Search",
@@ -5590,7 +5594,10 @@
       "billing": "Billing",
       "damage": "Damage",
       "tracking": "Tracking",
-      "other": "Other"
+      "other": "Other",
+      "shipment": "Shipment",
+      "account": "Account",
+      "integration": "Integration"
     },
     "priority": {
       "high": "High",
@@ -5601,7 +5608,8 @@
       "open": "Open",
       "inProgress": "In progress",
       "resolved": "Resolved",
-      "closed": "Closed"
+      "closed": "Closed",
+      "waiting": "Waiting for customer"
     },
     "left": "{{d}} left",
     "overdue": "Overdue {{d}}",
@@ -5748,5 +5756,424 @@
         "ai": "Emission estimates · Greener routes"
       }
     }
+  },
+  "notif": {
+    "title": "Notifications",
+    "subtitle_zero": "All caught up",
+    "subtitle_one": "{{count}} unread",
+    "subtitle_other": "{{count}} unread",
+    "markAll": "Mark all as read",
+    "filter": "Filter",
+    "f": {
+      "all": "All",
+      "unread": "Unread",
+      "action": "Action needed"
+    },
+    "empty": {
+      "all": "No notifications yet",
+      "unread": "Nothing unread",
+      "action": "Nothing needs your action"
+    },
+    "action": "Action needed",
+    "unread": "Unread"
+  },
+  "cp28": {
+    "title": "Users and roles",
+    "subtitle_one": "{{count}} user",
+    "subtitle_other": "{{count}} users",
+    "invite": "Invite user",
+    "sendInvite": "Send invite",
+    "col": {
+      "name": "Name",
+      "role": "Role",
+      "access": "Location access",
+      "status": "Status",
+      "lastLogin": "Last login",
+      "actions": "Actions"
+    },
+    "you": "you",
+    "allLocations": "All locations",
+    "status": {
+      "active": "Active",
+      "invited": "Invited",
+      "disabled": "Disabled"
+    },
+    "editUser": "Edit {{name}}",
+    "editTitle": "Edit {{name}}",
+    "resend": "Resend invite",
+    "reset": "Reset password",
+    "resent": "Invite sent again to {{name}} by email and SMS",
+    "resetSent": "Password reset link sent to {{name}}",
+    "enable": "Enable",
+    "disable": "Disable",
+    "enabled": "{{name}} can log in again",
+    "disabled": "{{name}} is disabled and can't log in",
+    "disableTitle": "Disable {{name}}?",
+    "disableBody": "They will be logged out and can't log in until an Admin enables them again.",
+    "lastAdmin": "At least one active Admin must remain. Make someone else Admin first.",
+    "rule": "Role changes take effect on the user's next action. The last active Admin can't be disabled or downgraded.",
+    "saved": "{{name}} updated",
+    "invited": "Invite sent to {{name}} ({{email}}) by email and SMS",
+    "f": {
+      "name": "Full name",
+      "email": "Work email",
+      "mobile": "Mobile",
+      "role": "Role",
+      "language": "Preferred language",
+      "access": "Location access"
+    },
+    "err": {
+      "required": "Fill in name, a valid email and a 10-digit mobile.",
+      "emailTaken": "This email already has a user.",
+      "lastAdmin": "At least one active Admin must remain. Make someone else Admin first."
+    }
+  },
+  "cp29": {
+    "title": "Pickup locations",
+    "subtitle": "Where Logisco collects your goods. Inactive locations can't be booked from.",
+    "viewOnly": "Where Logisco collects your goods. Only an Admin can change them.",
+    "add": "Add location",
+    "default": "Default",
+    "active": "Active",
+    "inactive": "Inactive",
+    "activeToggle": "{{name}} active",
+    "window": "{{days}} · {{from}}–{{to}}",
+    "activated": "{{name}} is active",
+    "deactivated": "{{name}} is inactive; it can't be booked from",
+    "setDefault": "Set as default",
+    "defaultSet": "{{name}} is now the default",
+    "defaultNote": "The default location can't be deactivated.",
+    "edit": "Edit",
+    "editTitle": "Edit {{name}}",
+    "serviceable": "Serviceable · {{area}}, {{city}}",
+    "notServiceable": "Not serviceable yet",
+    "saved": "{{name}} saved",
+    "f": {
+      "name": "Location name",
+      "address": "Address",
+      "pincode": "Pincode",
+      "days": "Pickup days",
+      "from": "Pickup from",
+      "to": "Pickup to",
+      "contact": "Contact person",
+      "mobile": "Contact mobile"
+    },
+    "err": {
+      "required": "Fill in every field; the pickup window must end after it starts.",
+      "notServiceable": "This pincode isn't serviceable yet."
+    }
+  },
+  "cp30": {
+    "title": "Address book",
+    "subtitle_one": "{{count}} saved consignee",
+    "subtitle_other": "{{count}} saved consignees",
+    "template": "Excel template",
+    "import": "Import from Excel",
+    "imported": "{{added}} added · {{skipped}} skipped (missing fields or pincode not serviceable)",
+    "add": "Add consignee",
+    "search": "Search company, contact, city or pincode",
+    "empty": "No saved consignees",
+    "col": {
+      "consignee": "Consignee",
+      "place": "City · pincode",
+      "contact": "Contact",
+      "service": "Default service",
+      "hours": "Receiving hours",
+      "actions": "Actions"
+    },
+    "appointment": "Appointment",
+    "editOne": "Edit {{name}}",
+    "deleteOne": "Delete {{name}}",
+    "delete": "Delete",
+    "deleteTitle": "Delete {{name}} from the address book?",
+    "deleteBody": "Past shipments keep the address. You can add it again any time.",
+    "deleted": "{{name}} removed from the address book",
+    "saved": "{{name}} saved",
+    "noDefault": "No default",
+    "hoursHint": "Used for appointment slots, e.g. Sunday closed",
+    "f": {
+      "company": "Company name",
+      "category": "Consignee type",
+      "contact": "Contact person",
+      "mobile": "Mobile",
+      "address": "Address line 1",
+      "landmark": "Address line 2 / landmark",
+      "pincode": "Pincode",
+      "gstin": "GSTIN",
+      "email": "Email",
+      "service": "Default service type",
+      "hours": "Holidays / receiving hours",
+      "appointment": "Appointment required for delivery"
+    },
+    "err": {
+      "required": "Fill in company, contact, a 10-digit mobile and the address.",
+      "notServiceable": "This pincode isn't serviceable yet."
+    }
+  },
+  "cp31": {
+    "title": "SKU master",
+    "subtitle": "{{count}} SKUs · {{flagged}} flagged by AI",
+    "template": "Excel template",
+    "upload": "Upload Excel",
+    "imported": "{{added}} saved · {{flagged}} flagged · {{skipped}} skipped",
+    "add": "Add SKU",
+    "col": {
+      "code": "SKU code",
+      "description": "Description",
+      "dims": "L × B × H (cm)",
+      "weight": "Weight",
+      "volumetric": "Volumetric / CFT",
+      "hsn": "HSN",
+      "value": "Unit value",
+      "status": "Weight status",
+      "actions": "Actions"
+    },
+    "status": {
+      "frozen": "Frozen",
+      "flagged": "Flagged",
+      "draft": "With Logisco"
+    },
+    "why": {
+      "density": "AI: the weight doesn't fit the size",
+      "size": "AI: a side is over 300 cm"
+    },
+    "accept": "Accept as is",
+    "correct": "Correct",
+    "accepted": "{{code}} sent to Logisco to check",
+    "editOne": "Edit {{code}}",
+    "correctTitle": "Correct {{code}}",
+    "frozenNote": "This weight is frozen. Changing the size or weight sends it for Logisco re-verification.",
+    "f": {
+      "l": "Length (cm)",
+      "b": "Breadth (cm)",
+      "h": "Height (cm)",
+      "weight": "Weight (kg)",
+      "value": "Unit value (₹)"
+    },
+    "preview": "Volumetric {{volumetric}} · CFT {{cft}}.",
+    "looksRight": "Size and weight look right.",
+    "saved": "{{code}} saved and weight frozen",
+    "reverified": "{{code}} re-verified; weight frozen",
+    "savedFlagged": "{{code}} saved but flagged: check the size and weight",
+    "note": "Volumetric weight = L × B × H ÷ {{divisor}} (Parcel). CFT weight = cubic feet × {{cft}} (PTL). Frozen weights are verified by Logisco and used at booking.",
+    "err": {
+      "required": "Fill in code, description, size and weight.",
+      "codeTaken": "This SKU code already exists."
+    }
+  },
+  "cp32": {
+    "title": "Integrations",
+    "subtitle": "API keys, webhooks and connectors for booking from your own systems.",
+    "keys": "API keys",
+    "env": "Environment",
+    "envs": {
+      "sandbox": "Sandbox",
+      "production": "Production"
+    },
+    "generate": "Generate key",
+    "generateTitle": "New {{env}} key",
+    "keyName": "Key name",
+    "prodLocked": "Production keys are available after go-live.",
+    "noKeys": "No keys in this environment",
+    "col": {
+      "name": "Name",
+      "key": "Key",
+      "created": "Created",
+      "lastUsed": "Last used",
+      "actions": "Actions"
+    },
+    "revoke": "Revoke",
+    "revoked": "Revoked {{date}}",
+    "revokeTitle": "Revoke {{name}}?",
+    "revokeBody": "Systems using this key stop working at once.",
+    "revokedToast": "{{name}} revoked",
+    "keyCreated": "Key created",
+    "keyOnce": "Copy it now: it is shown in full only once.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyFailed": "Couldn't copy; select the text instead",
+    "done": "Done",
+    "webhooks": "Webhooks",
+    "addWebhook": "Add webhook",
+    "noWebhooks": "No webhooks",
+    "endpoint": "Endpoint URL",
+    "httpsOnly": "HTTPS only",
+    "events": "Events",
+    "ev": {
+      "booked": "Booked",
+      "pickedUp": "Picked up",
+      "inTransit": "In transit",
+      "outForDelivery": "Out for delivery",
+      "delivered": "Delivered",
+      "ndr": "NDR",
+      "exception": "Exception",
+      "invoice": "Invoice generated"
+    },
+    "allEvents": "All events",
+    "secret": "Signing secret whsec_••••{{last4}}",
+    "lastTest": "Last test {{status}} at {{at}}",
+    "test": "Send test event",
+    "testOk": "200 OK in {{ms}} ms",
+    "testFail": "The endpoint didn't answer",
+    "regenerate": "Regenerate secret",
+    "removeWebhook": "Remove webhook",
+    "removed": "Webhook removed",
+    "secretTitle": "Signing secret",
+    "secretOnce": "Copy it now: it is shown in full only once.",
+    "connectors": "Connectors",
+    "erp": {
+      "tally": "Tally",
+      "sap": "SAP",
+      "zoho": "Zoho Books"
+    },
+    "connected": "Connected",
+    "notConnected": "Not connected",
+    "sync": "Every {{every}} min · last sync {{at}}",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "connectedToast": "{{erp}} connected",
+    "disconnected": "{{erp}} disconnected",
+    "oneErp": "Disconnect the current ERP first.",
+    "ondc": "Marketplace / ONDC",
+    "sellerId": "Seller ID",
+    "sellerIs": "Seller ID {{id}}",
+    "ondcOn": "Marketplace linked",
+    "ondcOff": "Marketplace unlinked",
+    "templates": "Excel templates",
+    "tpl": {
+      "booking": "Bulk booking",
+      "address": "Address book",
+      "sku": "SKU master"
+    },
+    "tplNote": "Fill in and upload from the matching screen for {{name}}."
+  },
+  "cp33": {
+    "title": "Company profile",
+    "subtitle": "Legal details, KYC, billing, bank, account manager and rate card.",
+    "viewOnly": "Only an Admin can change these details.",
+    "legal": "Legal details",
+    "legalName": "Legal name",
+    "constitution": "Constitution",
+    "kyc": "KYC",
+    "kycState": {
+      "verified": "Verified",
+      "underReview": "Under review",
+      "notStarted": "Not started"
+    },
+    "reKyc": "re-KYC due {{date}}",
+    "requestChange": "Request a change",
+    "docs": "KYC documents",
+    "noDocs": "No documents on file",
+    "doc": {
+      "gst": "GST certificate",
+      "pan": "PAN card",
+      "coi": "Certificate of incorporation",
+      "cheque": "Cancelled cheque"
+    },
+    "uploaded": "uploaded {{date}}",
+    "expires": "expires {{date}}",
+    "replace": "Replace",
+    "replaced": "{{doc}} replaced; sent to Logisco for review",
+    "billing": "Billing settings",
+    "f": {
+      "address": "Billing address",
+      "frequency": "Invoice frequency",
+      "emails": "Invoice email(s)",
+      "po": "PO number mandatory on bookings",
+      "holder": "Account holder name",
+      "account": "Account number",
+      "otp": "OTP"
+    },
+    "freq": {
+      "monthly": "Monthly",
+      "perShipment": "Per shipment"
+    },
+    "emailsHint": "Separate several with commas",
+    "billingSaved": "Billing settings saved",
+    "bank": "Bank account",
+    "noBank": "No bank account on file",
+    "bankUse": "Used for COD remittances and refunds.",
+    "changeBank": "Change bank account",
+    "bankNote": "We send an OTP to your mobile, then credit ₹1 to the new account to check the name.",
+    "sendOtp": "Send OTP",
+    "otpSent": "OTP sent to {{mobile}} (demo: {{otp}})",
+    "verifyChange": "Verify and change",
+    "otpWrong": "Wrong OTP",
+    "bankInvalid": "Check the account number and IFSC.",
+    "pennyFail": "Penny-drop name {{name}} matches only {{pct}}%. The account was not changed.",
+    "bankChanged": "Bank account changed · penny-drop name {{name}} ({{pct}}% match)",
+    "kam": "Account manager",
+    "noKam": "Self-serve account: write to support from Help.",
+    "rateCard": "Rate card and contract",
+    "valid": "Valid {{from}} to {{to}}",
+    "credit": "Credit limit {{limit}} · {{days}} days · deposit {{deposit}}",
+    "prepaid": "Prepaid wallet",
+    "viewRateCard": "View rate card",
+    "readOnly": "Read only. Ask your account manager for a revision."
+  },
+  "cp34": {
+    "title": "Preferences",
+    "subtitle": "Your language, and messages to your receivers.",
+    "language": "Language",
+    "languageHint": "Applies to the portal and your messages.",
+    "saved": "Language saved",
+    "consignee": "Consignee notifications",
+    "consigneeBody": "Send tracking, appointment and delivery messages (WhatsApp / SMS) to your receivers.",
+    "on": "Consignee messages on",
+    "off": "Consignee messages off"
+  },
+  "cp37": {
+    "title": "Help and support",
+    "subtitle_zero": "No open tickets",
+    "subtitle_one": "{{count}} open ticket",
+    "subtitle_other": "{{count}} open tickets",
+    "raise": "Raise ticket",
+    "raiseSub": "For service or billing questions that are not exceptions or claims.",
+    "empty": "No tickets yet",
+    "col": {
+      "ticket": "Ticket",
+      "category": "Category",
+      "subject": "Subject",
+      "status": "Status",
+      "updated": "Last update"
+    },
+    "cat": {
+      "shipment": "Shipment",
+      "billing": "Billing",
+      "pickup": "Pickup",
+      "account": "Account",
+      "integration": "Integration",
+      "other": "Other",
+      "delivery": "Delivery",
+      "damage": "Damage",
+      "tracking": "Tracking"
+    },
+    "status": {
+      "open": "Open",
+      "inProgress": "In progress",
+      "waiting": "Waiting for you",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "back": "All tickets",
+    "f": {
+      "category": "Category",
+      "ref": "LR / invoice (optional)",
+      "subject": "Subject",
+      "description": "Description"
+    },
+    "refUnknown": "Not one of your LRs or invoices",
+    "attach": "Attach a file (max 5 MB)",
+    "tooBig": "Files up to {{mb}} MB",
+    "submit": "Submit",
+    "raised": "{{id}} raised",
+    "logisco": "{{name}} (Logisco)",
+    "resolvedTitle": "Resolved",
+    "resolvedBody": "Logisco marked this resolved. Confirm to close it, or reply if it isn't.",
+    "confirm": "Confirm resolved",
+    "closed": "{{id}} closed",
+    "reply": "Reply",
+    "send": "Send",
+    "sent": "Reply sent"
   }
 }

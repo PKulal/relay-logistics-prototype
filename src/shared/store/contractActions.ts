@@ -141,14 +141,14 @@ export function setIntegration(data: DemoData, customerId: Id, s: IntegrationSte
 
 /**
  * SIMULATED AI outlier check (source §6 Step 6: "AI flags dimension
- * outliers"): implausible density (below 20 or above 3,000 kg per m³) or a
- * side over 300 cm.
+ * outliers"): implausible density (below 20 or above 1,200 kg per m³: packed
+ * goods, even copper coils, sit well inside this) or a side over 300 cm.
  */
 export function skuOutlier(s: Pick<Sku, 'l' | 'b' | 'h' | 'weight'>): 'density' | 'size' | undefined {
   if (Math.max(s.l, s.b, s.h) > 300) return 'size'
   const m3 = (s.l * s.b * s.h) / 1_000_000
   const density = m3 > 0 ? s.weight / m3 : Infinity
-  return density < 20 || density > 3000 ? 'density' : undefined
+  return density < 20 || density > 1200 ? 'density' : undefined
 }
 
 export interface SkuRow {

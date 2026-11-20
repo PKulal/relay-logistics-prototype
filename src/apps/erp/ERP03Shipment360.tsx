@@ -313,8 +313,8 @@ function Money({ data, s, legs }: { data: DemoData; s: Shipment; legs: Leg[] }) 
   const { t } = useTranslation()
   const insurance = priceLine(s.price, 'fov')
   const m = computeMargin({ subtotal: s.price.subtotal, legCosts: legs.map((l) => l.cost), insurance, riskBufferPct: data.settings.riskBufferPct, targetMarginPct: data.settings.targetMarginPct })
-  const row = (label: React.ReactNode, amount: string, strong?: boolean) => (
-    <tr className="border-b border-gray-100">
+  const row = (label: React.ReactNode, amount: string, strong?: boolean, key?: string) => (
+    <tr key={key} className="border-b border-gray-100">
       <td className={cn('py-1.5', strong && 'font-semibold')}>{label}</td>
       <td className={cn('tabular py-1.5 text-right', strong && 'font-semibold')}>{amount}</td>
     </tr>
@@ -330,7 +330,7 @@ function Money({ data, s, legs }: { data: DemoData; s: Shipment; legs: Leg[] }) 
         <table className="w-full text-table">
           <tbody>
             {row(t('erp03.priceBeforeGst'), formatINR(s.price.subtotal), true)}
-            {legs.map((l) => row(`L${l.seq} ${data.partners[l.partnerId].shortName} (${t(`legType.${l.type}`)})`, `− ${formatINR(l.cost)}`))}
+            {legs.map((l) => row(`L${l.seq} ${data.partners[l.partnerId].shortName} (${t(`legType.${l.type}`)})`, `− ${formatINR(l.cost)}`, false, l.id))}
             {row(t('erp03.insurancePassThrough'), `− ${formatINR(insurance)}`)}
             {row(t('erp03.grossMargin', { pct: m.grossPct }), formatINR(m.gross), true)}
             {row(t('erp03.riskBuffer', { pct: data.settings.riskBufferPct }), `− ${formatINR(m.buffer)}`)}

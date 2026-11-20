@@ -191,7 +191,7 @@ export default function CP08Contract() {
   )
 }
 
-function ParcelTable({ card }: { card: CustomerRateCard }) {
+export function ParcelTable({ card }: { card: CustomerRateCard }) {
   const { t } = useTranslation()
   return (
     <section className="overflow-x-auto rounded-xl border bg-card p-4 shadow-card">
@@ -224,7 +224,7 @@ function ParcelTable({ card }: { card: CustomerRateCard }) {
   )
 }
 
-function PtlTable({ data, card }: { data: DemoData; card: CustomerRateCard }) {
+export function PtlTable({ data, card }: { data: DemoData; card: CustomerRateCard }) {
   const { t } = useTranslation()
   return (
     <section className="overflow-x-auto rounded-xl border bg-card p-4 shadow-card">
@@ -261,7 +261,7 @@ function PtlTable({ data, card }: { data: DemoData; card: CustomerRateCard }) {
   )
 }
 
-function Surcharges({ data, card }: { data: DemoData; card: CustomerRateCard }) {
+export function Surcharges({ data, card }: { data: DemoData; card: CustomerRateCard }) {
   const { t } = useTranslation()
   const s = card.surcharges
   const rows: [string, string][] = [

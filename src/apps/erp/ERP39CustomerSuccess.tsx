@@ -34,13 +34,13 @@ export default function ERP39CustomerSuccess() {
   const tickets = Object.values(data.tickets)
     .filter((x) => x.customerId)
     .map((x) => ({ x, priority: ticketPriority(data, x, now) }))
-    .sort((a, b) => Number(a.x.status === 'resolved') - Number(b.x.status === 'resolved') || RANK[a.priority] - RANK[b.priority] || (a.x.dueAt ?? '').localeCompare(b.x.dueAt ?? ''))
+    .sort((a, b) => Number(a.x.status === 'resolved' || a.x.status === 'closed') - Number(b.x.status === 'resolved' || b.x.status === 'closed') || RANK[a.priority] - RANK[b.priority] || (a.x.dueAt ?? '').localeCompare(b.x.dueAt ?? ''))
   const ndrs = ndrFollowUps(data, now)
   const accounts = Object.values(data.customers).filter((c) => c.status === 'live')
 
   return (
     <div className="flex flex-col gap-4">
-      <PageHeader title={t('erp39.title')} subtitle={t('erp39.subtitle', { count: tickets.filter((x) => x.x.status === 'open' || x.x.status === 'inProgress').length })} className="mb-0" />
+      <PageHeader title={t('erp39.title')} subtitle={t('erp39.subtitle', { count: tickets.filter((x) => x.x.status !== 'resolved' && x.x.status !== 'closed').length })} className="mb-0" />
 
       <section className="overflow-x-auto rounded-xl border bg-card shadow-card" aria-label={t('erp39.queue')}>
         <h2 className="flex items-center gap-2 px-4 pt-4 font-heading text-section font-semibold">
@@ -78,7 +78,7 @@ export default function ERP39CustomerSuccess() {
                   <td className={cn('tabular', !done && left !== undefined && left < 0 && 'font-semibold text-status-danger')}>{done || left === undefined ? '—' : left < 0 ? t('erp39.overdue', { d: formatDuration(-left) }) : t('erp39.left', { d: formatDuration(left) })}</td>
                   <td>{x.ownerId ? data.staff[x.ownerId]?.name : '—'}</td>
                   <td>
-                    <Chip tone={done ? 'success' : x.status === 'inProgress' ? 'info' : 'warning'}>{t(`erp39.status.${x.status}`)}</Chip>
+                    <Chip tone={done ? 'success' : x.status === 'inProgress' || x.status === 'waiting' ? 'info' : 'warning'}>{t(`erp39.status.${x.status}`)}</Chip>
                   </td>
                 </tr>,
                 open === x.id ? <TicketThread key={`${x.id}-t`} x={x} /> : null,
@@ -125,7 +125,7 @@ export default function ERP39CustomerSuccess() {
               {accounts.map((c) => {
                 const risk = churnRisk(data, c.id, now)
                 const onTime = accountStats(data, c.id, now).onTimePct
-                const openTickets = Object.values(data.tickets).filter((x) => x.customerId === c.id && (x.status === 'open' || x.status === 'inProgress')).length
+                const openTickets = Object.values(data.tickets).filter((x) => x.customerId === c.id && x.status !== 'resolved' && x.status !== 'closed').length
                 return (
                   <tr key={c.id} className="border-b last:border-0" aria-label={c.shortName}>
                     <td className="px-4 py-2">
