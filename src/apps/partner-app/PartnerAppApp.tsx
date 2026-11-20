@@ -42,6 +42,7 @@ import PA10Training, { PA10Practice } from './PA10Training'
 import PA13Settings from './PA13Settings'
 import PAMore from './PAMore'
 import PA11Assistant from './PA11Assistant'
+import PA03Setup from './PA03Setup'
 
 /** Built tab screens by screen id. */
 const BUILT: Record<string, React.ReactNode> = {
@@ -63,7 +64,7 @@ export default function PartnerAppApp() {
   const partner = useData((d) => (staff ? d.partners[staff.partnerId] : undefined))
 
   // PP-29: deactivated or blocked staff have no app access
-  if (!staff || !partner || (staff.status ?? 'active') !== 'active') return <Navigate to="/launch/partner-app" replace />
+  if (!staff || !partner || (staff.status ?? 'active') !== 'active') return <Navigate to="/app/welcome" replace />
 
   const tabs = TABS[staff.role]
   const screen = (s: Pick<Tab, 'screenId' | 'labelKey' | 'phase'>) => (
@@ -124,6 +125,7 @@ export default function PartnerAppApp() {
             <Route path="notifications" element={<PA08Notifications />} />
             <Route path="training" element={<PA10Training />} />
             <Route path="assistant" element={<PA11Assistant />} />
+            <Route path="setup" element={<PA03Setup />} />
             <Route path="training/:taskId" element={<PA10Practice />} />
             {staff.role === 'hub' && <Route path="my-day" element={<PA09MyDay />} />}
             {/* Another role's tab opened by URL */}

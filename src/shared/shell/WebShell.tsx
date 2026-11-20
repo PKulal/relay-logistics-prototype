@@ -158,7 +158,7 @@ export function WebShell<Ctx>({ app, nav, orgName, orgBadge, user, headerActions
               <DropdownMenuItem
                 onSelect={() => {
                   logout(app)
-                  navigate(`/launch/${meta.id}`)
+                  navigate(`${meta.path}/login`)
                 }}
               >
                 <LogOut /> {t('header.logout')}

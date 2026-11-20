@@ -60,7 +60,7 @@ export default function PartnerPortalApp() {
   const cases = useData((d) => d.suspensionCases)
 
   // PP-34: a disabled user is signed out
-  if (!user || !partner || user.status === 'disabled') return <Navigate to="/launch/partner-portal" replace />
+  if (!user || !partner || user.status === 'disabled') return <Navigate to="/partner/login" replace />
 
   const openCase = Object.values(cases).some((c) => c.partnerId === partner.id && c.step !== 'closed')
   const ctx: PartnerCtx = { role: user.role, partner, openCase }

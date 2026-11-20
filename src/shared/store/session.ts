@@ -14,10 +14,27 @@ export interface AppSession {
   loggedInAt: number
 }
 
+/** CP-01 / PP-01 "Remember me": the login survives closing the tab (this device only). */
+const REMEMBER_KEY = 'logisco-remember'
+const readRemembered = (): Partial<Record<AppKey, Id>> => {
+  try {
+    return JSON.parse(localStorage.getItem(REMEMBER_KEY) ?? '{}') as Partial<Record<AppKey, Id>>
+  } catch {
+    return {}
+  }
+}
+const writeRemembered = (r: Partial<Record<AppKey, Id>>) => {
+  try {
+    localStorage.setItem(REMEMBER_KEY, JSON.stringify(r))
+  } catch {
+    /* storage blocked: remember for this tab only */
+  }
+}
+
 interface SessionState {
   sessions: Partial<Record<AppKey, AppSession>>
   language: Language
-  login: (app: AppKey, userId: Id) => void
+  login: (app: AppKey, userId: Id, remember?: boolean) => void
   logout: (app: AppKey) => void
   setLanguage: (language: Language) => void
 }
@@ -27,9 +44,17 @@ export const useSession = create<SessionState>()(
     (set) => ({
       sessions: {},
       language: 'en',
-      login: (app, userId) => set((s) => ({ sessions: { ...s.sessions, [app]: { userId, loggedInAt: Date.now() } } })),
+      login: (app, userId, remember) => {
+        if (remember) writeRemembered({ ...readRemembered(), [app]: userId })
+        set((s) => ({ sessions: { ...s.sessions, [app]: { userId, loggedInAt: Date.now() } } }))
+      },
       logout: (app) =>
         set((s) => {
+          const r = readRemembered()
+          if (r[app]) {
+            delete r[app]
+            writeRemembered(r)
+          }
           const sessions = { ...s.sessions }
           delete sessions[app]
           return { sessions }
@@ -44,6 +69,11 @@ export const useSession = create<SessionState>()(
       storage: createJSONStorage(() => sessionStorage),
       onRehydrateStorage: () => (state) => {
         if (state?.language) void i18n.changeLanguage(state.language)
+        // A remembered login fills in an app this tab isn't logged in to
+        if (state) {
+          const r = readRemembered()
+          for (const [app, userId] of Object.entries(r) as [AppKey, Id][]) if (!state.sessions[app] && userId) state.sessions = { ...state.sessions, [app]: { userId, loggedInAt: Date.now() } }
+        }
       },
     },
   ),

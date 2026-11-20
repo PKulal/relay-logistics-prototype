@@ -66,7 +66,7 @@ export default function ErpApp() {
   const notifications = useData((d) => d.notifications)
 
   // ERP-42: a disabled user is signed out
-  if (!user || user.status === 'disabled') return <Navigate to="/launch/erp" replace />
+  if (!user || user.status === 'disabled') return <Navigate to="/erp/login" replace />
 
   const ctx: ErpCtx = { role: user.role }
   // ERP-42 role editor overrides the default menu and URL access

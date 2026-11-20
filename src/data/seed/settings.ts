@@ -93,7 +93,7 @@ function addPartnerSettings(data: DemoData): DemoData {
     Object.entries(data.fieldStaff).map(([id, f]) => {
       n++
       const licenceNo = f.role !== 'hub' && f.licenceValidTill ? (f.licenceNo ?? `DL-04${String(20190000000 + n * 104729).slice(-11)}`) : f.licenceNo
-      return [id, { ...f, status: f.status ?? 'active', licenceNo, policeVerifiedOn: f.policeVerified ? (f.policeVerifiedOn ?? '2026-03-08') : undefined }]
+      return [id, { ...f, status: f.status ?? 'active', appActivatedAt: f.appActivatedAt ?? AT('2026-03-15', '09:00'), licenceNo, policeVerifiedOn: f.policeVerified ? (f.policeVerifiedOn ?? '2026-03-08') : undefined }]
     }),
   )
   // PA-10: one SwiftCity rider is still in training (videos started, practice not done)

@@ -112,7 +112,7 @@ export default function PA13Settings() {
         disabled={queue.length > 0}
         onClick={() => {
           logout('partnerApp')
-          navigate('/launch/partner-app')
+          navigate('/app/login')
         }}
       >
         <LogOut /> {t('header.logout')}

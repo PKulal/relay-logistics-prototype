@@ -129,9 +129,8 @@ function LoginDialog({ persona, appPath, onClose }: { persona: Persona; appPath:
       return
     }
     login(persona.app, persona.id)
-    // CP-28: an invited user becomes active on first login
-    if (persona.app === 'customer') useDemoStore.getState().recordCustomerLogin(persona.id)
-    if (persona.app === 'partnerPortal') useDemoStore.getState().recordPartnerLogin(persona.id)
+    // CP-28 / PP-34: an invited user becomes active on first login; every login is audited (ERP-43)
+    useDemoStore.getState().recordLogin(persona.app, persona.id)
     toast.success(t('login.welcome', { name: persona.name }))
     navigate(appPath)
   }

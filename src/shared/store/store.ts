@@ -47,6 +47,7 @@ import * as ps from './partnerSettingsActions'
 import * as fa from './fieldAppActions'
 import * as adm from './adminActions'
 import * as ai from './aiLogActions'
+import * as auth from './authActions'
 import type { SettingsError, SettingsPatch, StaffInput as StaffUserInput, StaffUserError } from './adminActions'
 import type { HubInput, PortalUserError, PortalUserInput, StaffEdit, StaffError, StaffInput, VehicleError, VehicleInput } from './partnerSettingsActions'
 import type { ConsigneeInput, LocationInput, SkuInput, TicketInput, UserError, UserInput } from './customerSettingsActions'
@@ -347,6 +348,10 @@ export interface DemoState {
   /** AI assistant (CP-35, PP-37, PA-11, ERP-02): a prepared action is logged; Confirm marks it accepted (ERP-43) */
   logAssistant: (app: AppKey, intent: string, recordId: Id, confidence: number) => Id
   acceptAssistant: (decisionId: Id, userId: Id) => void
+  /** Logins (CP-01, PP-01, PA-02, ERP-01, persona picker): audited */
+  recordLogin: (app: AppKey, userId: Id) => void
+  activateFieldApp: (staffId: Id) => void
+  recordPasswordReset: (app: AppKey, userId: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -712,6 +717,9 @@ export const useDemoStore = create<DemoState>()(
           updateSettings: (patch: SettingsPatch, by: Id) => run((d, now) => adm.updateSettings(d, patch, by, now)),
           logAssistant: (app: AppKey, intent: string, recordId: Id, confidence: number) => run((d, now) => ai.logAi(d, { kind: 'assistant', app, intent, recordId, at: now, confidence })).id,
           acceptAssistant: (decisionId: Id, userId: Id) => upd((d) => ai.acceptAi(d, decisionId, userId)),
+          recordLogin: (app: AppKey, userId: Id) => upd((d, now) => auth.recordLogin(d, app, userId, now)),
+          activateFieldApp: (staffId: Id) => upd((d, now) => auth.activateFieldApp(d, staffId, now)),
+          recordPasswordReset: (app: AppKey, userId: Id) => upd((d, now) => auth.recordPasswordReset(d, app, userId, now)),
         }
       })(),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),

@@ -875,6 +875,8 @@ export interface FieldStaff {
   licenceNo?: string
   policeVerifiedOn?: IsoDate
   appLinkSentAt?: IsoDateTime
+  /** PA-03: first login on the app (permissions and profile checked) */
+  appActivatedAt?: IsoDateTime
   /** PA-10 progress: videos watched and practice tasks passed (source §4 Step 6) */
   training?: { videos: string[]; practice: string[]; completedAt?: IsoDateTime }
   /** PA-13 Hindi voice prompts (source §5.1). Default on. */

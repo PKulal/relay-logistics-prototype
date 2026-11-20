@@ -7091,5 +7091,118 @@
       "scoring": "Open scoring",
       "shipment": "Open"
     }
+  },
+  "auth": {
+    "otpTitle": "Enter the OTP",
+    "otp": "One-time password",
+    "otpSent": "We sent a 6-digit OTP to {{mobile}}.",
+    "otpHint": "Demo OTP: {{otp}}",
+    "otpWrong_one": "Wrong OTP. {{count}} attempt left.",
+    "otpWrong_other": "Wrong OTP. {{count}} attempts left.",
+    "otpLocked": "Too many wrong attempts. Go back and request a new OTP.",
+    "verify": "Verify",
+    "resend": "Resend OTP",
+    "resendIn": "Resend in {{s}} s",
+    "noMoreResends": "No more resends",
+    "changeNumber": "Change number",
+    "language": "Language",
+    "method": "Login method",
+    "m": {
+      "email": "Email & password",
+      "mobile": "Mobile OTP"
+    },
+    "email": "Work email",
+    "password": "Password",
+    "anyPassword": "Demo: any password of 8+ characters works.",
+    "show": "Show password",
+    "hide": "Hide password",
+    "mobile": "Mobile number",
+    "remember": "Remember me on this device",
+    "login": "Log in",
+    "getOtp": "Get OTP",
+    "sendOtp": "Send OTP",
+    "forgot": "Forgot password?",
+    "locked": "Too many failed attempts. Your account is locked for 15 minutes.",
+    "demoUsers": "Demo users",
+    "personas": "Pick a demo persona instead",
+    "err": {
+      "unknown": "Email, mobile or password is not correct.",
+      "disabled": "Your access has been disabled. Contact your company admin.",
+      "fieldStaff": "Please use the Logisco Partner App.",
+      "invalid": "Check the email or the 10-digit mobile number.",
+      "password": "Email, mobile or password is not correct."
+    },
+    "forgotTitle": "Reset your password",
+    "forgotSub": "We'll send an OTP to the mobile registered with your account.",
+    "emailOrMobile": "Email or mobile",
+    "ifExists": "If this account exists, we've sent an OTP to its registered mobile.",
+    "newPassword": "New password",
+    "pwRule": "At least 8 characters with a letter and a number",
+    "strength": "Password strength {{n}} of 4",
+    "confirmPassword": "Confirm password",
+    "noMatch": "Passwords don't match",
+    "reset": "Reset password",
+    "resetDone": "Password changed. Log in with the new password.",
+    "backToLogin": "Back to login",
+    "cp": {
+      "title": "Customer Portal",
+      "subtitle": "Book, track and manage your shipments.",
+      "signup": "New business? Sign up",
+      "signupBody": "Open an account in minutes",
+      "track": "Track a shipment",
+      "trackBody": "No login needed"
+    },
+    "pp": {
+      "title": "Partner Portal",
+      "subtitle": "Jobs, payouts and your network with Logisco.",
+      "become": "Become a partner",
+      "becomeBody": "Register your company",
+      "status": "Check application status",
+      "statusHint": "With your reference and mobile",
+      "statusBody": "Enter your application reference and the mobile you applied with.",
+      "ref": "Application reference",
+      "statusNotFound": "No application matches this reference and mobile."
+    },
+    "erp": {
+      "title": "Logisco ERP + Control Tower",
+      "subtitle": "Staff sign-in with your company account and a second factor.",
+      "sso": "Sign in with company account",
+      "pick": "Choose your account (demo: one per role)",
+      "second": "Second factor for {{name}}",
+      "note": "Two-factor login is mandatory for staff. Sessions end after 8 hours, or 30 minutes idle."
+    },
+    "pa": {
+      "chooseLanguage": "Choose your language",
+      "moreLanguages": "More languages can be added later.",
+      "continue": "Continue",
+      "login": "Log in with your mobile",
+      "err": {
+        "unknown": "This number is not registered. Ask your company to add you.",
+        "disabled": "Your company has removed your app access. Contact your office.",
+        "fieldStaff": "This number is not registered. Ask your company to add you.",
+        "invalid": "Enter a 10-digit mobile number."
+      },
+      "setup": "Set up your phone",
+      "permissions": "Permissions",
+      "profile": "Your profile",
+      "perm": {
+        "camera": "Camera",
+        "location": "Location",
+        "notifications": "Notifications",
+        "calls": "Phone calls",
+        "battery": "Battery optimisation"
+      },
+      "why": {
+        "camera": "To scan labels and take photos",
+        "location": "To geo-tag scans and track trips",
+        "notifications": "For new and changed tasks",
+        "calls": "For masked calls to customers",
+        "battery": "Turn off so tracking keeps running on trips"
+      },
+      "allow": "Allow",
+      "allowed": "Allowed",
+      "turnOff": "Turn off",
+      "needRequired": "Allow camera, location and notifications to continue."
+    }
   }
 }

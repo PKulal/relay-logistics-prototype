@@ -55,7 +55,7 @@ export default function CustomerApp() {
   const notifications = useData((d) => d.notifications)
 
   // CP-28: a disabled user is signed out
-  if (!user || !customer || user.status === 'disabled') return <Navigate to="/launch/customer" replace />
+  if (!user || !customer || user.status === 'disabled') return <Navigate to="/customer/login" replace />
   const viewer = { app: 'customer' as const, customerId: customer.id, userId: user.id }
 
   const ctx: CustomerCtx = { role: user.role, customer }
