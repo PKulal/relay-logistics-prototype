@@ -3,6 +3,7 @@
  * One or more accepted jobs go to a rider, driver or hub staff member, who gets
  * them in the Partner App. Line-haul jobs choose the truck and driver.
  */
+import { vehicleBlock } from '@shared/engines/partnerSettings'
 import { ArrowLeft, UserCheck } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -37,7 +38,8 @@ export default function PP14Assign() {
   const legType = legs[0]?.type
   const sameType = legs.every((l) => l.type === legType)
   const options = legType ? staffOptions(data, partner.id, legType, now) : []
-  const vehicles = Object.values(data.vehicles).filter((v) => v.partnerId === partner.id)
+  // PP-30: inactive vehicles are hidden; one with an expired document is shown but can't be picked
+  const vehicles = Object.values(data.vehicles).filter((v) => v.partnerId === partner.id && v.active !== false)
   const needsVehicle = legs.some((l) => vehicleRequired(l, data.shipments[l.shipmentId]))
   const lineHaul = legType === 'lineHaul'
 
@@ -136,8 +138,9 @@ export default function PP14Assign() {
           <NativeSelect id="as-veh" value={vehicleId} onChange={(e) => setVehicleId(e.target.value)}>
             <option value="">{t('pp14.noVehicle')}</option>
             {vehicles.map((v) => (
-              <option key={v.id} value={v.id}>
+              <option key={v.id} value={v.id} disabled={!!vehicleBlock(v, now)}>
                 {v.regNo} · {v.type}
+                {vehicleBlock(v, now) ? ` · ${t('pp14.docsExpired')}` : ''}
               </option>
             ))}
           </NativeSelect>

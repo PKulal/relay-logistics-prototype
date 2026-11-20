@@ -10,6 +10,16 @@ import { useSessionUser } from '@shared/store/session'
 import { AccessDenied, NotFound } from '@shared/ui/Page'
 import { TierBadge } from '@shared/ui/TierBadge'
 import { partnerNav, type PartnerCtx } from './nav'
+import PP29Staff from './PP29Staff'
+import PP30Fleet from './PP30Fleet'
+import PP31Hubs from './PP31Hubs'
+import PP32Compliance from './PP32Compliance'
+import PP33Company from './PP33Company'
+import PP34Users from './PP34Users'
+import PP35Api from './PP35Api'
+import PP36Preferences from './PP36Preferences'
+import { unreadCount } from '@shared/engines/notifications'
+import PP38Notifications from './PP38Notifications'
 import PP11Dashboard from './PP11Dashboard'
 import PP12JobInbox from './PP12JobInbox'
 import PP13JobDetail from './PP13JobDetail'
@@ -34,7 +44,7 @@ import PP28Cod from './PP28Cod'
 import PP39Case from './PP39Case'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'PP-10': PP10Tracker, 'PP-11': PP11Dashboard, 'PP-12': PP12JobInbox, 'PP-18': PP18Capacity, 'PP-19': PP19Coverage, 'PP-20': PP20Escalations, 'PP-21': PP21DeliveryExceptions, 'PP-22': PP22Claims, 'PP-23': PP23Scorecard, 'PP-25': PP25Daily, 'PP-26': PP26Invoices, 'PP-27': PP27Payouts, 'PP-28': PP28Cod, 'PP-39': PP39Case }
+const SCREENS = { 'PP-10': PP10Tracker, 'PP-11': PP11Dashboard, 'PP-12': PP12JobInbox, 'PP-18': PP18Capacity, 'PP-19': PP19Coverage, 'PP-20': PP20Escalations, 'PP-21': PP21DeliveryExceptions, 'PP-22': PP22Claims, 'PP-23': PP23Scorecard, 'PP-25': PP25Daily, 'PP-26': PP26Invoices, 'PP-27': PP27Payouts, 'PP-28': PP28Cod, 'PP-29': PP29Staff, 'PP-30': PP30Fleet, 'PP-31': PP31Hubs, 'PP-32': PP32Compliance, 'PP-33': PP33Company, 'PP-34': PP34Users, 'PP-35': PP35Api, 'PP-36': PP36Preferences, 'PP-38': PP38Notifications, 'PP-39': PP39Case }
 
 /** Before the monitored trial the partner sees only its onboarding (no jobs yet). */
 const PRE_TRIAL: PartnerStatus[] = ['applied', 'kyc', 'agreement', 'integration']
@@ -45,10 +55,15 @@ export default function PartnerPortalApp() {
   const userId = useSessionUser('partnerPortal')
   const user = useData((d) => (userId ? d.partnerUsers[userId] : undefined))
   const partner = useData((d) => (user ? d.partners[user.partnerId] : undefined))
+  const notifications = useData((d) => d.notifications)
+  const cases = useData((d) => d.suspensionCases)
 
-  if (!user || !partner) return <Navigate to="/launch/partner-portal" replace />
+  // PP-34: a disabled user is signed out
+  if (!user || !partner || user.status === 'disabled') return <Navigate to="/launch/partner-portal" replace />
 
-  const ctx: PartnerCtx = { role: user.role, partner }
+  const openCase = Object.values(cases).some((c) => c.partnerId === partner.id && c.step !== 'closed')
+  const ctx: PartnerCtx = { role: user.role, partner, openCase }
+  const viewer = { app: 'partnerPortal' as const, partnerId: partner.id, userId: user.id, role: user.role }
   const preTrial = PRE_TRIAL.includes(partner.status)
   // Offboarded: access revoked, only the case stays visible (source §5.4)
   const offboarded = partner.status === 'offboarded'
@@ -73,6 +88,8 @@ export default function PartnerPortalApp() {
             }
             user={{ name: user.name, roleLabel: t(`roles.partner.${user.role}`) }}
             searchPlaceholderKey="search.placeholder.partner"
+            unread={unreadCount(notifications, viewer)}
+            preferencesPath="settings/preferences"
           />
         }
       >

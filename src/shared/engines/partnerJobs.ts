@@ -188,7 +188,7 @@ export function partnerAlerts(data: DemoData, partnerId: Id, now: IsoDateTime): 
 
 // ─── Assignment (PP-14) ────────────────────────────────────────────────────────
 
-export type StaffBlock = 'licenceExpired' | 'policeVerificationPending'
+export type StaffBlock = 'inactive' | 'licenceExpired' | 'policeVerificationPending'
 
 export interface StaffOption {
   staff: FieldStaff
@@ -206,7 +206,7 @@ export function staffOptions(data: DemoData, partnerId: Id, legType: LegType, no
     .filter((s) => s.partnerId === partnerId && s.role === ROLE_FOR[legType])
     .map((staff) => {
       const jobsToday = Object.values(data.legs).filter((l) => l.staffId === staff.id && istDate(l.window.from) === today && !['withdrawn'].includes(l.status)).length
-      const block: StaffBlock | undefined = staff.licenceValidTill && staff.licenceValidTill < today ? 'licenceExpired' : !staff.policeVerified ? 'policeVerificationPending' : undefined
+      const block: StaffBlock | undefined = (staff.status ?? 'active') !== 'active' ? 'inactive' : staff.licenceValidTill && staff.licenceValidTill < today ? 'licenceExpired' : !staff.policeVerified ? 'policeVerificationPending' : undefined
       return { staff, jobsToday, block }
     })
 }

@@ -98,6 +98,7 @@ export function buildBaseSeed(): DemoData {
 
     notifications: {},
     aiDecisions: {},
+    docRenewals: {},
     auditLog: {},
 
     // Next Delhi booking becomes LGS-DEL-000781 (the hero). nextLr() skips numbers already used.

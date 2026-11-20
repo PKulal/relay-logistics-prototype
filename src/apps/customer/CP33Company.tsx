@@ -5,24 +5,23 @@
  * Logisco. A bank change needs an OTP and a new SIMULATED penny-drop.
  * Tracking-page branding is not built (no basis in the client document).
  */
-import { Building2, FileText, Landmark, Loader2, Receipt, UserRound } from 'lucide-react'
+import { Building2, FileText, Landmark, Receipt, UserRound } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useData } from '@shared/hooks/useDemo'
 import { formatDate, formatINR } from '@shared/lib/format'
-import { DEMO_LOGIN_OTP, sendOtp, verifyLoginOtp } from '@shared/sim/otp'
 import { useDemoStore } from '@shared/store'
 import type { Customer } from '@shared/types'
+import { BankChangeDialog } from '@shared/ui/BankChangeDialog'
 import { Button } from '@shared/ui/button'
 import { Checkbox } from '@shared/ui/checkbox'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@shared/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@shared/ui/dialog'
 import { Field } from '@shared/ui/FormField'
 import { Input } from '@shared/ui/input'
 import { NativeSelect } from '@shared/ui/NativeSelect'
 import { PageHeader } from '@shared/ui/Page'
-import { SimulatedTag } from '@shared/ui/SimulatedTag'
 import { Chip } from '@shared/ui/StatusChip'
 import { ParcelTable, PtlTable, Surcharges } from './onboarding/CP08Contract'
 import { useCustomerSession } from './useCustomerSession'
@@ -150,7 +149,7 @@ export default function CP33Company() {
           </DialogContent>
         </Dialog>
       )}
-      {bankOpen && <BankDialog c={c} onClose={() => setBankOpen(false)} />}
+      {bankOpen && <BankChangeDialog holder={c.legalName} mobile={user.mobile} onSubmit={(b) => useDemoStore.getState().changeBank(c.id, b, user.id)} onClose={() => setBankOpen(false)} />}
     </div>
   )
 }
@@ -246,79 +245,5 @@ function BillingSettings({ c, isAdmin }: { c: Customer; isAdmin: boolean }) {
         </Button>
       )}
     </section>
-  )
-}
-
-function BankDialog({ c, onClose }: { c: Customer; onClose: () => void }) {
-  const { t } = useTranslation()
-  const { user } = useCustomerSession()
-  const [b, setB] = useState({ holder: c.legalName, account: '', ifsc: '' })
-  const [step, setStep] = useState<'form' | 'otp'>('form')
-  const [otp, setOtp] = useState('')
-  const [busy, setBusy] = useState(false)
-  const [err, setErr] = useState('')
-  const formOk = b.holder.trim() && b.account.replace(/\D/g, '').length >= 9 && /^[A-Z]{4}0[A-Z0-9]{6}$/i.test(b.ifsc.trim())
-
-  const send = async () => {
-    setBusy(true)
-    await sendOtp(user.mobile)
-    setBusy(false)
-    setStep('otp')
-  }
-  const verify = () => {
-    if (!verifyLoginOtp(otp)) return setErr(t('cp33.otpWrong'))
-    const r = useDemoStore.getState().changeBank(c.id, b, user.id)
-    if (!r.ok) return setErr(r.nameReturned ? t('cp33.pennyFail', { name: r.nameReturned, pct: r.matchPct }) : t('cp33.bankInvalid'))
-    toast.success(t('cp33.bankChanged', { name: r.nameReturned, pct: r.matchPct }))
-    onClose()
-  }
-
-  return (
-    <Dialog open onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            {t('cp33.changeBank')} <SimulatedTag />
-          </DialogTitle>
-          <DialogDescription>{step === 'form' ? t('cp33.bankNote') : t('cp33.otpSent', { mobile: user.mobile, otp: DEMO_LOGIN_OTP })}</DialogDescription>
-        </DialogHeader>
-        {step === 'form' ? (
-          <div className="grid gap-3">
-            <Field label={t('cp33.f.holder')} htmlFor="bk-holder" required>
-              <Input id="bk-holder" value={b.holder} onChange={(e) => setB({ ...b, holder: e.target.value })} />
-            </Field>
-            <Field label={t('cp33.f.account')} htmlFor="bk-acc" required>
-              <Input id="bk-acc" inputMode="numeric" value={b.account} onChange={(e) => setB({ ...b, account: e.target.value.replace(/\D/g, '') })} />
-            </Field>
-            <Field label="IFSC" htmlFor="bk-ifsc" required>
-              <Input id="bk-ifsc" value={b.ifsc} onChange={(e) => setB({ ...b, ifsc: e.target.value.toUpperCase() })} />
-            </Field>
-          </div>
-        ) : (
-          <Field label={t('cp33.f.otp')} htmlFor="bk-otp" required>
-            <Input id="bk-otp" inputMode="numeric" maxLength={6} value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))} />
-          </Field>
-        )}
-        {err && (
-          <p role="alert" className="text-caption text-status-danger">
-            {err}
-          </p>
-        )}
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            {t('common.cancel')}
-          </Button>
-          {step === 'form' ? (
-            <Button disabled={!formOk || busy} onClick={() => void send()}>
-              {busy && <Loader2 className="animate-spin" />} {t('cp33.sendOtp')}
-            </Button>
-          ) : (
-            <Button disabled={otp.length !== 6} onClick={verify}>
-              {t('cp33.verifyChange')}
-            </Button>
-          )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
   )
 }

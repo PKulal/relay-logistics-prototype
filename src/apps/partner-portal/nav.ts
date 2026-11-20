@@ -5,7 +5,7 @@
 import {
   Activity,
   CalendarRange,
-  CircleHelp,
+  Bell,
   ClipboardCheck,
   FileWarning,
   Gauge,
@@ -27,6 +27,8 @@ import type { Partner, PartnerRole, PartnerType } from '@shared/types'
 export interface PartnerCtx {
   role: PartnerRole
   partner: Partner
+  /** A suspension / exit case is open (PP-39 shows; source §5.4) */
+  openCase?: boolean
 }
 
 const roles =
@@ -64,7 +66,7 @@ export const partnerNav: NavGroup<PartnerCtx>[] = [
       { path: 'claims', labelKey: 'nav.pp.claims', screenId: 'PP-22', icon: ShieldAlert, phase: 4 },
       { path: 'scorecard', labelKey: 'nav.pp.scorecard', screenId: 'PP-23', icon: Gauge, phase: 5 },
       // PP-39: shown while the partner is suspended or offboarded (source §5.4)
-      { path: 'case', labelKey: 'nav.pp.case', screenId: 'PP-39', icon: ShieldX, phase: 5, visible: (c) => c.partner.status === 'suspended' || c.partner.status === 'offboarded' },
+      { path: 'case', labelKey: 'nav.pp.case', screenId: 'PP-39', icon: ShieldX, phase: 5, visible: (c) => c.partner.status === 'suspended' || c.partner.status === 'offboarded' || !!c.openCase },
       {
         path: 'finance',
         labelKey: 'nav.pp.finance',
@@ -104,7 +106,8 @@ export const partnerNav: NavGroup<PartnerCtx>[] = [
           { path: 'settings/preferences', labelKey: 'nav.pp.preferences', screenId: 'PP-36', phase: 5 },
         ],
       },
-      { path: 'help', labelKey: 'nav.pp.help', screenId: 'PP-38', icon: CircleHelp, phase: 5 },
+      // PP-38: the notification centre (support tickets to Logisco are not in the client document)
+      { path: 'notifications', labelKey: 'nav.pp.notifications', screenId: 'PP-38', icon: Bell, phase: 5 },
     ],
   },
 ]

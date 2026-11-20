@@ -105,6 +105,16 @@ export interface Hub {
   docks: number
   hours: string
   auditStatus: 'pending' | 'passed' | 'failed'
+  /** PP-31 profile (source §3 Type F, §4.1 hub lease, fire NOC, trade licence; §4 Step 4 audit) */
+  areaSqft?: number
+  storagePallets?: number
+  scaleCalibrationTill?: IsoDate
+  fireNocTill?: IsoDate
+  tradeLicenceTill?: IsoDate
+  leaseTill?: IsoDate
+  cctv?: boolean
+  fireSafety?: boolean
+  addedAt?: IsoDateTime
 }
 
 /** PP-19 → ERP-21: a partner asks to add or remove pincodes or lanes; Network Planning decides. */
@@ -574,6 +584,52 @@ export interface Partner {
    * hand in the Partner Portal (SwiftCity, QuickLink).
    */
   autoAccept: boolean
+  /** PP-33 company profile (seeded for live partners; onboarding fills it for new ones) */
+  profile?: PartnerProfile
+  /** PP-32 company documents with expiry (source §4 Step 8 document-expiry alerts) */
+  companyDocs?: PartnerCompanyDoc[]
+  /** PP-35 own-system integration (Types A and E; source §13 Partner API) */
+  integration?: PartnerIntegration
+}
+
+export interface PartnerProfile {
+  address: string
+  onboardedOn: IsoDate
+  bank: { name: string; branch: string; ifsc: string; account: string }
+  deposit: number
+  agreementSignedOn: IsoDate
+}
+
+export type CompanyDocKey = 'gst' | 'pan' | 'incorporation' | 'transportLicence' | 'insurance'
+
+export interface PartnerCompanyDoc {
+  key: CompanyDocKey
+  number?: string
+  file: string
+  expiry?: IsoDate
+}
+
+export const JOB_PUSH_EVENTS = ['jobOffered', 'jobWithdrawn', 'jobUpdated'] as const
+export type JobPushEvent = (typeof JOB_PUSH_EVENTS)[number]
+
+export interface PartnerIntegration {
+  apiKeys: ApiKey[]
+  webhook?: { url: string; events: JobPushEvent[]; secretLast4: string; lastTest?: { at: IsoDateTime; status: number } }
+  /** Partner status code → Logisco leg event */
+  statusMapping: { code: string; status: 'accepted' | 'pickedUp' | 'inTransit' | 'arrived' | 'delivered' | 'failed' }[]
+  errors: { at: IsoDateTime; call: string; reason: string }[]
+}
+
+/** PP-32 renewal upload: the new expiry is applied at once and stays Under review until Logisco's check (SIMULATED). */
+export interface DocRenewal {
+  /** Register row id, e.g. "VH:V-DL01LT4521:insurance" */
+  id: Id
+  partnerId: Id
+  file: string
+  newExpiry: IsoDate
+  at: IsoDateTime
+  by: Id
+  reviewDoneAt: IsoDateTime
 }
 
 /** Monitored trial (source §4 Step 7): 10 parcel jobs, or 3 PTL / line-haul trips. */
@@ -769,6 +825,14 @@ export interface PartnerUser {
   mobile: string
   email: string
   role: PartnerRole
+  /** PP-34: Invited until first login. Default active. */
+  status?: 'active' | 'invited' | 'disabled'
+  invitedAt?: IsoDateTime
+  lastLoginAt?: IsoDateTime
+  /** Hub / region access; empty or absent = all */
+  hubIds?: Id[]
+  /** PP-36 */
+  language?: 'en' | 'hi'
 }
 
 export type FieldRole = 'rider' | 'driver' | 'hub'
@@ -789,6 +853,11 @@ export interface FieldStaff {
   /** Added at go-live setup with photo and ID (PP-09) */
   photo?: string
   idProof?: { kind: 'aadhaar' | 'dl' | 'voterId'; last4: string }
+  /** PP-29: inactive / blocked staff have no app access and can't be assigned. Default active. */
+  status?: 'active' | 'inactive' | 'blocked'
+  licenceNo?: string
+  policeVerifiedOn?: IsoDate
+  appLinkSentAt?: IsoDateTime
 }
 
 export interface Vehicle {
@@ -799,7 +868,13 @@ export interface Vehicle {
   payloadKg: number
   fastagId?: string
   gpsId?: string
+  /** Earliest of the vehicle's document expiries (kept in step with docs) */
   docExpiry: IsoDate
+  /** PP-30: RC, fitness, permit and insurance expiries (Vahan) */
+  docs?: { rc: IsoDate; fitness: IsoDate; permit: IsoDate; insurance: IsoDate }
+  ownership?: 'own' | 'attached'
+  /** Default true; deactivated vehicles can't be assigned */
+  active?: boolean
 }
 
 export interface WeeklyScore {
@@ -1660,6 +1735,8 @@ export interface DemoData {
   // cross-cutting
   notifications: Record<Id, Notification>
   aiDecisions: Record<Id, AiDecision>
+  /** PP-32 renewal uploads */
+  docRenewals: Record<Id, DocRenewal>
   auditLog: Record<Id, AuditLog>
   /** Next serial per LR origin code, e.g. { DEL: 781 } → next Delhi LR is LGS-DEL-000781 */
   lrSerials: Record<string, number>

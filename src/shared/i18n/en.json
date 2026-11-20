@@ -136,7 +136,8 @@
       "integration": "Integration",
       "preferences": "Preferences",
       "help": "Help",
-      "case": "Suspension case"
+      "case": "Suspension case",
+      "notifications": "Notifications"
     },
     "erp": {
       "home": "Home",
@@ -1149,8 +1150,10 @@
     },
     "block": {
       "licenceExpired": "Licence expired: can’t be assigned",
-      "policeVerificationPending": "Police verification pending: can’t be assigned"
-    }
+      "policeVerificationPending": "Police verification pending: can’t be assigned",
+      "inactive": "Inactive or blocked: no app access"
+    },
+    "docsExpired": "documents expired"
   },
   "photo": {
     "take": "Take photo",
@@ -6175,5 +6178,305 @@
     "reply": "Reply",
     "send": "Send",
     "sent": "Reply sent"
+  },
+  "pp29": {
+    "title": "Field staff",
+    "subtitle": "{{count}} people · {{active}} active",
+    "add": "Add staff",
+    "addSend": "Add and send app link",
+    "col": {
+      "name": "Name",
+      "role": "Role",
+      "vehicle": "Vehicle",
+      "status": "Status",
+      "training": "Training",
+      "docs": "Licence and police verification",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "blocked": "Blocked"
+    },
+    "trained": "Trained",
+    "notTrained": "Training pending",
+    "licenceTill": "Licence till {{date}}",
+    "licence": {
+      "missing": "No licence on file",
+      "expired": "Licence expired"
+    },
+    "policeOk": "Police verified",
+    "policePending": "Police verification pending",
+    "cantAssign": "Can't be assigned jobs yet",
+    "editOne": "Edit {{name}}",
+    "resend": "Resend app link",
+    "linkSent": "App link sent to {{name}} on {{mobile}}",
+    "deactivate": "Deactivate",
+    "deactivated": "{{name}} deactivated; app access removed",
+    "block": "Block",
+    "blocked": "{{name}} blocked; app access removed",
+    "blockTitle": "Block {{name}}?",
+    "blockBody": "Blocking removes app access at once. Use it for misconduct; use Deactivate for someone who has left.",
+    "reactivate": "Reactivate",
+    "reactivated": "{{name}} active again",
+    "rule": "Staff can't be assigned jobs until the licence (riders and drivers) and police verification are valid.",
+    "mobileHint": "Used for app login by OTP; must be unique",
+    "verify": "Verify on Sarathi",
+    "licenceOk": "Valid till {{date}}",
+    "licenceBad": "Not found on Sarathi; check the number",
+    "policeHint": "Certificate file",
+    "noVehicle": "No default vehicle",
+    "baseCity": "{{city}} (no hub)",
+    "saved": "{{name}} updated",
+    "added": "{{name}} added; app link sent to {{mobile}}",
+    "f": {
+      "name": "Full name",
+      "role": "Role",
+      "mobile": "Mobile",
+      "language": "App language",
+      "licence": "Driving licence no.",
+      "police": "Police verification",
+      "policeDate": "Verified on",
+      "vehicle": "Default vehicle",
+      "base": "Base location / hub"
+    },
+    "err": {
+      "required": "Fill in name, a 10-digit mobile, photo and ID.",
+      "mobileTaken": "This mobile is already used by another staff member.",
+      "licence": "The licence number wasn't found on Sarathi.",
+      "police": "Add the date of the police verification."
+    }
+  },
+  "pp30": {
+    "title": "Vehicles",
+    "subtitle_one": "{{count}} vehicle",
+    "subtitle_other": "{{count}} vehicles",
+    "add": "Add vehicle",
+    "col": {
+      "reg": "Registration",
+      "type": "Type",
+      "payload": "Payload",
+      "docs": "Documents (expiry)",
+      "tracking": "FASTag / GPS",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "own": {
+      "own": "Own",
+      "attached": "Attached"
+    },
+    "doc": {
+      "rc": "RC",
+      "fitness": "Fitness",
+      "permit": "Permit",
+      "insurance": "Insurance"
+    },
+    "docsTill": "Documents till {{date}}",
+    "state": {
+      "ok": "Assignable",
+      "inactive": "Inactive",
+      "docsExpired": "Document expired"
+    },
+    "activeToggle": "{{reg}} active",
+    "activated": "{{reg}} active",
+    "deactivated": "{{reg}} deactivated",
+    "editOne": "Edit {{reg}}",
+    "rule": "A vehicle with an expired document can't be assigned.",
+    "verify": "Verify on Vahan",
+    "vahanOk": "Found on Vahan; expiries filled in",
+    "fastagHint": "Needed for line-haul trucks",
+    "saved": "{{reg}} saved",
+    "f": {
+      "reg": "Registration number",
+      "type": "Vehicle type",
+      "payload": "Payload (kg)",
+      "rc": "RC valid till",
+      "fitness": "Fitness valid till",
+      "permit": "Permit valid till",
+      "insurance": "Insurance valid till",
+      "fastag": "FASTag ID",
+      "gps": "GPS device ID",
+      "ownership": "Ownership"
+    },
+    "err": {
+      "required": "Fill in registration, type, payload and all four document dates.",
+      "vahan": "Not found on Vahan; check the number",
+      "duplicate": "This vehicle is already registered",
+      "fastag": "Line-haul trucks need a FASTag ID."
+    }
+  },
+  "pp31": {
+    "title": "Hubs",
+    "subtitle": "Your hubs: address, docks, hours, storage, safety and audit status.",
+    "add": "Add hub",
+    "empty": "No hubs yet",
+    "audit": {
+      "pending": "Audit pending",
+      "passed": "Audit passed",
+      "failed": "Audit failed"
+    },
+    "facts": "{{docks}} docks · {{hours}} · {{area}} sq ft · {{pallets}} pallets",
+    "safety": "CCTV / fire safety",
+    "edit": "Edit",
+    "editTitle": "Edit {{name}}",
+    "auditNote": "Adding a hub starts a new audit by Logisco before it gets work.",
+    "saved": "{{name}} saved",
+    "added": "{{name}} added; Logisco will schedule the audit",
+    "f": {
+      "name": "Hub name",
+      "pincode": "Pincode",
+      "address": "Address",
+      "area": "Area (sq ft)",
+      "docks": "Docks",
+      "hours": "Operating hours",
+      "storage": "Storage (pallets)",
+      "scaleCalibrationTill": "Scale calibration till",
+      "fireNocTill": "Fire NOC till",
+      "tradeLicenceTill": "Trade licence till",
+      "leaseTill": "Lease till",
+      "cctv": "CCTV installed",
+      "fire": "Fire safety in place"
+    },
+    "err": {
+      "required": "Fill in name, address, area, docks, hours and the scale calibration date.",
+      "notServiceable": "This pincode isn't serviceable yet.",
+      "safety": "CCTV and fire safety are required."
+    }
+  },
+  "pp32": {
+    "title": "Documents and compliance",
+    "subtitle": "Company, vehicle, staff and hub documents with their expiry.",
+    "state": {
+      "valid": "Valid",
+      "expiring": "Expiring",
+      "expired": "Expired",
+      "underReview": "Under review"
+    },
+    "expiringIn": "Expires within {{days}} days",
+    "pending": "Pending",
+    "filter": "Belongs to",
+    "owner": {
+      "all": "All",
+      "company": "Company",
+      "vehicle": "Vehicle",
+      "staff": "Staff",
+      "hub": "Hub"
+    },
+    "col": {
+      "doc": "Document",
+      "owner": "Belongs to",
+      "number": "Number / date",
+      "expiry": "Expiry",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "kind": {
+      "gst": "GST registration",
+      "pan": "PAN",
+      "incorporation": "Incorporation certificate",
+      "transportLicence": "Transport licence",
+      "insurance": "Insurance",
+      "rc": "RC",
+      "fitness": "Fitness certificate",
+      "permit": "Permit",
+      "licence": "Driving licence",
+      "police": "Police verification",
+      "scaleCalibration": "Scale calibration",
+      "fireNoc": "Fire NOC",
+      "tradeLicence": "Trade licence",
+      "lease": "Lease agreement"
+    },
+    "upload": "Upload renewal",
+    "uploaded": "{{doc}} uploaded; under review by Logisco",
+    "renewTitle": "Renew {{doc}} · {{owner}}",
+    "renewNote": "Logisco checks the file; the status turns Valid after review.",
+    "file": "File",
+    "newExpiry": "New expiry date",
+    "rule": "Alerts at 30, 15 and 7 days before expiry. Repeated expiry can lead to a suspension review."
+  },
+  "pp33": {
+    "title": "Company profile",
+    "subtitle": "Company details, payout bank, agreement, rate card and deposit.",
+    "viewOnly": "Only the Partner Admin can change these.",
+    "company": "Company details",
+    "name": "Legal name",
+    "type": "Partner type",
+    "address": "Address",
+    "since": "Partner since",
+    "coordinator": "Logisco coordinator",
+    "bank": "Payout bank account",
+    "noProfile": "Added when onboarding completes",
+    "bankUse": "Weekly payouts and COD settlements go here.",
+    "deposit": "Security deposit held: {{amount}}",
+    "agreement": "Agreement",
+    "signed": "Signed on {{date}}",
+    "agreementNote": "Agreement with annexures: rate card, hand-over windows, SLA, penalties and liability cap.",
+    "print": "Print agreement",
+    "exit": "Exit Logisco",
+    "exitNote": "Ask to end the partnership. Logisco moves your open jobs, settles your final payout and closes the account.",
+    "requestExit": "Request exit",
+    "exitTitle": "Request exit?",
+    "exitBody": "This starts offboarding: new allocations stop, open jobs are finished or moved, and a final settlement follows. You can follow it on the case screen.",
+    "reason": "Reason",
+    "exitSent": "Exit requested; Logisco Partner Management will contact you",
+    "caseOpen": "Case {{id}} open",
+    "viewCase": "View case",
+    "rates": "Rate card",
+    "col": {
+      "leg": "Leg",
+      "where": "Lane / cluster",
+      "service": "Service",
+      "rate": "Rate",
+      "terms": "Terms"
+    },
+    "kind": {
+      "parcel": "Parcel",
+      "ptl": "PTL",
+      "both": "Parcel and PTL"
+    },
+    "upTo": "up to {{kg}} kg",
+    "minKg": "min {{kg}} kg",
+    "minimum": "min {{amount}}",
+    "ratesNote": "Read only. Rates change through Logisco Partner Management."
+  },
+  "pp34": {
+    "title": "Portal users",
+    "access": "Hub access",
+    "all": "All",
+    "accessHint": "None ticked = all hubs",
+    "lastAdmin": "At least one active Partner Admin must remain.",
+    "rule": "At least one active Partner Admin must remain."
+  },
+  "pp35": {
+    "title": "API and integration",
+    "subtitle": "Keys, job push webhook, status mapping and errors for your own system.",
+    "webhook": "Job push webhook",
+    "ev": {
+      "jobOffered": "Job offered",
+      "jobWithdrawn": "Job withdrawn",
+      "jobUpdated": "Job updated"
+    },
+    "saved": "Webhook saved",
+    "mapping": "Status mapping",
+    "endpoint": "Send status updates to",
+    "code": "Your status code",
+    "status": "Logisco status",
+    "st": {
+      "accepted": "Accepted",
+      "pickedUp": "Picked up",
+      "inTransit": "In transit",
+      "arrived": "Arrived",
+      "delivered": "Delivered",
+      "failed": "Failed attempt"
+    },
+    "addRow": "Add code",
+    "removeRow": "Remove code",
+    "dupes": "Each code can appear only once.",
+    "mappingSaved": "Status mapping saved",
+    "errors": "Error log",
+    "noErrors": "No failed calls"
+  },
+  "pp36": {
+    "subtitle": "Your language for the portal and messages."
   }
 }

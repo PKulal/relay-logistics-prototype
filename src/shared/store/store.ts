@@ -10,7 +10,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { advanceJourneys } from '@shared/sim/journey'
-import type { ApiKey, WebhookEvent, LegType, Rfq, SettingsChange, SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
+import type { FieldStaff, JobPushEvent, PartnerIntegration, ApiKey, WebhookEvent, LegType, Rfq, SettingsChange, SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
 import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
 import * as erp from './erpActions'
@@ -43,6 +43,8 @@ import * as net from './networkActions'
 import * as dept from './departmentActions'
 import type { NewRfq } from './departmentActions'
 import * as cs from './customerSettingsActions'
+import * as ps from './partnerSettingsActions'
+import type { HubInput, PortalUserError, PortalUserInput, StaffEdit, StaffError, StaffInput, VehicleError, VehicleInput } from './partnerSettingsActions'
 import type { ConsigneeInput, LocationInput, SkuInput, TicketInput, UserError, UserInput } from './customerSettingsActions'
 import type { CapacityEdit, CoverageChange, LaneEdit, NewPincode, PincodeEdit } from './networkActions'
 import type { HubReport, PickupFailed, TicketResolution } from './exceptionActions'
@@ -304,6 +306,27 @@ export interface DemoState {
   raiseTicket: (customerId: Id, x: TicketInput, by: Id) => Id | undefined
   customerReplyTicket: (id: Id, text: string, attachment: string | undefined, by: Id) => void
   confirmResolved: (id: Id, by: Id) => void
+  /** Partner Portal settings (PP-29 to PP-36) */
+  createStaff: (partnerId: Id, x: StaffInput, by: Id) => { id?: Id; error?: StaffError }
+  updateStaff: (id: Id, x: StaffEdit, by: Id) => { error?: StaffError }
+  setStaffStatus: (id: Id, status: NonNullable<FieldStaff['status']>, by: Id) => void
+  resendAppLink: (id: Id, by: Id) => void
+  saveVehicle: (partnerId: Id, x: VehicleInput, id: Id | undefined, by: Id) => { id?: Id; error?: VehicleError }
+  setVehicleActive: (id: Id, active: boolean, by: Id) => void
+  saveHub: (partnerId: Id, x: HubInput, id: Id | undefined, by: Id) => { id?: Id; error?: 'required' | 'notServiceable' | 'safety' }
+  uploadRenewal: (partnerId: Id, docId: Id, file: string, newExpiry: IsoDate, by: Id) => void
+  changePartnerBank: (partnerId: Id, b: { holder: string; account: string; ifsc: string }, by: Id) => { ok: boolean; matchPct: number; nameReturned: string }
+  requestExit: (partnerId: Id, reason: string, by: Id) => void
+  invitePortalUser: (partnerId: Id, x: PortalUserInput, by: Id) => { id?: Id; error?: PortalUserError }
+  updatePortalUser: (id: Id, x: Pick<PortalUserInput, 'name' | 'mobile' | 'role' | 'hubIds'>, by: Id) => { error?: PortalUserError }
+  setPortalUserEnabled: (id: Id, enabled: boolean, by: Id) => { error?: PortalUserError }
+  recordPartnerLogin: (id: Id) => void
+  setPortalUserLanguage: (id: Id, language: 'en' | 'hi') => void
+  createPartnerApiKey: (partnerId: Id, name: string, env: ApiKey['env'], by: Id) => string | undefined
+  revokePartnerApiKey: (partnerId: Id, keyId: Id, by: Id) => void
+  setJobWebhook: (partnerId: Id, url: string, events: JobPushEvent[], by: Id) => { saved: boolean; secret?: string }
+  testJobWebhook: (partnerId: Id) => { status?: number; ms?: number }
+  saveStatusMapping: (partnerId: Id, mapping: PartnerIntegration['statusMapping'], by: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -632,6 +655,30 @@ export const useDemoStore = create<DemoState>()(
           raiseTicket: (customerId: Id, x: TicketInput, by: Id) => run((d, now) => cs.raiseTicket(d, customerId, x, by, now)).id,
           customerReplyTicket: (id: Id, text: string, attachment: string | undefined, by: Id) => upd((d, now) => cs.customerReplyTicket(d, id, text, attachment, by, now)),
           confirmResolved: (id: Id, by: Id) => upd((d, now) => cs.confirmResolved(d, id, by, now)),
+          createStaff: (partnerId: Id, x: StaffInput, by: Id) => run((d, now) => ps.createStaff(d, partnerId, x, by, now)),
+          updateStaff: (id: Id, x: StaffEdit, by: Id) => run((d, now) => ps.updateStaff(d, id, x, by, now)),
+          setStaffStatus: (id: Id, status: NonNullable<FieldStaff['status']>, by: Id) => upd((d, now) => ps.setStaffStatus(d, id, status, by, now)),
+          resendAppLink: (id: Id, by: Id) => upd((d, now) => ps.resendAppLink(d, id, by, now)),
+          saveVehicle: (partnerId: Id, x: VehicleInput, id: Id | undefined, by: Id) => run((d, now) => ps.saveVehicle(d, partnerId, x, id, by, now)),
+          setVehicleActive: (id: Id, active: boolean, by: Id) => upd((d, now) => ps.setVehicleActive(d, id, active, by, now)),
+          saveHub: (partnerId: Id, x: HubInput, id: Id | undefined, by: Id) => run((d, now) => ps.saveHub(d, partnerId, x, id, by, now)),
+          uploadRenewal: (partnerId: Id, docId: Id, file: string, newExpiry: IsoDate, by: Id) => upd((d, now) => ps.uploadRenewal(d, partnerId, docId, file, newExpiry, by, now)),
+          changePartnerBank: (partnerId: Id, b: { holder: string; account: string; ifsc: string }, by: Id) => run((d, now) => ps.changePartnerBank(d, partnerId, b, by, now)),
+          requestExit: (partnerId: Id, reason: string, by: Id) => upd((d, now) => ps.requestExit(d, partnerId, reason, by, now)),
+          invitePortalUser: (partnerId: Id, x: PortalUserInput, by: Id) => run((d, now) => ps.invitePortalUser(d, partnerId, x, by, now)),
+          updatePortalUser: (id: Id, x: Pick<PortalUserInput, 'name' | 'mobile' | 'role' | 'hubIds'>, by: Id) => run((d, now) => ps.updatePortalUser(d, id, x, by, now)),
+          setPortalUserEnabled: (id: Id, enabled: boolean, by: Id) => run((d, now) => ps.setPortalUserEnabled(d, id, enabled, by, now)),
+          recordPartnerLogin: (id: Id) => upd((d, now) => ps.recordPartnerLogin(d, id, now)),
+          setPortalUserLanguage: (id: Id, language: 'en' | 'hi') => upd((d) => ps.setPortalUserLanguage(d, id, language)),
+          createPartnerApiKey: (partnerId: Id, name: string, env: ApiKey['env'], by: Id) => run((d, now) => ps.createPartnerApiKey(d, partnerId, name, env, by, now)).key,
+          revokePartnerApiKey: (partnerId: Id, keyId: Id, by: Id) => upd((d, now) => ps.revokePartnerApiKey(d, partnerId, keyId, by, now)),
+          setJobWebhook: (partnerId: Id, url: string, events: JobPushEvent[], by: Id) => {
+            const before = get().data
+            const r = run((d, now) => ps.setJobWebhook(d, partnerId, url, events, by, now))
+            return { saved: get().data !== before, secret: r.secret }
+          },
+          testJobWebhook: (partnerId: Id) => run((d, now) => ps.testJobWebhook(d, partnerId, now)),
+          saveStatusMapping: (partnerId: Id, mapping: PartnerIntegration['statusMapping'], by: Id) => upd((d, now) => ps.saveStatusMapping(d, partnerId, mapping, by, now)),
         }
       })(),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),

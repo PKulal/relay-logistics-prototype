@@ -2,6 +2,7 @@
  * Partner Portal job actions (PP-12 to PP-14) as pure state changes.
  * Every change is a chain-of-custody event, so statuses follow the status engine.
  */
+import { vehicleBlock } from '@shared/engines/partnerSettings'
 import type { DemoData, Id, IsoDateTime, ShipmentEvent } from '@shared/types'
 import { applyEvents } from './actions'
 import { eventIdFactory } from './booking'
@@ -36,6 +37,9 @@ export function flagLeg(data: DemoData, legId: Id, reason: FlagReason, remark: s
 export function assignLegs(data: DemoData, legIds: Id[], staffId: Id, vehicleId: Id | undefined, userId: Id, now: IsoDateTime): DemoData {
   const ok = legIds.filter((id) => ['accepted', 'assigned'].includes(data.legs[id]?.status))
   if (ok.length === 0) return data
+  // PP-29 / PP-30 rules: no assignment to inactive staff or to a vehicle that is inactive or has an expired document
+  if ((data.fieldStaff[staffId]?.status ?? 'active') !== 'active') return data
+  if (vehicleId && data.vehicles[vehicleId] && vehicleBlock(data.vehicles[vehicleId], now)) return data
   let next = applyEvents(
     data,
     legEvents(data, ok, () => ({ type: 'legAssigned', at: now, by: userId, app: 'partnerPortal', assigneeStaffId: staffId, assigneeVehicleId: vehicleId })),
