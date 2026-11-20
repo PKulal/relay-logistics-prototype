@@ -48,9 +48,11 @@ interface WebShellProps<Ctx> {
   unread?: number
   /** Profile menu → Preferences (CP-34, PP-36) */
   preferencesPath?: string
+  /** Floating AI assistant (CP-35, PP-37, ERP-02) */
+  assistant?: React.ReactNode
 }
 
-export function WebShell<Ctx>({ app, nav, orgName, orgBadge, user, headerActions, helpPath = 'help', searchPlaceholderKey, onSearch, dark, unread = 0, preferencesPath }: WebShellProps<Ctx>) {
+export function WebShell<Ctx>({ app, nav, orgName, orgBadge, user, headerActions, helpPath = 'help', searchPlaceholderKey, onSearch, dark, unread = 0, preferencesPath, assistant }: WebShellProps<Ctx>) {
   const { t } = useTranslation()
   const meta = appByKey(app)
   const navigate = useNavigate()
@@ -209,6 +211,7 @@ export function WebShell<Ctx>({ app, nav, orgName, orgBadge, user, headerActions
           </div>
         </main>
       </div>
+      {assistant}
     </div>
   )
 }

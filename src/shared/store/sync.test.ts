@@ -227,6 +227,8 @@ function makeTab() {
     setStaffUserEnabled: () => ({}),
     setRolePermission: () => {},
     updateSettings: () => ({}),
+    logAssistant: () => '',
+    acceptAssistant: () => {},
     createNegotiatedCard: () => '',
     editRateCard: () => {},
     submitRateCard: () => {},

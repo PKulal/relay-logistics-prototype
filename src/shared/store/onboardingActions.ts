@@ -3,6 +3,7 @@
  * → track, digital KYC, credit application and decision; plus the Sales
  * pipeline actions (ERP-26). Every decision is written to the audit log.
  */
+import { logAiData } from './aiLogActions'
 import { assisted, billingFor, constitutionOf, creditScore, DEFAULT_KAM, gstinCheck, gstLookup, leadScore, pennyDrop, suggestedCredit, trackFor, yearsSince } from '@shared/engines/onboarding'
 import type { CreditApplication, Customer, CustomerOnboarding, CustomerStatus, CustomerType, DemoData, Id, IsoDateTime, KycRecord, Lead, LeadSource, LeadStage, PickupLocation, Qualification } from '@shared/types'
 import { issueContract, offerCardFor } from './contractActions'
@@ -113,6 +114,7 @@ export function saveQualification(data: DemoData, customerId: Id, q: Qualificati
       ...next,
       leads: { ...next.leads, [lead.id]: { ...lead, declaredVolume: q.shipmentsPerMonth, aiScore: leadScore(lead.industry, q.lanes.length, q.shipmentsPerMonth), ownerId: lead.ownerId ?? customer.kamId } },
     }
+    next = logAiData(next, { kind: 'leadScore', recordId: lead.id, at, confidence: 0.7, score: next.leads[lead.id].aiScore, reasons: [`industry:${lead.industry}`, `lanes:${q.lanes.length}`, `volume:${q.shipmentsPerMonth}`], app: 'customer' })
   }
   return audit(next, { userId: by, app: 'customer', action: 'customer.qualify', recordId: customerId, at, after: { track, billing: customer.billing } })
 }
@@ -227,7 +229,8 @@ export function submitCredit(data: DemoData, customerId: Id, r: CreditRequest, b
   if (!c?.onboarding || c.billing !== 'credit') return data
   const s = creditScore({ yearsInBusiness: r.yearsInBusiness, gstConsent: r.gstConsent, gstActive: c.onboarding.kyc?.gstin.active !== false, depositWilling: r.depositWilling })
   const credit: CreditApplication = { ...r, submittedAt: at, status: 'underReview', score: s.score, scoreReasons: s.reasons.map((x) => `${x.key}:${x.points}`) }
-  return audit(setCustomer(data, { ...c, status: 'credit', onboarding: { ...c.onboarding, credit } }, at, 'Credit application submitted', by), { userId: by, app: 'customer', action: 'credit.submit', recordId: customerId, at, after: r })
+  const logged = logAiData(data, { kind: 'creditRisk', recordId: customerId, at, confidence: 0.8, score: s.score, reasons: credit.scoreReasons, app: 'customer' })
+  return audit(setCustomer(logged, { ...c, status: 'credit', onboarding: { ...c.onboarding, credit } }, at, 'Credit application submitted', by), { userId: by, app: 'customer', action: 'credit.submit', recordId: customerId, at, after: r })
 }
 
 export interface CreditDecision {

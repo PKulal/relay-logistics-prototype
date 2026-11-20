@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/shared/lib/utils'
 import { auditRows, brief, decisionRows, MODEL_REVIEWS, toCsv, type DecisionRow } from '@shared/engines/aiLog'
 import { useData } from '@shared/hooks/useDemo'
-import { formatDate, formatDateTime } from '@shared/lib/format'
+import { formatDate, formatDateTime, formatINR } from '@shared/lib/format'
 import type { AppKey, DemoData } from '@shared/types'
 import { Button } from '@shared/ui/button'
 import { EmptyState } from '@shared/ui/EmptyState'
@@ -121,8 +121,30 @@ function Decisions() {
   const data = useData((d) => d)
   const [kind, setKind] = useState<DecisionRow['kind'] | ''>('')
   const rows = decisionRows(data).filter((r) => !kind || r.kind === kind)
-  const decisionText = (r: DecisionRow) => (r.kind === 'legAssignment' ? t('erp43.d.assigned', { partner: r.decision.partner ?? '—' }) : r.kind === 'marginCheck' ? t(r.decision.belowTarget ? 'erp43.d.below' : 'erp43.d.ok', { pct: r.decision.grossPct }) : t('erp43.d.eta'))
-  const reasonText = (r: DecisionRow) => (r.kind === 'legAssignment' ? t('erp43.r.assigned', { count: r.reason.candidates ?? 0, score: r.reason.score ?? '—' }) : r.kind === 'marginCheck' ? t('erp43.r.margin', { target: r.reason.targetPct }) : '—')
+  const decisionText = (r: DecisionRow): string => {
+    const x = r.decision
+    switch (r.kind) {
+      case 'legAssignment':
+        return t('erp43.d.assigned', { partner: x.partner ?? '—' })
+      case 'marginCheck':
+        return t(x.belowTarget ? 'erp43.d.below' : 'erp43.d.ok', { pct: x.grossPct })
+      case 'creditRisk':
+      case 'leadScore':
+        return t(`erp43.d.${r.kind}`, { score: x.score })
+      case 'skuOutlier':
+        return t('erp43.d.skuOutlier', { why: t(`cp31.why.${x.flag ?? 'density'}`) })
+      case 'documentOcr':
+        return t('erp43.d.documentOcr', { flag: t(`erp43.flag.${x.flag ?? 'mismatch'}`) })
+      case 'weightCheck':
+        return t('erp43.d.weightCheck', { amount: formatINR(x.score ?? 0) })
+      case 'assistant':
+        return t('erp43.d.assistant', { intent: t(`erp43.intent.${x.intent}`, { defaultValue: x.intent }) })
+      default:
+        return t('erp43.d.eta')
+    }
+  }
+  const reasonText = (r: DecisionRow) =>
+    r.kind === 'legAssignment' ? t('erp43.r.assigned', { count: r.reason.candidates ?? 0, score: r.reason.score ?? '—' }) : r.kind === 'marginCheck' ? t('erp43.r.margin', { target: r.reason.targetPct }) : r.kind === 'assistant' ? t('erp43.r.assistant', { app: t(`erp43.app.${r.reason.app}`) }) : r.reason.reasons?.join(' · ') || '—'
   const exportCsv = () =>
     download('ai-decisions.csv', toCsv([[t('erp43.col.time'), t('erp43.col.model'), t('erp43.col.record'), t('erp43.col.decision'), t('erp43.col.reason'), t('erp43.col.confidence'), t('erp43.col.accepted')], ...rows.map((r) => [r.at, r.model, r.record, decisionText(r), reasonText(r), `${Math.round(r.confidence * 100)}%`, r.acceptedBy ? whoIs(data, r.acceptedBy) : ''])]))
   return (
@@ -130,7 +152,7 @@ function Decisions() {
       <div className="flex flex-wrap items-center gap-2 px-4 pt-4">
         <NativeSelect aria-label={t('erp43.col.model')} value={kind} onChange={(e) => setKind(e.target.value as DecisionRow['kind'] | '')} className="w-56">
           <option value="">{t('erp43.allModels')}</option>
-          {(['legAssignment', 'marginCheck', 'etaPrediction'] as const).map((k) => (
+          {(['legAssignment', 'marginCheck', 'assistant', 'creditRisk', 'leadScore', 'skuOutlier', 'documentOcr', 'weightCheck'] as const).map((k) => (
             <option key={k} value={k}>
               {t(`erp43.kind.${k}`)}
             </option>
@@ -196,7 +218,7 @@ function Models() {
           {MODEL_REVIEWS.map((m) => (
             <tr key={m.model} className="border-b last:border-0">
               <td className="tabular px-4 py-2">{m.model}</td>
-              <td className="tabular">{['legAssignment', 'marginCheck', 'etaPrediction'].includes(m.kind) ? count(m.kind) : '—'}</td>
+              <td className="tabular">{m.kind === 'etaPrediction' ? '—' : count(m.kind)}</td>
               <td>{t(`erp43.m.${m.kind}.accuracy`)}</td>
               <td className="text-caption text-muted-foreground">{t(`erp43.m.${m.kind}.fairness`)}</td>
               <td className="tabular">{formatDate(m.nextReview)}</td>

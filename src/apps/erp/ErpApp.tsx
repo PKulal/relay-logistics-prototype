@@ -50,6 +50,7 @@ import ERP43Logs from './ERP43Logs'
 import ERP44Settings from './ERP44Settings'
 import { unreadCount } from '@shared/engines/notifications'
 import { NotificationCentre } from '@shared/ui/NotificationCentre'
+import { AssistantLauncher } from '@shared/ui/Assistant'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
 const SCREENS = { 'ERP-04': ERP04Command, 'ERP-05': ERP05JobBoard, 'ERP-06': ERP06AtRisk, 'ERP-07': ERP07Exceptions, 'ERP-09': ERP09PartnerHealth, 'ERP-10': ERP10DailyPack, 'ERP-11': ERP11Applications, 'ERP-12': ERP12KycDesk, 'ERP-13': ERP13Commercials, 'ERP-14': ERP14Trials, 'ERP-16': ERP16Scoring, 'ERP-17': ERP17Suspensions, 'ERP-18': ERP18Pincodes, 'ERP-19': ERP19Lanes, 'ERP-20': ERP20LegRules, 'ERP-21': ERP21Gaps, 'ERP-22': ERP22RateCards, 'ERP-23': ERP23Approvals, 'ERP-24': ERP24MarginMonitor, 'ERP-25': ERP25Simulator, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-28': ERP28Accounts, 'ERP-29': ERP29Rfqs, 'ERP-30': ERP30CreditReview, 'ERP-31': ERP31Invoicing, 'ERP-32': ERP32Payables, 'ERP-33': ERP33Payouts, 'ERP-34': ERP34CodRecon, 'ERP-36': ERP36ClaimsDesk, 'ERP-39': ERP39CustomerSuccess, 'ERP-40': ERP40HubOps, 'ERP-41': ERP41Compliance, 'ERP-42': ERP42Access, 'ERP-43': ERP43Logs, 'ERP-44': ERP44Settings, 'ERP-45': ERP45Department }
@@ -81,6 +82,7 @@ export default function ErpApp() {
             dark
             nav={visibleNav(nav, ctx)}
             unread={unreadCount(notifications, viewer)}
+            assistant={<AssistantLauncher ctx={{ app: 'erp', userId: user.id, role: user.role }} />}
             orgName={t('apps.erp.short')}
             user={{ name: user.name, roleLabel: user.title }}
             searchPlaceholderKey="search.placeholder.erp"

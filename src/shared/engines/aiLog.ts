@@ -7,7 +7,7 @@ import type { AiDecision, AuditLog, DemoData, IsoDate, IsoDateTime } from '@shar
 /** Model review (seeded reference; INVENTED figures until real monitoring exists). Accuracy and fairness texts are i18n keys erp43.m.<kind>. */
 export interface ModelReview {
   model: string
-  kind: AiDecision['kind'] | 'creditRisk' | 'leadScore' | 'skuOutlier'
+  kind: AiDecision['kind']
   nextReview: IsoDate
 }
 
@@ -18,6 +18,9 @@ export const MODEL_REVIEWS: ModelReview[] = [
   { model: 'credit-risk-v1', kind: 'creditRisk', nextReview: '2026-12-15' },
   { model: 'lead-score-v1', kind: 'leadScore', nextReview: '2027-01-15' },
   { model: 'sku-outlier-v1', kind: 'skuOutlier', nextReview: '2027-01-15' },
+  { model: 'doc-ocr-v1', kind: 'documentOcr', nextReview: '2026-12-15' },
+  { model: 'weight-check-v1', kind: 'weightCheck', nextReview: '2026-12-15' },
+  { model: 'assistant-v1', kind: 'assistant', nextReview: '2026-12-15' },
 ]
 
 export interface DecisionRow {
@@ -27,8 +30,8 @@ export interface DecisionRow {
   record: string
   kind: AiDecision['kind']
   /** Words for the decision come from i18n with these values */
-  decision: { partner?: string; grossPct?: number; belowTarget?: boolean }
-  reason: { candidates?: number; score?: number; targetPct?: number }
+  decision: { partner?: string; grossPct?: number; belowTarget?: boolean; score?: number; flag?: string; intent?: string }
+  reason: { candidates?: number; score?: number; targetPct?: number; reasons?: string[]; app?: string }
   confidence: number
   acceptedBy?: string
 }
@@ -43,8 +46,8 @@ export function decisionRows(data: DemoData): DecisionRow[] {
         model: d.model,
         record: d.legId ?? d.recordId,
         kind: d.kind,
-        decision: { partner: d.chosenPartnerId ? data.partners[d.chosenPartnerId]?.shortName : undefined, grossPct: d.margin?.grossPct, belowTarget: d.margin?.belowTarget },
-        reason: { candidates: d.candidates?.filter((c) => c.eligible).length, score: chosen?.score, targetPct: d.margin?.targetPct },
+        decision: { partner: d.chosenPartnerId ? data.partners[d.chosenPartnerId]?.shortName : undefined, grossPct: d.margin?.grossPct, belowTarget: d.margin?.belowTarget, score: d.score, flag: d.flag, intent: d.intent },
+        reason: { candidates: d.candidates?.filter((c) => c.eligible).length, score: chosen?.score, targetPct: d.margin?.targetPct, reasons: d.reasons, app: d.app },
         confidence: d.confidence,
         acceptedBy: d.acceptedByUserId,
       }

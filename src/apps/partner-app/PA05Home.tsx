@@ -2,7 +2,7 @@
  * PA-05 Home (today) — docs/03-partner-app.md §6.1.
  * Today's work at a glance and the next task. Content by role.
  */
-import { Banknote, ChevronRight, GraduationCap } from 'lucide-react'
+import { Banknote, ChevronRight, GraduationCap, Mic } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -25,7 +25,13 @@ export default function PA05Home() {
 
   return (
     <div className="flex flex-col gap-4 p-4">
-      <h1 className="font-heading text-[22px] font-bold">{t('pa05.hello', { name: staff.name.split(' ')[0] })}</h1>
+      <div className="flex items-center justify-between gap-2">
+        <h1 className="font-heading text-[22px] font-bold">{t('pa05.hello', { name: staff.name.split(' ')[0] })}</h1>
+        {/* PA-11: mic button on Home */}
+        <Link to="/app/assistant" aria-label={t('ai.title')} className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
+          <Mic className="size-6" aria-hidden />
+        </Link>
+      </div>
 
       {/* PA-10: prompted until training is complete */}
       {!staff.trained && (

@@ -3,6 +3,7 @@
  * are marked read with pickupActions.markRead.
  * Every change is written to the audit log (ERP-43).
  */
+import { logAiData } from './aiLogActions'
 import { isLastAdmin, serviceable, skuCodeTaken, userStatus } from '@shared/engines/customerSettings'
 import { pennyDrop } from '@shared/engines/onboarding'
 import { ticketDue } from '@shared/engines/departments'
@@ -157,7 +158,8 @@ export function saveSku(data: DemoData, customerId: Id, x: SkuInput, id: Id | un
   const sameSize = old && old.l === x.l && old.b === x.b && old.h === x.h && old.weight === x.weight
   const status: Sku['status'] = sameSize ? old.status : skuOutlier(x) ? 'flagged' : 'frozen'
   const sku: Sku = { id: sid, customerId, ...x, code: x.code.trim(), description: x.description.trim(), hsn: x.hsn.trim(), status }
-  return { data: log({ ...data, skus: { ...data.skus, [sid]: sku } }, by, old ? 'sku.edit' : 'sku.add', sid, at, old && { l: old.l, b: old.b, h: old.h, weight: old.weight, status: old.status }, { l: x.l, b: x.b, h: x.h, weight: x.weight, status }), id: sid }
+  const flagged = !sameSize && status === 'flagged' ? logAiData(data, { kind: 'skuOutlier', recordId: sku.code, at, confidence: 0.85, flag: skuOutlier(x), app: 'customer' }) : data
+  return { data: log({ ...flagged, skus: { ...flagged.skus, [sid]: sku } }, by, old ? 'sku.edit' : 'sku.add', sid, at, old && { l: old.l, b: old.b, h: old.h, weight: old.weight, status: old.status }, { l: x.l, b: x.b, h: x.h, weight: x.weight, status }), id: sid }
 }
 
 /** Review AI flag → Accept as is: goes to Logisco for a manual check (Draft). */

@@ -115,7 +115,7 @@ export function CP22RaiseClaim() {
   const eligible = claimableShipments(data, customer.id, now)
   const [lr, setLr] = useState(eligible.some((s) => s.id === params.get('lr')) ? params.get('lr')! : '')
   const s = data.shipments[lr]
-  const [type, setType] = useState<ClaimType | ''>(s?.status === 'deliveredWithException' ? 'shortage' : '')
+  const [type, setType] = useState<ClaimType | ''>(params.get('type') === 'damage' ? 'damage' : s?.status === 'deliveredWithException' ? 'shortage' : '')
   const [pieces, setPieces] = useState<string[]>(() => (s ? s.pieces.filter((p) => p.condition === 'missing' || p.condition === 'damaged').map((p) => p.id) : []))
   const [amount, setAmount] = useState('')
   const [description, setDescription] = useState('')

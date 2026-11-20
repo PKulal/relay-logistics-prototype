@@ -4,6 +4,7 @@
  * automatic checks and OCR, manual verification desk and hub audit
  * (PP-04 to PP-07; ERP-11, ERP-12). Every decision is written to the audit log.
  */
+import { logAiData } from './aiLogActions'
 import { gstinCheck, gstLookup, panValid, pennyDrop } from '@shared/engines/onboarding'
 import {
   FIT_INVITE,
@@ -234,7 +235,9 @@ export function submitPartnerKyc(data: DemoData, appId: Id, by: Id, at: IsoDateT
   const p = data.partners[a.partnerId]
   const documents = a.documents.map((d) => (d.file ? { ...d, ...ocrRead(data, a, p, d, at) } : d))
   const flagged = documents.some((d) => d.status === 'flagged')
-  let next = setApp(data, { ...a, documents, status: 'kyc', kycSubmittedAt: at, outcome: flagged ? undefined : { result: 'approved', conditions: [], by: 'system', at } })
+  let logged = data
+  for (const d of documents.filter((x) => x.status === 'flagged')) logged = logAiData(logged, { kind: 'documentOcr', recordId: `${a.ref} · ${d.key}`, at, confidence: 0.9, flag: d.flag, app: 'partnerPortal' })
+  let next = setApp(logged, { ...a, documents, status: 'kyc', kycSubmittedAt: at, outcome: flagged ? undefined : { result: 'approved', conditions: [], by: 'system', at } })
   next = audit(next, { userId: by, app: 'partnerPortal', action: 'partner.kycSubmitted', recordId: appId, at, after: { flagged: documents.filter((d) => d.status === 'flagged').map((d) => d.key) } })
   if (flagged) next = notify(next, toDesk, 'Partner KYC flagged for review', `${p.shortName} · ${a.ref}`, `/erp/partners/kyc?app=${appId}`, at)
   return advance(next, appId, at)

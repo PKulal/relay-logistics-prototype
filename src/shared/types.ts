@@ -1672,9 +1672,9 @@ export interface AiDecision {
   id: Id
   /** e.g. "assignment-v1", "margin-check-v1", "eta-v1" */
   model: string
-  /** Shipment (LR) the decision belongs to */
+  /** The record the decision is about: LR, customer, SKU, application… */
   recordId: Id
-  kind: 'legAssignment' | 'marginCheck' | 'etaPrediction'
+  kind: AiKind
   legId?: Id
   at: IsoDateTime
   /** 0–1 */
@@ -1685,7 +1685,16 @@ export interface AiDecision {
   /** marginCheck */
   margin?: { gross: number; grossPct: number; net: number; netPct: number; targetPct: number; belowTarget: boolean }
   acceptedByUserId?: Id
+  /** Other models (ERP-43): score, flag and reasons; the assistant's intent and the app it ran in */
+  score?: number
+  flag?: string
+  reasons?: string[]
+  intent?: string
+  app?: AppKey
 }
+
+/** Every AI feature that writes to the decision log (source §12 guardrails). */
+export type AiKind = 'legAssignment' | 'marginCheck' | 'etaPrediction' | 'assistant' | 'creditRisk' | 'leadScore' | 'skuOutlier' | 'documentOcr' | 'weightCheck'
 
 export interface AuditLog {
   id: Id

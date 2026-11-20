@@ -2,6 +2,7 @@
  * Partner App pickup actions (PA-14 to PA-17) and weight verification (Partner
  * App spec §7.4). Pure state changes; every step is a chain-of-custody event.
  */
+import { logAiData } from './aiLogActions'
 import { quote } from '@shared/engines/quote'
 import { round2 } from '@shared/engines/money'
 import type { DemoData, Id, IsoDateTime, Piece, ShipmentEvent } from '@shared/types'
@@ -89,6 +90,7 @@ export function applyVerifiedWeights(data: DemoData, lr: Id, verified: VerifiedP
     note: changed.map((c) => `${c.id.slice(-2)}: ${c.l} × ${c.b} × ${c.h} cm, ${c.weight} kg`).join('; '),
   }
   next = applyEvents(next, [ev], at)
+  next = logAiData(next, { kind: 'weightCheck', recordId: lr, at, confidence: 0.95, flag: 'outsideTolerance', score: outcome.amountDiff, app: 'partnerApp' })
   const id = `WR-${lr.slice(-6)}`
   return {
     ...next,

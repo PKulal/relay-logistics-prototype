@@ -8,6 +8,7 @@ import { navRoutes } from '@shared/shell/routes'
 import { WebShell } from '@shared/shell/WebShell'
 import { useSessionUser } from '@shared/store/session'
 import { Button } from '@shared/ui/button'
+import { AssistantLauncher } from '@shared/ui/Assistant'
 import { NotificationCentre } from '@shared/ui/NotificationCentre'
 import { AccessDenied, NotFound } from '@shared/ui/Page'
 import CP11Dashboard from './CP11Dashboard'
@@ -75,6 +76,7 @@ export default function CustomerApp() {
             searchPlaceholderKey="search.placeholder.customer"
             unread={unreadCount(notifications, viewer)}
             preferencesPath="preferences"
+            assistant={<AssistantLauncher ctx={{ app: 'customer', userId: user.id, role: user.role, customerId: customer.id }} />}
             headerActions={
               canBook && (
                 <Button size="sm" className="mr-1 hidden sm:inline-flex" onClick={() => navigate('/customer/book')}>

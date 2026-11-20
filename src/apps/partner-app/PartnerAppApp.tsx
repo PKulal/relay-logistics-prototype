@@ -41,6 +41,7 @@ import PA09MyDay from './PA09MyDay'
 import PA10Training, { PA10Practice } from './PA10Training'
 import PA13Settings from './PA13Settings'
 import PAMore from './PAMore'
+import PA11Assistant from './PA11Assistant'
 
 /** Built tab screens by screen id. */
 const BUILT: Record<string, React.ReactNode> = {
@@ -122,6 +123,7 @@ export default function PartnerAppApp() {
             <Route path={SYNC_SCREEN.path} element={<PA13Settings />} />
             <Route path="notifications" element={<PA08Notifications />} />
             <Route path="training" element={<PA10Training />} />
+            <Route path="assistant" element={<PA11Assistant />} />
             <Route path="training/:taskId" element={<PA10Practice />} />
             {staff.role === 'hub' && <Route path="my-day" element={<PA09MyDay />} />}
             {/* Another role's tab opened by URL */}

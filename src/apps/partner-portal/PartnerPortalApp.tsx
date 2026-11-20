@@ -20,6 +20,7 @@ import PP35Api from './PP35Api'
 import PP36Preferences from './PP36Preferences'
 import { unreadCount } from '@shared/engines/notifications'
 import PP38Notifications from './PP38Notifications'
+import { AssistantLauncher } from '@shared/ui/Assistant'
 import PP11Dashboard from './PP11Dashboard'
 import PP12JobInbox from './PP12JobInbox'
 import PP13JobDetail from './PP13JobDetail'
@@ -90,6 +91,7 @@ export default function PartnerPortalApp() {
             searchPlaceholderKey="search.placeholder.partner"
             unread={unreadCount(notifications, viewer)}
             preferencesPath="settings/preferences"
+            assistant={!only && <AssistantLauncher ctx={{ app: 'partnerPortal', userId: user.id, role: user.role, partnerId: partner.id }} />}
           />
         }
       >

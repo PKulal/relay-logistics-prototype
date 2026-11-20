@@ -892,7 +892,13 @@
       },
       "marginLine": "Gross {{gross}} ({{grossPct}}%) · after buffer {{net}} ({{netPct}}%) · target {{target}}%",
       "ok": "OK",
-      "flagged": "Flagged"
+      "flagged": "Flagged",
+      "assistant": "AI assistant",
+      "creditRisk": "Credit risk",
+      "leadScore": "Lead score",
+      "skuOutlier": "SKU outlier",
+      "documentOcr": "Document OCR",
+      "weightCheck": "Weight check"
     }
   },
   "erpActions": {
@@ -6723,18 +6729,31 @@
     "kind": {
       "legAssignment": "Partner assignment",
       "marginCheck": "Margin check",
-      "etaPrediction": "ETA prediction"
+      "etaPrediction": "ETA prediction",
+      "assistant": "AI assistant",
+      "creditRisk": "Credit risk",
+      "leadScore": "Lead score",
+      "skuOutlier": "SKU outlier",
+      "documentOcr": "Document OCR",
+      "weightCheck": "Weight check"
     },
     "d": {
       "assigned": "Assigned to {{partner}}",
       "ok": "Gross margin {{pct}}%: above target",
       "below": "Gross margin {{pct}}%: below target",
-      "eta": "ETA updated"
+      "eta": "ETA updated",
+      "creditRisk": "Credit-risk score {{score}}",
+      "leadScore": "Lead score {{score}}",
+      "skuOutlier": "SKU flagged: {{why}}",
+      "documentOcr": "Document flagged: {{flag}}",
+      "weightCheck": "Weight outside tolerance ({{amount}})",
+      "assistant": "Assistant prepared: {{intent}}"
     },
     "r": {
       "assigned_one": "Best of {{count}} eligible partner (score {{score}})",
       "assigned_other": "Best of {{count}} eligible partners (score {{score}})",
-      "margin": "Target {{target}}%"
+      "margin": "Target {{target}}%",
+      "assistant": "Asked in {{app}}; a person confirms"
     },
     "m": {
       "legAssignment": {
@@ -6760,9 +6779,32 @@
       "skuOutlier": {
         "accuracy": "2 of 2 flags confirmed by customers",
         "fairness": "Not applicable"
+      },
+      "documentOcr": {
+        "accuracy": "96% of flags confirmed by the KYC desk",
+        "fairness": "Same checks for every partner type"
+      },
+      "weightCheck": {
+        "accuracy": "92% of revisions accepted by customers",
+        "fairness": "Same tolerance for every customer"
+      },
+      "assistant": {
+        "accuracy": "88% of prepared actions confirmed",
+        "fairness": "Answers in Hindi and English equally"
       }
     },
-    "modelsNote": "Models are reviewed monthly. Accuracy and fairness figures are sample values until live monitoring is connected."
+    "modelsNote": "Models are reviewed monthly. Accuracy and fairness figures are sample values until live monitoring is connected.",
+    "flag": {
+      "tampered": "possible tampering",
+      "duplicate": "duplicate",
+      "mismatch": "details don't match",
+      "expired": "expired"
+    },
+    "intent": {
+      "reschedule": "reschedule a failed delivery",
+      "claim": "start a damage claim",
+      "track": "track a shipment"
+    }
   },
   "erp44": {
     "title": "System settings",
@@ -6813,6 +6855,241 @@
     "err": {
       "range": "{{field}} is outside the allowed range.",
       "order": "Tier bands must go down from Platinum to Bronze, between 1 and 100."
+    }
+  },
+  "ai": {
+    "title": "AI assistant",
+    "sub": {
+      "customer": "Track, reschedule, raise claims and find documents.",
+      "partnerPortal": "Jobs, payouts, score and how-to.",
+      "partnerApp": "How do I…? Ask by voice or text.",
+      "erp": "Ask about lanes, risks, collections and partners."
+    },
+    "hello": {
+      "customer": "Hi! Ask me about a shipment, a failed delivery, a claim or an invoice.",
+      "partnerPortal": "Hi! Ask me about your score, payouts, staff or jobs at risk.",
+      "partnerApp": "Ask how to handle a problem on the road. I'll guide you step by step.",
+      "erp": "Ask about lanes losing money, shipments at risk, overdue invoices or weak partners."
+    },
+    "suggestions": "Suggestions",
+    "mic": "Speak your question",
+    "ask": "Your question",
+    "placeholder": "Type a question in English or Hindi",
+    "send": "Send",
+    "voiceSim": "Voice is simulated on this device: using a sample question.",
+    "guardrail": "The assistant prepares; you confirm. It never pays money, closes a claim, completes a delivery or changes COD.",
+    "eta": "ETA {{date}}",
+    "date": "Date",
+    "slot": "Time slot",
+    "confirm": "Confirm",
+    "chip": {
+      "customer": {
+        "track": "Where is LR 790?",
+        "reschedule": "Reschedule my failed delivery",
+        "claim": "Raise a damage claim",
+        "invoice": "Download my invoice"
+      },
+      "partnerPortal": {
+        "score": "Why did my score drop?",
+        "payout": "When is my next payout?",
+        "addRider": "How do I add a rider?",
+        "atRisk": "Show at-risk jobs"
+      },
+      "partnerApp": {
+        "noAnswer": "Customer not answering",
+        "labelTorn": "Label is torn",
+        "sealWrong": "Seal number wrong",
+        "scale": "Scale not working"
+      },
+      "erp": {
+        "lanes": "Which lanes lost money last week?",
+        "risk": "Shipments at risk",
+        "overdue": "Overdue invoices",
+        "probation": "Partners on probation"
+      }
+    },
+    "c": {
+      "pay": "I can't pay for you. Open your invoices to pay or record a payment yourself.",
+      "noFailed": "You have no failed delivery waiting for an answer.",
+      "notFailed": "{{lr}} is {{status}}. Only failed deliveries can be rescheduled here.",
+      "role": "Your role can't do this. Ask your company Admin.",
+      "reschedule": "{{lr}} could not be delivered. Pick a new date and slot, then confirm.",
+      "rescheduled": "Done: {{lr}} will be reattempted on {{date}}, {{from}}–{{to}}.",
+      "whichClaim": "Which shipment is the claim for?",
+      "noClaimable": "No shipment is in its claim window right now.",
+      "notClaimable": "{{lr}} can't be claimed: it isn't delivered, or the claim window has passed.",
+      "claim": "I'll open the claim form for {{lr}} with Damage selected. You check the pieces and submit.",
+      "claimConfirm": "Open claim form",
+      "claimOpened": "Claim form opened for {{lr}}",
+      "invoices_one": "You have {{count}} open invoice.",
+      "invoices_other": "You have {{count}} open invoices.",
+      "noInvoices": "No open invoices. Everything is paid.",
+      "cod": "COD pending {{pending}}; next remittance {{next}}. Remitted this month: {{month}}.",
+      "credit": "You're on credit: limit {{limit}}, available {{available}}.",
+      "wallet": "Wallet balance {{amount}}.",
+      "book": "To book a shipment:",
+      "lrNotFound": "I couldn't find that LR in your shipments.",
+      "whichLr": "Which LR? Type its number, e.g. LR 790.",
+      "track": {
+        "booked": "{{lr}} is booked; pickup is planned. ETA {{eta}}.",
+        "pickedUp": "{{lr}} has been picked up. ETA {{eta}}.",
+        "atOriginHub": "{{lr}} is at the origin hub. ETA {{eta}}.",
+        "inTransit": "{{lr}} is in transit. ETA {{eta}}.",
+        "atDestinationHub": "{{lr}} has reached the destination hub. ETA {{eta}}.",
+        "outForDelivery": "{{lr}} is out for delivery today.",
+        "delivered": "{{lr}} was delivered.",
+        "undelivered": "{{lr}} could not be delivered. You can reschedule it.",
+        "deliveredWithException": "{{lr}} was delivered with an exception. You can raise a claim.",
+        "returnToOrigin": "{{lr}} is returning to origin.",
+        "cancelled": "{{lr}} was cancelled."
+      },
+      "help": "I can track a shipment, reschedule a failed delivery, start a claim, show invoices, COD or your wallet. Try a suggestion below."
+    },
+    "p": {
+      "noScore": "No published score yet.",
+      "scoreDown": "Your score fell {{delta}} points to {{total}} ({{tier}}). These pulled it down most:",
+      "score": "Your latest score is {{total}} ({{tier}}). Your weakest KPIs:",
+      "payout": "Next payout {{amount}} on {{date}}.",
+      "noPayout": "Nothing is due in the next payout on {{date}}.",
+      "addRider": "To add a rider:",
+      "docs_one": "{{count}} document needs renewal:",
+      "docs_other": "{{count}} documents need renewal:",
+      "docsOk": "All your documents are valid.",
+      "atRisk_one": "{{count}} job is at risk of missing its SLA:",
+      "atRisk_other": "{{count}} jobs are at risk of missing their SLA:",
+      "noRisk": "No jobs at risk right now.",
+      "help": "I can explain your score, your next payout, how to add staff, documents expiring and jobs at risk."
+    },
+    "a": {
+      "help": "Ask about a problem: customer not answering, OTP, label, seal, scale, damage, address, cash, network or a breakdown.",
+      "otp": "If the OTP doesn't arrive:",
+      "otpSteps": {
+        "1": "Ask the customer to check SMS and WhatsApp; wait one minute.",
+        "2": "Tap Resend OTP once.",
+        "3": "Still nothing: take the customer's signature and a photo instead."
+      },
+      "noAnswer": "If the customer isn't answering:",
+      "noAnswerSteps": {
+        "1": "Call twice from the app (masked number), 5 minutes apart.",
+        "2": "Wait 10 minutes at the address.",
+        "3": "Then mark a failed attempt: Customer not available, with a photo of the door."
+      },
+      "labelTorn": "If a label is torn:",
+      "labelTornSteps": {
+        "1": "Don't skip the piece: tap Type the piece ID.",
+        "2": "Read the LR and piece number from the invoice or the other pieces.",
+        "3": "Take a photo of the damaged label; the hub reprints it."
+      },
+      "sealWrong": "If the seal number doesn't match:",
+      "sealWrongSteps": {
+        "1": "Don't open the bag or truck.",
+        "2": "Take photos of the seal and the number.",
+        "3": "Report a problem: Seal mismatch. The hub checks the pieces."
+      },
+      "scale": "If the scale isn't working:",
+      "scaleSteps": {
+        "1": "Use the hub or pickup point's other scale if there is one.",
+        "2": "Otherwise enter the booked weight and add a photo.",
+        "3": "Report a problem so the hub re-weighs it."
+      },
+      "breakdown": "If your vehicle breaks down:",
+      "breakdownSteps": {
+        "1": "Park safely; press SOS if anyone is hurt.",
+        "2": "Report a problem: Breakdown, with the place.",
+        "3": "Your office or the Control Tower moves the load to another vehicle."
+      },
+      "damaged": "If a piece is damaged:",
+      "damagedSteps": {
+        "1": "Take photos of the damage before moving it.",
+        "2": "Mark the piece as damaged in the hand-over or delivery screen.",
+        "3": "Hand it over as usual; a claim may follow."
+      },
+      "offline": "If there's no network:",
+      "offlineSteps": {
+        "1": "Keep working: scans and photos are saved on the phone.",
+        "2": "Check Settings and sync to see what is waiting.",
+        "3": "When you have signal, tap Sync now."
+      },
+      "wrongAddress": "If the address is wrong or not found:",
+      "wrongAddressSteps": {
+        "1": "Call the customer from the app for directions.",
+        "2": "If they give a new address, ask them to change it on the tracking link.",
+        "3": "If you still can't find it, mark a failed attempt: Address not found."
+      },
+      "codShort": "If the customer doesn't have the full COD amount:",
+      "codShortSteps": {
+        "1": "Collect only the exact amount, by cash or UPI.",
+        "2": "Never deliver for less: the app won't accept a lower amount.",
+        "3": "Mark a failed attempt: COD not ready, so the customer can pick a new slot."
+      }
+    },
+    "guard": {
+      "field": "I can't complete a delivery or change a COD amount. Do it on the delivery screen with the OTP or signature.",
+      "money": "I can't release money or close a claim. Payouts and claims need a person at Logisco.",
+      "erp": "I can't pay, refund or close a claim. Open the screen and a person approves (maker-checker)."
+    },
+    "e": {
+      "lanes_one": "{{count}} lane is below target margin:",
+      "lanes_other": "{{count}} lanes are below target margin:",
+      "lanesOk": "Every lane is above target margin.",
+      "sos_one": "{{count}} active SOS:",
+      "sos_other": "{{count}} active SOS:",
+      "noSos": "No active SOS.",
+      "risk_one": "{{count}} shipment at risk:",
+      "risk_other": "Top {{count}} shipments at risk:",
+      "noRisk": "No shipments at risk.",
+      "overdue_one": "{{count}} account to chase:",
+      "overdue_other": "{{count}} accounts to chase first:",
+      "noOverdue": "No overdue invoices.",
+      "probation_one": "{{count}} partner on Probation or suspended:",
+      "probation_other": "{{count}} partners on Probation or suspended:",
+      "noProbation": "No partner is on Probation.",
+      "help": "Ask which lanes lost money, shipments at risk, active SOS, overdue invoices, partners on Probation, or an LR."
+    },
+    "row": {
+      "shipment": "{{lr}} · {{status}}",
+      "invoice": "{{id}} · {{amount}} · due {{due}}",
+      "kpi": "{{kpi}}: {{value}}%",
+      "docExpired": "{{doc}} · {{owner}} · expired {{date}}",
+      "docExpiring": "{{doc}} · {{owner}} · expires {{date}}",
+      "risk": "{{lr}} · {{job}} · risk {{risk}}%",
+      "lane": "{{lane}}: {{pct}}% ({{margin}}, {{n}} shipments)",
+      "sos": "{{name}} · {{partner}}",
+      "overdue": "{{customer}} · {{amount}} · {{days}} days overdue",
+      "partner": "{{name}} · score {{score}}"
+    },
+    "steps": {
+      "book": {
+        "1": "Pick the pickup location and date.",
+        "2": "Choose the consignee from your address book.",
+        "3": "Add pieces (or an SKU), the invoice and e-way bill.",
+        "4": "Check the price and confirm."
+      },
+      "rider": {
+        "1": "Go to Staff and fleet → Field staff → Add staff.",
+        "2": "Enter name, mobile, photo and ID; verify the licence on Sarathi.",
+        "3": "Upload the police verification.",
+        "4": "Save: the rider gets an SMS with the app link."
+      }
+    },
+    "openPanel": "Open the AI assistant",
+    "open": {
+      "invoices": "Open invoices",
+      "exceptions": "Open exceptions",
+      "cod": "Open COD remittance",
+      "wallet": "Open wallet",
+      "book": "Book a shipment",
+      "payouts": "Open payouts",
+      "scorecard": "Open scorecard",
+      "staff": "Open field staff",
+      "compliance": "Open documents",
+      "jobs": "Open jobs",
+      "margin": "Open margin monitor",
+      "health": "Open partner health",
+      "atRisk": "Open at-risk board",
+      "collections": "Open collections",
+      "scoring": "Open scoring",
+      "shipment": "Open"
     }
   }
 }

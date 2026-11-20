@@ -10,7 +10,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { advanceJourneys } from '@shared/sim/journey'
-import type { ErpRole, PermLevel, FieldStaff, JobPushEvent, PartnerIntegration, ApiKey, WebhookEvent, LegType, Rfq, SettingsChange, SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
+import type { AppKey, ErpRole, PermLevel, FieldStaff, JobPushEvent, PartnerIntegration, ApiKey, WebhookEvent, LegType, Rfq, SettingsChange, SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
 import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
 import * as erp from './erpActions'
@@ -46,6 +46,7 @@ import * as cs from './customerSettingsActions'
 import * as ps from './partnerSettingsActions'
 import * as fa from './fieldAppActions'
 import * as adm from './adminActions'
+import * as ai from './aiLogActions'
 import type { SettingsError, SettingsPatch, StaffInput as StaffUserInput, StaffUserError } from './adminActions'
 import type { HubInput, PortalUserError, PortalUserInput, StaffEdit, StaffError, StaffInput, VehicleError, VehicleInput } from './partnerSettingsActions'
 import type { ConsigneeInput, LocationInput, SkuInput, TicketInput, UserError, UserInput } from './customerSettingsActions'
@@ -343,6 +344,9 @@ export interface DemoState {
   setStaffUserEnabled: (id: Id, enabled: boolean, by: Id) => { error?: StaffUserError }
   setRolePermission: (role: ErpRole, screenId: string, level: PermLevel | undefined, by: Id) => void
   updateSettings: (patch: SettingsPatch, by: Id) => { error?: SettingsError }
+  /** AI assistant (CP-35, PP-37, PA-11, ERP-02): a prepared action is logged; Confirm marks it accepted (ERP-43) */
+  logAssistant: (app: AppKey, intent: string, recordId: Id, confidence: number) => Id
+  acceptAssistant: (decisionId: Id, userId: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -706,6 +710,8 @@ export const useDemoStore = create<DemoState>()(
           setStaffUserEnabled: (id: Id, enabled: boolean, by: Id) => run((d, now) => adm.setStaffUserEnabled(d, id, enabled, by, now)),
           setRolePermission: (role: ErpRole, screenId: string, level: PermLevel | undefined, by: Id) => upd((d, now) => adm.setRolePermission(d, role, screenId, level, by, now)),
           updateSettings: (patch: SettingsPatch, by: Id) => run((d, now) => adm.updateSettings(d, patch, by, now)),
+          logAssistant: (app: AppKey, intent: string, recordId: Id, confidence: number) => run((d, now) => ai.logAi(d, { kind: 'assistant', app, intent, recordId, at: now, confidence })).id,
+          acceptAssistant: (decisionId: Id, userId: Id) => upd((d) => ai.acceptAi(d, decisionId, userId)),
         }
       })(),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),

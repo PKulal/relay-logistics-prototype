@@ -1,8 +1,8 @@
 /**
  * More tab — the Partner App menu for PA-08, PA-09 (hub staff), PA-10 and
- * PA-13 (PA spec §4.1). The AI assistant (PA-11) is added with the AI item.
+ * PA-11 and PA-13 (PA spec §4.1).
  */
-import { Bell, CalendarCheck, ChevronRight, GraduationCap, RefreshCw, Siren } from 'lucide-react'
+import { Bell, CalendarCheck, ChevronRight, GraduationCap, RefreshCw, Siren, Sparkles } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { trainingStatus, queueOf } from '@shared/engines/fieldDay'
@@ -23,6 +23,7 @@ export default function PAMore() {
     ...(staff.role === 'hub' ? [{ to: '/app/my-day', icon: CalendarCheck, label: t('pa09.title'), badge: null }] : []),
     { to: '/app/training', icon: GraduationCap, label: t('pa10.title'), badge: <Chip tone={training === 'done' ? 'success' : 'warning'}>{t(`pa10.status.${training}`)}</Chip> },
     { to: '/app/sync', icon: RefreshCw, label: t('pa13.title'), badge: pending ? <Chip tone="warning">{t('pa13.pending', { count: pending })}</Chip> : null },
+    { to: '/app/assistant', icon: Sparkles, label: t('ai.title'), badge: null },
     { to: '/app/sos', icon: Siren, label: t('nav.pa.sos'), badge: null },
   ]
   return (
