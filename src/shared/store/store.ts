@@ -352,6 +352,7 @@ export interface DemoState {
   recordLogin: (app: AppKey, userId: Id) => void
   activateFieldApp: (staffId: Id) => void
   recordPasswordReset: (app: AppKey, userId: Id) => void
+  recordBulkBatch: (customerId: Id, file: string, rows: number, lrs: Id[], errors: number, by: Id) => Id
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -720,6 +721,7 @@ export const useDemoStore = create<DemoState>()(
           recordLogin: (app: AppKey, userId: Id) => upd((d, now) => auth.recordLogin(d, app, userId, now)),
           activateFieldApp: (staffId: Id) => upd((d, now) => auth.activateFieldApp(d, staffId, now)),
           recordPasswordReset: (app: AppKey, userId: Id) => upd((d, now) => auth.recordPasswordReset(d, app, userId, now)),
+          recordBulkBatch: (customerId: Id, file: string, rows: number, lrs: Id[], errors: number, by: Id) => run((d, now) => cs.recordBulkBatch(d, customerId, file, rows, lrs, errors, by, now)).id,
         }
       })(),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),

@@ -301,6 +301,15 @@ export function setConsigneeMessages(data: DemoData, customerId: Id, on: boolean
   return log(setCustomer(data, { ...c, consigneeMessages: on }), by, on ? 'consigneeMessages.on' : 'consigneeMessages.off', customerId, at)
 }
 
+// ── CP-15 bulk booking ──────────────────────────────────────────────────────
+
+/** Batch history row after "Book valid rows" (the shipments themselves go through bookShipment). */
+export function recordBulkBatch(data: DemoData, customerId: Id, file: string, rows: number, lrs: Id[], errors: number, by: Id, at: IsoDateTime): { data: DemoData; id: Id } {
+  const id = `BLK-${String(Object.keys(data.bulkBatches).length + 1).padStart(4, '0')}`
+  const next = { ...data, bulkBatches: { ...data.bulkBatches, [id]: { id, customerId, file, at, by, rows, booked: lrs.length, errors, lrs } } }
+  return { data: log(next, by, 'bulk.book', id, at, undefined, { booked: lrs.length, errors }), id }
+}
+
 // ── CP-37 help tickets ──────────────────────────────────────────────────────
 
 export interface TicketInput {

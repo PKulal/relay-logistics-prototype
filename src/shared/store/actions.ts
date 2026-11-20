@@ -68,9 +68,16 @@ export const NEW_CODE_START_SERIAL = 900
  * (JOB-000781-L1): a serial already used by any shipment is skipped.
  * Returns the LR and the updated serial counters.
  */
-export function nextLr(data: DemoData, originCode: string): { lr: Id; lrSerials: DemoData['lrSerials'] } {
+export function nextLr(data: DemoData, originCode: string, reserved?: string): { lr: Id; lrSerials: DemoData['lrSerials'] } {
   const used = new Set(Object.keys(data.shipments).map((id) => id.slice(-6)))
-  let serial = data.lrSerials[originCode] ?? NEW_CODE_START_SERIAL
+  const start = data.lrSerials[originCode] ?? NEW_CODE_START_SERIAL
+  let serial = start
   while (used.has(String(serial).padStart(6, '0'))) serial += 1
+  // A reserved serial (the hero LR) is skipped without moving the counter past it
+  if (reserved && String(serial).padStart(6, '0') === reserved) {
+    let other = serial + 1
+    while (used.has(String(other).padStart(6, '0'))) other += 1
+    return { lr: `LGS-${originCode}-${String(other).padStart(6, '0')}`, lrSerials: { ...data.lrSerials, [originCode]: serial } }
+  }
   return { lr: `LGS-${originCode}-${String(serial).padStart(6, '0')}`, lrSerials: { ...data.lrSerials, [originCode]: serial + 1 } }
 }

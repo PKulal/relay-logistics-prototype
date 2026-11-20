@@ -637,6 +637,25 @@ export interface SyncItem {
   attempts: number
 }
 
+/** CP-27 analytics: pre-computed weekly and lane history (spec prototype note). INVENTED. */
+export interface CustomerAnalytics {
+  weeks: { week: IsoDate; shipments: number; onTimePct: number; damagePer1000: number; co2PerShipment: number }[]
+  lanes: { origin: string; dest: string; destState: string; service: Service | 'parcel'; shipments: number; avgTransit: number; promised: number; onTimePct: number; damagePct: number; costPerKg: number; co2: number }[]
+}
+
+/** CP-15 bulk booking batch (batch history). */
+export interface BulkBatch {
+  id: Id
+  customerId: Id
+  file: string
+  at: IsoDateTime
+  by: Id
+  rows: number
+  booked: number
+  errors: number
+  lrs: Id[]
+}
+
 /** PP-32 renewal upload: the new expiry is applied at once and stays Under review until Logisco's check (SIMULATED). */
 export interface DocRenewal {
   /** Register row id, e.g. "VH:V-DL01LT4521:insurance" */
@@ -1779,6 +1798,10 @@ export interface DemoData {
   docRenewals: Record<Id, DocRenewal>
   /** PA-13 work saved on phones while offline */
   syncQueue: Record<Id, SyncItem>
+  /** CP-27 analytics history by customer */
+  customerAnalytics: Record<Id, CustomerAnalytics>
+  /** CP-15 bulk booking batches */
+  bulkBatches: Record<Id, BulkBatch>
   /** ERP-42 role editor overrides: role → screen id → level (screens not listed keep the default) */
   rolePermissions: Partial<Record<ErpRole, Record<string, PermLevel>>>
   auditLog: Record<Id, AuditLog>

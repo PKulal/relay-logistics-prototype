@@ -8,6 +8,7 @@ import { addMoneySeed } from './money'
 import { addBengaluruBackup, buildWeeklyScores } from './scores'
 import { addDepartmentSeed } from './departments'
 import { addSettingsSeed } from './settings'
+import { addAnalyticsSeed } from './analytics'
 
 const EMPTY_PERIOD = { revenue: 0, marginPct: 0, onTimePct: 0, claimsPer10k: 0, activeCustomers: 0, activePartners: 0 }
 import { codFromDeliveries } from '@shared/store/moneyActions'
@@ -101,6 +102,8 @@ export function buildBaseSeed(): DemoData {
     docRenewals: {},
     syncQueue: {},
     rolePermissions: {},
+    bulkBatches: {},
+    customerAnalytics: {},
     auditLog: {},
 
     // Next Delhi booking becomes LGS-DEL-000781 (the hero). nextLr() skips numbers already used.
@@ -115,5 +118,5 @@ export function buildBaseSeed(): DemoData {
 export function buildSeed(): DemoData {
   const data = generateShipments(addKeyShipments(buildBaseSeed(), DEMO_START), DEMO_START)
   // Exceptions already present at 10:00 are auto-ticketed (source §10 Steps 1–2)
-  return raiseAutoTickets(addSettingsSeed(addDepartmentSeed(addBengaluruBackup(codFromDeliveries(addMoneySeed(addInvestigatingClaim(joinTrips(data, Object.keys(data.legs)))))))), DEMO_START)
+  return raiseAutoTickets(addAnalyticsSeed(addSettingsSeed(addDepartmentSeed(addBengaluruBackup(codFromDeliveries(addMoneySeed(addInvestigatingClaim(joinTrips(data, Object.keys(data.legs))))))))), DEMO_START)
 }

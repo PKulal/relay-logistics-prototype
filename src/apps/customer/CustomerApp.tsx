@@ -32,6 +32,9 @@ import CP32Integrations from './CP32Integrations'
 import CP33Company from './CP33Company'
 import CP34Preferences from './CP34Preferences'
 import CP37Help from './CP37Help'
+import CP15BulkBooking from './CP15BulkBooking'
+import CP26Documents from './CP26Documents'
+import CP27Analytics from './CP27Analytics'
 import CP05Qualification from './onboarding/CP05Qualification'
 import CP06Kyc from './onboarding/CP06Kyc'
 import CP07Credit from './onboarding/CP07Credit'
@@ -43,7 +46,7 @@ import CP10Tracker from './onboarding/CP10Tracker'
 import { customerNav, type CustomerCtx } from './nav'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'CP-11': CP11Dashboard, 'CP-12': CP12GetQuote, 'CP-13': CP13BookShipment, 'CP-16': CP16Shipments, 'CP-19': CP19Exceptions, 'CP-22': CP22Claims, 'CP-23': CP23Wallet, 'CP-24': CP24Invoices, 'CP-25': CP25Cod, 'CP-28': CP28Users, 'CP-29': CP29Locations, 'CP-30': CP30AddressBook, 'CP-31': CP31Skus, 'CP-32': CP32Integrations, 'CP-33': CP33Company, 'CP-37': CP37Help }
+const SCREENS = { 'CP-11': CP11Dashboard, 'CP-12': CP12GetQuote, 'CP-13': CP13BookShipment, 'CP-16': CP16Shipments, 'CP-19': CP19Exceptions, 'CP-22': CP22Claims, 'CP-23': CP23Wallet, 'CP-24': CP24Invoices, 'CP-25': CP25Cod, 'CP-28': CP28Users, 'CP-29': CP29Locations, 'CP-30': CP30AddressBook, 'CP-31': CP31Skus, 'CP-32': CP32Integrations, 'CP-33': CP33Company, 'CP-37': CP37Help, 'CP-15': CP15BulkBooking, 'CP-26': CP26Documents, 'CP-27': CP27Analytics }
 
 /** Customer Portal (/customer) — B2B shippers. Spec: docs/01-customer-portal.md */
 export default function CustomerApp() {

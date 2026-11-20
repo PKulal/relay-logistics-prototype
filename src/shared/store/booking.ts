@@ -39,6 +39,8 @@ export interface BookingInput {
   pickupContact?: { name: string; mobile: string }
   /** "I already have one": the customer's 12-digit e-way bill number */
   existingEwbNo?: string
+  /** CP-15 bulk booking row */
+  bulk?: boolean
   /** Seed only: a fixed LR (e.g. LGS-DEL-000784). Live bookings take the next free LR. */
   lr?: Id
   /** Seed only: false skips wallet / credit movements (seeded balances are snapshots). Default true. */
@@ -122,7 +124,8 @@ export function bookShipment(data: DemoData, input: BookingInput, at: IsoDateTim
   if (!lr) {
     const code = LR_CODES[q.origin.city]
     if (!code) throw new Error(`No LR code for ${q.origin.city}`)
-    ;({ lr, lrSerials } = nextLr(data, code))
+    // CP-15 bulk rows never take the hero LR (LGS-DEL-000781 is booked live in the demo)
+    ;({ lr, lrSerials } = nextLr(data, code, input.bulk && code === 'DEL' ? '000781' : undefined))
   }
   if (data.shipments[lr]) throw new Error(`LR ${lr} already exists`)
   const serial = lr.slice(-6)

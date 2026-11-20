@@ -232,6 +232,7 @@ function makeTab() {
     recordLogin: () => {},
     activateFieldApp: () => {},
     recordPasswordReset: () => {},
+    recordBulkBatch: () => '',
     createNegotiatedCard: () => '',
     editRateCard: () => {},
     submitRateCard: () => {},
