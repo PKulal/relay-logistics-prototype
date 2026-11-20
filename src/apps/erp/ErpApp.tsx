@@ -26,6 +26,8 @@ import ERP20LegRules from './ERP20LegRules'
 import ERP21Gaps from './ERP21Gaps'
 import ERP22RateCards from './ERP22RateCards'
 import ERP23Approvals from './ERP23Approvals'
+import ERP24MarginMonitor from './ERP24MarginMonitor'
+import ERP25Simulator from './ERP25Simulator'
 import ERP26Leads from './ERP26Leads'
 import ERP27OnboardingReview from './ERP27OnboardingReview'
 import ERP30CreditReview from './ERP30CreditReview'
@@ -37,7 +39,7 @@ import ERP36ClaimsDesk, { ERP37Claim } from './ERP36Claims'
 import { erpNav, type ErpCtx } from './nav'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'ERP-05': ERP05JobBoard, 'ERP-06': ERP06AtRisk, 'ERP-07': ERP07Exceptions, 'ERP-09': ERP09PartnerHealth, 'ERP-10': ERP10DailyPack, 'ERP-11': ERP11Applications, 'ERP-12': ERP12KycDesk, 'ERP-13': ERP13Commercials, 'ERP-14': ERP14Trials, 'ERP-16': ERP16Scoring, 'ERP-17': ERP17Suspensions, 'ERP-18': ERP18Pincodes, 'ERP-19': ERP19Lanes, 'ERP-20': ERP20LegRules, 'ERP-21': ERP21Gaps, 'ERP-22': ERP22RateCards, 'ERP-23': ERP23Approvals, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-30': ERP30CreditReview, 'ERP-31': ERP31Invoicing, 'ERP-32': ERP32Payables, 'ERP-33': ERP33Payouts, 'ERP-34': ERP34CodRecon, 'ERP-36': ERP36ClaimsDesk }
+const SCREENS = { 'ERP-05': ERP05JobBoard, 'ERP-06': ERP06AtRisk, 'ERP-07': ERP07Exceptions, 'ERP-09': ERP09PartnerHealth, 'ERP-10': ERP10DailyPack, 'ERP-11': ERP11Applications, 'ERP-12': ERP12KycDesk, 'ERP-13': ERP13Commercials, 'ERP-14': ERP14Trials, 'ERP-16': ERP16Scoring, 'ERP-17': ERP17Suspensions, 'ERP-18': ERP18Pincodes, 'ERP-19': ERP19Lanes, 'ERP-20': ERP20LegRules, 'ERP-21': ERP21Gaps, 'ERP-22': ERP22RateCards, 'ERP-23': ERP23Approvals, 'ERP-24': ERP24MarginMonitor, 'ERP-25': ERP25Simulator, 'ERP-26': ERP26Leads, 'ERP-27': ERP27OnboardingReview, 'ERP-30': ERP30CreditReview, 'ERP-31': ERP31Invoicing, 'ERP-32': ERP32Payables, 'ERP-33': ERP33Payouts, 'ERP-34': ERP34CodRecon, 'ERP-36': ERP36ClaimsDesk }
 
 /** Logisco ERP + Control Tower (/erp) — Logisco staff. Spec: docs/04-erp-control-tower.md */
 export default function ErpApp() {
