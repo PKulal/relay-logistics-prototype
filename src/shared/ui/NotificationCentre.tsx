@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import { cn } from '@/shared/lib/utils'
 import { actionNeeded, notificationsFor, type Viewer } from '@shared/engines/notifications'
 import { useData } from '@shared/hooks/useDemo'
+import { notificationText } from '@shared/i18n/dataText'
 import { formatDateTime } from '@shared/lib/format'
 import { useDemoStore } from '@shared/store'
 import { Button } from '@shared/ui/button'
@@ -20,7 +21,7 @@ import { Chip } from '@shared/ui/StatusChip'
 type Filter = 'all' | 'unread' | 'action'
 
 export function NotificationCentre({ viewer, children }: { viewer: Viewer; children?: React.ReactNode }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const all = useData((d) => d.notifications)
   const [filter, setFilter] = useState<Filter>('all')
@@ -58,14 +59,15 @@ export function NotificationCentre({ viewer, children }: { viewer: Viewer; child
         <ul className="flex flex-col divide-y rounded-xl border bg-card shadow-card" data-testid="notifications">
           {shown.map((n) => {
             const act = actionNeeded(n)
+            const text = notificationText(n, t, i18n.language)
             const Icon = act ? CircleAlert : n.read ? Bell : BellDot
             return (
               <li key={n.id}>
-                <button type="button" onClick={() => open(n.id, n.link)} className={cn('flex w-full items-start gap-3 px-4 py-3 text-left hover:bg-accent', !n.read && 'bg-primary-soft')} aria-label={n.title}>
+                <button type="button" onClick={() => open(n.id, n.link)} className={cn('flex w-full items-start gap-3 px-4 py-3 text-left hover:bg-accent', !n.read && 'bg-primary-soft')} aria-label={text.title}>
                   <Icon className={cn('mt-0.5 size-5 shrink-0', act ? 'text-status-warning' : n.read ? 'text-muted-foreground' : 'text-primary')} aria-hidden />
                   <span className="min-w-0 flex-1">
-                    <span className={cn('block', !n.read && 'font-semibold')}>{n.title}</span>
-                    <span className="block text-caption text-muted-foreground">{n.body}</span>
+                    <span className={cn('block', !n.read && 'font-semibold')}>{text.title}</span>
+                    <span className="block text-caption text-muted-foreground">{text.body}</span>
                   </span>
                   <span className="flex shrink-0 flex-col items-end gap-1">
                     <span className="tabular text-caption text-muted-foreground">{formatDateTime(n.at)}</span>

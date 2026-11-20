@@ -13,11 +13,12 @@ import { useData } from '@shared/hooks/useDemo'
 import { formatDateTime } from '@shared/lib/format'
 import { useDemoStore } from '@shared/store'
 import { Button } from '@shared/ui/button'
+import { dataBody } from '@shared/i18n/dataText'
 import { fieldTitle, LEG_ID } from './fieldText'
 import { useFieldSession } from './useFieldSession'
 
 export default function PA08Notifications() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const { staff } = useFieldSession()
   const all = useData((d) => d.notifications)
@@ -49,7 +50,7 @@ export default function PA08Notifications() {
                 {n.read ? <Bell className="mt-0.5 size-5 shrink-0 text-muted-foreground" aria-hidden /> : <BellDot className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden />}
                 <span className="min-w-0 flex-1">
                   <span className={cn('block', !n.read && 'font-bold')}>{fieldTitle(n, t)}</span>
-                  <span className="tabular block text-caption text-muted-foreground">{LEG_ID.test(n.title) ? n.title : n.body}</span>
+                  <span className="tabular block text-caption text-muted-foreground">{LEG_ID.test(n.title) ? n.title : dataBody(n.body, t, i18n.language)}</span>
                   <span className="tabular block text-caption text-muted-foreground">{formatDateTime(n.at)}</span>
                 </span>
               </button>

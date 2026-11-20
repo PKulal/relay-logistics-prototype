@@ -1,5 +1,6 @@
 /** Wording for Partner App notifications (PA-08); stored in English, shown in the staff member's language. */
 import type { TFunction } from 'i18next'
+import { dataTitle } from '@shared/i18n/dataText'
 import type { Notification } from '@shared/types'
 
 export const LEG_ID = /^JOB-\d{6}-L\d$/
@@ -8,5 +9,5 @@ export const LEG_ID = /^JOB-\d{6}-L\d$/
 export function fieldTitle(n: Notification, t: TFunction): string {
   if (LEG_ID.test(n.title)) return t('pa08.k.newTask', { lr: n.body })
   const map: Record<string, string> = { 'Appointment booked': 'slotChanged', 'Task removed': 'taskRemoved', 'Customer chose reattempt': 'reattempt', 'Return to origin': 'rto', 'Sync failed': 'syncFailed' }
-  return map[n.title] ? t(`pa08.k.${map[n.title]}`) : n.title
+  return map[n.title] ? t(`pa08.k.${map[n.title]}`) : dataTitle(n.title, t)
 }

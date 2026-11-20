@@ -67,7 +67,7 @@ export default function PA09MyDay() {
         <h2 className="mb-2 font-bold">{t('pa09.week')}</h2>
         <div className="h-40" data-testid="week">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={d.week.map((w) => ({ day: formatDayShort(w.date), done: w.done }))}>
+            <BarChart data={d.week.map((w) => ({ day: t(`pp18.d.${formatDayShort(w.date).slice(0, 3).toLowerCase()}`), done: w.done }))}>
               <XAxis dataKey="day" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
               <YAxis allowDecimals={false} width={24} tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
               <Bar dataKey="done" fill="var(--accent)" radius={[4, 4, 0, 0]} isAnimationActive={false} />
