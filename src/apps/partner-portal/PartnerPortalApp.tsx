@@ -20,6 +20,9 @@ import PP35Api from './PP35Api'
 import PP36Preferences from './PP36Preferences'
 import { unreadCount } from '@shared/engines/notifications'
 import PP38Notifications from './PP38Notifications'
+import PP15LiveBoard from './PP15LiveBoard'
+import PP16Trips from './PP16Trips'
+import PP17HubOps from './PP17HubOps'
 import { AssistantLauncher } from '@shared/ui/Assistant'
 import PP11Dashboard from './PP11Dashboard'
 import PP12JobInbox from './PP12JobInbox'
@@ -45,7 +48,7 @@ import PP28Cod from './PP28Cod'
 import PP39Case from './PP39Case'
 
 /** Built screens, by spec screen id. Unlisted screens show their placeholder. */
-const SCREENS = { 'PP-10': PP10Tracker, 'PP-11': PP11Dashboard, 'PP-12': PP12JobInbox, 'PP-18': PP18Capacity, 'PP-19': PP19Coverage, 'PP-20': PP20Escalations, 'PP-21': PP21DeliveryExceptions, 'PP-22': PP22Claims, 'PP-23': PP23Scorecard, 'PP-25': PP25Daily, 'PP-26': PP26Invoices, 'PP-27': PP27Payouts, 'PP-28': PP28Cod, 'PP-29': PP29Staff, 'PP-30': PP30Fleet, 'PP-31': PP31Hubs, 'PP-32': PP32Compliance, 'PP-33': PP33Company, 'PP-34': PP34Users, 'PP-35': PP35Api, 'PP-36': PP36Preferences, 'PP-38': PP38Notifications, 'PP-39': PP39Case }
+const SCREENS = { 'PP-10': PP10Tracker, 'PP-11': PP11Dashboard, 'PP-12': PP12JobInbox, 'PP-18': PP18Capacity, 'PP-19': PP19Coverage, 'PP-20': PP20Escalations, 'PP-21': PP21DeliveryExceptions, 'PP-22': PP22Claims, 'PP-23': PP23Scorecard, 'PP-25': PP25Daily, 'PP-26': PP26Invoices, 'PP-27': PP27Payouts, 'PP-28': PP28Cod, 'PP-29': PP29Staff, 'PP-30': PP30Fleet, 'PP-31': PP31Hubs, 'PP-32': PP32Compliance, 'PP-33': PP33Company, 'PP-34': PP34Users, 'PP-35': PP35Api, 'PP-36': PP36Preferences, 'PP-38': PP38Notifications, 'PP-15': PP15LiveBoard, 'PP-16': PP16Trips, 'PP-17': PP17HubOps, 'PP-39': PP39Case }
 
 /** Before the monitored trial the partner sees only its onboarding (no jobs yet). */
 const PRE_TRIAL: PartnerStatus[] = ['applied', 'kyc', 'agreement', 'integration']

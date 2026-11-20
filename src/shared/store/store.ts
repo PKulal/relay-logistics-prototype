@@ -48,6 +48,7 @@ import * as fa from './fieldAppActions'
 import * as adm from './adminActions'
 import * as ai from './aiLogActions'
 import * as auth from './authActions'
+import * as pops from './partnerOpsActions'
 import type { SettingsError, SettingsPatch, StaffInput as StaffUserInput, StaffUserError } from './adminActions'
 import type { HubInput, PortalUserError, PortalUserInput, StaffEdit, StaffError, StaffInput, VehicleError, VehicleInput } from './partnerSettingsActions'
 import type { ConsigneeInput, LocationInput, SkuInput, TicketInput, UserError, UserInput } from './customerSettingsActions'
@@ -353,6 +354,7 @@ export interface DemoState {
   activateFieldApp: (staffId: Id) => void
   recordPasswordReset: (app: AppKey, userId: Id) => void
   recordBulkBatch: (customerId: Id, file: string, rows: number, lrs: Id[], errors: number, by: Id) => Id
+  changeTripVehicle: (tripId: Id, vehicleId: Id, driverId: Id, by: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -722,6 +724,7 @@ export const useDemoStore = create<DemoState>()(
           activateFieldApp: (staffId: Id) => upd((d, now) => auth.activateFieldApp(d, staffId, now)),
           recordPasswordReset: (app: AppKey, userId: Id) => upd((d, now) => auth.recordPasswordReset(d, app, userId, now)),
           recordBulkBatch: (customerId: Id, file: string, rows: number, lrs: Id[], errors: number, by: Id) => run((d, now) => cs.recordBulkBatch(d, customerId, file, rows, lrs, errors, by, now)).id,
+          changeTripVehicle: (tripId: Id, vehicleId: Id, driverId: Id, by: Id) => upd((d, now) => pops.changeTripVehicle(d, tripId, vehicleId, driverId, by, now)),
         }
       })(),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),
