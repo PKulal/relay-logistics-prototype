@@ -10,7 +10,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { advanceJourneys } from '@shared/sim/journey'
-import type { SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
+import type { LegType, SettingsChange, SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
 import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
 import * as erp from './erpActions'
@@ -39,6 +39,8 @@ import * as money from './moneyActions'
 import * as pay from './payoutActions'
 import * as exc from './exceptionActions'
 import * as sc from './scoringActions'
+import * as net from './networkActions'
+import type { CapacityEdit, CoverageChange, LaneEdit, NewPincode, PincodeEdit } from './networkActions'
 import type { HubReport, PickupFailed, TicketResolution } from './exceptionActions'
 import type { PartnerCodDeposit, UploadInvoice } from './payoutActions'
 import type { CodDeposit } from './moneyActions'
@@ -56,7 +58,7 @@ import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 23
+export const STORE_VERSION = 24
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -248,6 +250,16 @@ export interface DemoState {
   requestClose: (caseId: Id, by: Id) => void
   approveClose: (caseId: Id, by: Id) => void
   respondToCase: (caseId: Id, text: string, by: Id) => void
+  /** Network (ERP-18 to ERP-21, PP-18, PP-19) */
+  updatePincode: (code: string, edit: PincodeEdit, by: Id) => void
+  addPincode: (x: NewPincode, by: Id) => void
+  updateLane: (id: Id, edit: LaneEdit, by: Id) => void
+  proposeSettings: (changes: SettingsChange['changes'], reason: string, by: Id) => Id | undefined
+  decideSettings: (id: Id, approve: boolean, by: Id) => void
+  setCapacity: (partnerId: Id, x: CapacityEdit, by: Id) => void
+  requestCoverageChange: (partnerId: Id, x: CoverageChange, by: Id) => Id | undefined
+  decideCoverageChange: (id: Id, approve: boolean, note: string, by: Id) => void
+  createRecruitmentNeed: (legType: LegType, place: string, by: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -508,6 +520,23 @@ export const useDemoStore = create<DemoState>()(
       requestClose: (caseId, by) => set((s) => ({ data: sc.requestClose(s.data, caseId, by, s.demoNow) })),
       approveClose: (caseId, by) => set((s) => ({ data: sc.approveClose(s.data, caseId, by, s.demoNow) })),
       respondToCase: (caseId, text, by) => set((s) => ({ data: sc.respondToCase(s.data, caseId, text, by, s.demoNow) })),
+      updatePincode: (code, edit, by) => set((s) => ({ data: net.updatePincode(s.data, code, edit, by, s.demoNow) })),
+      addPincode: (x, by) => set((s) => ({ data: net.addPincode(s.data, x, by, s.demoNow) })),
+      updateLane: (id, edit, by) => set((s) => ({ data: net.updateLane(s.data, id, edit, by, s.demoNow) })),
+      proposeSettings: (changes, reason, by) => {
+        const r = net.proposeSettings(get().data, changes, reason, by, get().demoNow)
+        set({ data: r.data })
+        return r.id
+      },
+      decideSettings: (id, approve, by) => set((s) => ({ data: net.decideSettings(s.data, id, approve, by, s.demoNow) })),
+      setCapacity: (partnerId, x, by) => set((s) => ({ data: net.setCapacity(s.data, partnerId, x, by, s.demoNow) })),
+      requestCoverageChange: (partnerId, x, by) => {
+        const r = net.requestCoverageChange(get().data, partnerId, x, by, get().demoNow)
+        set({ data: r.data })
+        return r.id
+      },
+      decideCoverageChange: (id, approve, note, by) => set((s) => ({ data: net.decideCoverageChange(s.data, id, approve, note, by, s.demoNow) })),
+      createRecruitmentNeed: (legType, place, by) => set((s) => ({ data: net.createRecruitmentNeed(s.data, legType, place, by, s.demoNow) })),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),
 
 

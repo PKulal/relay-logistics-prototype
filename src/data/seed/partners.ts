@@ -26,6 +26,8 @@ export const namedPartners: Partner[] = [
     tier: 'gold',
     score: 86,
     capacityPerDay: 400,
+    // INVENTED: closed on Christmas (PP-18)
+    closedDates: ['2026-12-25'],
     baseLoadToday: 180,
     coveragePincodes: NCR,
     laneIds: [],

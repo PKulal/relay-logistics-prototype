@@ -13,6 +13,7 @@ import { parcelZone, priceLine } from './pricing'
 import { km } from './fieldTasks'
 import { findLane, quote } from './quote'
 import { legPattern } from './schedule'
+import { pincodeCoverage } from './network'
 
 export interface LineMargin {
   /** Margin after the risk buffer: the figure checked against the target */
@@ -65,15 +66,17 @@ function hubPincode(data: DemoData, hubId: Id): Pincode | undefined {
 
 /**
  * A typical route for each parcel zone: the longest one in the pincode master
- * that the network can carry (a line-haul lane where one is needed).
+ * that the network can carry (partners at both ends; a line-haul lane where one is needed).
  */
 export function zoneRoutes(data: DemoData): Partial<Record<ParcelZone, [Pincode, Pincode]>> {
   const pins = Object.values(data.pincodes).filter((p) => p.serviceable && !p.oda)
+  // Only pincodes a partner can pick up from / deliver to (a new pincode may not be covered yet)
+  const cov = pincodeCoverage(data)
   const out: Partial<Record<ParcelZone, [Pincode, Pincode]>> = {}
   const best: Partial<Record<ParcelZone, number>> = {}
   for (const a of pins)
     for (const b of pins) {
-      if (a.code === b.code) continue
+      if (a.code === b.code || !cov[a.code]?.firstMile.length || !cov[b.code]?.lastMile.length) continue
       if (legPattern(a, b).includes('lineHaul') && !findLane(data, a, b)) continue
       const z = parcelZone(a, b)
       const d = km(a, b)

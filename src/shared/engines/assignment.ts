@@ -110,8 +110,11 @@ export function partnerLoad(data: DemoData, partnerId: Id, date: IsoDate): numbe
  * declared capacity; a partner whose score falls below Bronze (Probation) has
  * its volume cut by 50%.
  */
-export function effectiveCapacity(p: Partner, probationCutPct: number): number {
-  return p.tier === 'probation' ? Math.floor((p.capacityPerDay * (100 - probationCutPct)) / 100) : p.capacityPerDay
+export function effectiveCapacity(p: Partner, probationCutPct: number, date?: IsoDate): number {
+  // PP-18 capacity calendar: closed days take no jobs; a day override replaces the default
+  if (date && p.closedDates?.includes(date)) return 0
+  const declared = (date ? p.capacityOverrides?.[date] : undefined) ?? p.capacityPerDay
+  return p.tier === 'probation' ? Math.floor((declared * (100 - probationCutPct)) / 100) : declared
 }
 
 export function rankCandidates(data: DemoData, type: LegType, i: AssignmentInput): Candidate[] {
@@ -135,7 +138,7 @@ export function rankCandidates(data: DemoData, type: LegType, i: AssignmentInput
       if (!ACTIVE.includes(p.status)) return skip('notActive')
       if (!p.services.includes(i.service)) return skip('serviceNotOffered')
       if (!rate) return skip('noRate')
-      if (partnerLoad(data, p.id, i.date) >= effectiveCapacity(p, data.settings.probationVolumeCutPct)) return skip('atCapacity')
+      if (partnerLoad(data, p.id, i.date) >= effectiveCapacity(p, data.settings.probationVolumeCutPct, i.date)) return skip('atCapacity')
       return { ...base, cost, eligible: true, rateLineId: rate.id }
     })
     // Partners that don't cover this place are noise for the "why" list.

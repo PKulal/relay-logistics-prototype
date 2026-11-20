@@ -48,7 +48,7 @@ export function reassignOptions(data: DemoData, legId: Id): ReassignOption[] {
   return rankCandidates(data, leg.type, input).map((c) => {
     const p = data.partners[c.partnerId]
     const current = c.partnerId === leg.partnerId
-    const capacityLeft = effectiveCapacity(p, data.settings.probationVolumeCutPct) - partnerLoad(data, p.id, input.date)
+    const capacityLeft = effectiveCapacity(p, data.settings.probationVolumeCutPct, input.date) - partnerLoad(data, p.id, input.date)
     return { ...c, current, capacityLeft, costDiff: Math.round((c.cost - leg.cost) * 100) / 100, eligible: c.eligible || current }
   })
 }

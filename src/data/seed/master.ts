@@ -31,6 +31,9 @@ export const pincodes: Pincode[] = [
   pin({ code: '122001', area: 'Daulatabad Road', city: 'Gurugram', state: 'Haryana', region: 'Delhi NCR', hubId: 'HUB-GGN', metro: true, lat: 28.4595, lng: 77.0266 }),
   pin({ code: '122050', area: 'IMT Manesar', city: 'Gurugram', state: 'Haryana', region: 'Delhi NCR', hubId: 'HUB-GGN', metro: false, lat: 28.359, lng: 76.935 }),
   pin({ code: '201301', area: 'Sector 63', city: 'Noida', state: 'Uttar Pradesh', region: 'Delhi NCR', hubId: 'HUB-GGN', metro: true, lat: 28.585, lng: 77.315 }),
+  // INVENTED: newly serviceable Noida pincodes with no partner yet (ERP-21 gap; SwiftCity's PP-19 request)
+  pin({ code: '201303', area: 'Sector 18', city: 'Noida', state: 'Uttar Pradesh', region: 'Delhi NCR', hubId: 'HUB-GGN', metro: true, lat: 28.570, lng: 77.326 }),
+  pin({ code: '201309', area: 'Sector 62', city: 'Noida', state: 'Uttar Pradesh', region: 'Delhi NCR', hubId: 'HUB-GGN', metro: true, lat: 28.627, lng: 77.373 }),
   // North Karnataka — served by Hubli Warehousing
   pin({ code: '580030', area: 'Amargol', city: 'Hubballi', state: 'Karnataka', region: 'Karnataka', hubId: 'HUB-HBL', metro: false, lat: 15.388, lng: 75.095 }),
   pin({ code: '580025', area: 'Tarihal Industrial Area', city: 'Hubballi', state: 'Karnataka', region: 'Karnataka', hubId: 'HUB-HBL', metro: false, lat: 15.34, lng: 75.07 }),
@@ -247,6 +250,9 @@ export const settings: Settings = {
   targetMarginPct: 15,
   riskBufferPct: 2,
   pickupCutoff: '14:00',
+  lineHaulArrival: '06:00',
+  destHubHandoverBy: '10:00',
+  intraRegionHubBy: '09:00',
   partnerAcceptanceMinutes: 30,
   arrivalGeofenceM: 200,
   weightTolerancePct: 3,

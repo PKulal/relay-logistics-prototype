@@ -75,6 +75,12 @@ export function buildBaseSeed(): DemoData {
     sosAlerts: {},
     improvementPlans: {},
     suspensionCases: {},
+    // INVENTED: SwiftCity asks to add the two new Noida pincodes (PP-19 sample "+6 Noida pincodes")
+    coverageRequests: {
+      'CR-0001': { id: 'CR-0001', partnerId: 'P-SWIFTCITY', action: 'add', pincodes: ['201303', '201309'], laneIds: [], effectiveFrom: '2026-11-25', reason: 'New riders based in Noida Sector 18 from 25-Nov', requestedBy: 'PU-VIKRAM', requestedAt: '2026-11-21T16:20:00+05:30', status: 'pending' },
+    },
+    recruitmentNeeds: {},
+    settingsChanges: {},
     partnerInvoices: byId(partnerInvoices),
     payouts: byId(payouts),
     tickets: {},

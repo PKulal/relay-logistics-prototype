@@ -107,6 +107,46 @@ export interface Hub {
   auditStatus: 'pending' | 'passed' | 'failed'
 }
 
+/** PP-19 → ERP-21: a partner asks to add or remove pincodes or lanes; Network Planning decides. */
+export interface CoverageRequest {
+  id: Id
+  partnerId: Id
+  action: 'add' | 'remove'
+  pincodes: string[]
+  laneIds: Id[]
+  effectiveFrom: IsoDate
+  reason: string
+  requestedBy: Id
+  requestedAt: IsoDateTime
+  status: 'pending' | 'approved' | 'rejected'
+  decidedBy?: Id
+  decidedAt?: IsoDateTime
+  note?: string
+}
+
+/** ERP-21 "Create recruitment need": raises the network-fit score of matching applicants (ERP-11). */
+export interface RecruitmentNeed {
+  id: Id
+  legType: LegType
+  /** Pincode for first / last mile; lane id for line-haul */
+  place: string
+  createdBy: Id
+  createdAt: IsoDateTime
+  open: boolean
+}
+
+/** ERP-20 settings change waiting for approval (maker-checker). */
+export interface SettingsChange {
+  id: Id
+  changes: Partial<Pick<Settings, 'pickupCutoff' | 'lineHaulArrival' | 'destHubHandoverBy' | 'intraRegionHubBy'>>
+  reason: string
+  by: Id
+  at: IsoDateTime
+  status: 'pending' | 'approved' | 'rejected'
+  checkerId?: Id
+  decidedAt?: IsoDateTime
+}
+
 export interface Lane {
   id: Id
   originRegion: string
@@ -194,6 +234,10 @@ export interface Settings {
   targetMarginPct: number
   riskBufferPct: number
   pickupCutoff: string // "HH:mm"
+  /** ERP-20 leg windows (source §8: cut-offs and hand-over windows aligned so legs connect) */
+  lineHaulArrival: string
+  destHubHandoverBy: string
+  intraRegionHubBy: string
   partnerAcceptanceMinutes: number
   arrivalGeofenceM: number
   weightTolerancePct: number
@@ -455,6 +499,9 @@ export interface Partner {
   tier: Tier | null
   score: number
   capacityPerDay: number
+  /** PP-18 capacity calendar (source §5.1 "daily capacity and holidays"): per-date overrides and closed days */
+  capacityOverrides?: Record<IsoDate, number>
+  closedDates?: IsoDate[]
   /**
    * Jobs already committed today from work outside the modelled shipments.
    * Assignment adds today's modelled legs on top. (MetroDash is seeded at capacity.)
@@ -1467,6 +1514,9 @@ export interface DemoData {
   payoutBatches: Record<Id, PayoutBatch>
   sosAlerts: Record<Id, SosAlert>
   improvementPlans: Record<Id, ImprovementPlan>
+  coverageRequests: Record<Id, CoverageRequest>
+  recruitmentNeeds: Record<Id, RecruitmentNeed>
+  settingsChanges: Record<Id, SettingsChange>
   suspensionCases: Record<Id, SuspensionCase>
   payouts: Record<Id, Payout>
   tickets: Record<Id, Ticket>

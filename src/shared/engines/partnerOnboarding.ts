@@ -196,7 +196,11 @@ export function networkFit(data: DemoData, x: FitInput): Pick<PartnerApplication
 
   if (!parts.length) return { fitScore: 25, fitDetail: { kind: 'none', place: '', partners: 0 } }
   const best = parts.map((_, i) => i).sort((a, b) => score[b] - score[a])[0]
-  return { fitScore: score[best], fitDetail: parts[best] }
+  // ERP-21 recruitment needs raise the fit of applicants who would fill them
+  const needs = Object.values(data.recruitmentNeeds ?? {}).filter((n) => n.open && x.legs.includes(n.legType))
+  const laneIds = x.lanes.map((l) => Object.values(data.lanes).find((n) => n.originHubId === hubOfCity(data, l.origin) && n.destHubId === hubOfCity(data, l.dest))?.id)
+  const meets = needs.some((n) => (n.legType === 'lineHaul' ? laneIds.includes(n.place) : x.pincodes.includes(n.place)))
+  return { fitScore: meets ? Math.min(99, score[best] + 8) : score[best], fitDetail: parts[best] }
 }
 
 // ─── SIMULATED KYC services ───────────────────────────────────────────────────

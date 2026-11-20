@@ -150,7 +150,7 @@ export function todayTiles(data: DemoData, partnerId: Id, now: IsoDateTime): Tod
 
 export function capacityToday(data: DemoData, partnerId: Id, now: IsoDateTime): { used: number; capacity: number } {
   const p = data.partners[partnerId]
-  return { used: partnerLoad(data, partnerId, istDate(now)), capacity: effectiveCapacity(p, data.settings.probationVolumeCutPct) }
+  return { used: partnerLoad(data, partnerId, istDate(now)), capacity: effectiveCapacity(p, data.settings.probationVolumeCutPct, istDate(now)) }
 }
 
 /** Latest weekly score and the change from the week before. */

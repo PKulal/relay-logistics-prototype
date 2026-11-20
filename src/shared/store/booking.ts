@@ -103,7 +103,7 @@ export function bookShipment(data: DemoData, input: BookingInput, at: IsoDateTim
       ? { ...deliverySlot, confirmed: true }
       : { date: eta, confirmed: false }
     : undefined
-  const windows = legWindows(q.pattern, { pickupSlot: input.pickupSlot, eta, lane: q.lane, deliverySlot })
+  const windows = legWindows(q.pattern, { pickupSlot: input.pickupSlot, eta, lane: q.lane, deliverySlot, times: data.settings })
   const plan = planAssignment(data, {
     pattern: q.pattern,
     origin: q.origin,

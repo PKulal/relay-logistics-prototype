@@ -52,7 +52,16 @@ export interface Window {
 export const DEFAULT_DELIVERY = { from: '10:00', to: '18:00' }
 
 /** Time windows for each leg, in pattern order. Each leg's SLA is its window end. */
-export function legWindows(pattern: LegType[], opts: { pickupSlot: Slot; eta: IsoDate; lane?: Lane; deliverySlot?: Slot }): Window[] {
+/** ERP-20 hand-over times (defaults = the seeded settings). */
+export interface LegTimes {
+  lineHaulArrival: string
+  destHubHandoverBy: string
+  intraRegionHubBy: string
+}
+const DEFAULT_TIMES: LegTimes = { lineHaulArrival: '06:00', destHubHandoverBy: '10:00', intraRegionHubBy: '09:00' }
+
+export function legWindows(pattern: LegType[], opts: { pickupSlot: Slot; eta: IsoDate; lane?: Lane; deliverySlot?: Slot; times?: LegTimes }): Window[] {
+  const times = opts.times ?? DEFAULT_TIMES
   const pickup: Window = { from: ist(opts.pickupSlot.date, opts.pickupSlot.from), to: ist(opts.pickupSlot.date, opts.pickupSlot.to) }
   const delivery = opts.deliverySlot ?? { date: opts.eta, ...DEFAULT_DELIVERY }
   const lastMile: Window = { from: ist(delivery.date, delivery.from), to: ist(delivery.date, delivery.to) }
@@ -60,21 +69,21 @@ export function legWindows(pattern: LegType[], opts: { pickupSlot: Slot; eta: Is
   if (pattern.length === 2) return [pickup, lastMile]
 
   if (pattern.length === 3) {
-    return [pickup, { from: pickup.to, to: ist(opts.eta, '09:00') }, lastMile]
+    return [pickup, { from: pickup.to, to: ist(opts.eta, times.intraRegionHubBy) }, lastMile]
   }
 
   if (!opts.lane) throw new Error('Long-haul shipment needs a lane')
   // Line-haul departs on the lane's daily schedule; if pickup ends after departure, take the next day's truck.
   let departure = ist(opts.pickupSlot.date, opts.lane.departureTime)
   if (!isBefore(pickup.to, departure)) departure = addDays(departure, 1)
-  const arrival = ist(opts.eta, '06:00')
-  const destHubOut = ist(opts.eta, '10:00')
+  const arrival = ist(opts.eta, times.lineHaulArrival)
+  const destHubOut = ist(opts.eta, times.destHubHandoverBy)
 
   return [
     pickup,
     { from: pickup.to, to: departure },
     { from: departure, to: arrival },
-    // Destination hub hands over by 10:00, or earlier if the delivery window starts earlier
+    // Destination hub hands over by the set time, or earlier if the delivery window starts earlier
     { from: arrival, to: isBefore(lastMile.from, destHubOut) ? lastMile.from : destHubOut },
     lastMile,
   ]
