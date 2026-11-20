@@ -373,10 +373,26 @@ export function freshState(): PersistedDemoState {
   return { data: buildSeed(), demoNow: DEMO_START, flags: { ...initialFlags } }
 }
 
+/**
+ * Building the seed takes about a second, so it is skipped when this browser
+ * already holds saved demo data of the current version: the persist middleware
+ * replaces the state from storage synchronously, before anything renders.
+ */
+function hasSavedState(): boolean {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    return !!raw && raw.endsWith(`"version":${STORE_VERSION}}`)
+  } catch {
+    return false
+  }
+}
+
+const startState = (): PersistedDemoState => (hasSavedState() ? { data: undefined as unknown as DemoData, demoNow: DEMO_START, flags: { ...initialFlags } } : freshState())
+
 export const useDemoStore = create<DemoState>()(
   persist(
     (set, get) => ({
-      ...freshState(),
+      ...startState(),
 
       advanceTime: (minutes) => {
         if (minutes <= 0) return
@@ -751,6 +767,10 @@ export const useDemoStore = create<DemoState>()(
       partialize: (s): PersistedDemoState => ({ data: s.data, demoNow: s.demoNow, flags: s.flags }),
       // Old saved data can't be trusted against a new seed: start fresh.
       migrate: () => freshState(),
+      // Saved data that can't be read (or a skipped seed that wasn't replaced): start fresh
+      onRehydrateStorage: () => (state, error) => {
+        if (error || !state?.data) queueMicrotask(() => useDemoStore.setState(freshState()))
+      },
     },
   ),
 )
