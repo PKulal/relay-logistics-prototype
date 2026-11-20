@@ -18,3 +18,6 @@ globalThis.ResizeObserver ??= ResizeObserverStub as unknown as typeof ResizeObse
 // jsdom has no element scrolling; the portal shell scrolls its content pane on navigation.
 Element.prototype.scrollTo ??= function scrollTo() {}
 Element.prototype.scrollIntoView ??= function scrollIntoView() {}
+
+// jsdom has no hit-testing; the OTP input (input-otp) asks for the element under the caret.
+document.elementFromPoint ??= () => null

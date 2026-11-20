@@ -5578,7 +5578,8 @@
     "won": "Mark won",
     "lost": "Mark lost",
     "moved": "Moved to {{status}}",
-    "log": "History"
+    "log": "History",
+    "empty": "No RFQs yet"
   },
   "erp39": {
     "title": "Customer Success",
@@ -5969,7 +5970,9 @@
     "err": {
       "required": "Fill in code, description, size and weight.",
       "codeTaken": "This SKU code already exists."
-    }
+    },
+    "empty": "No SKUs yet",
+    "emptyBody": "Add SKUs or upload the Excel template so bookings fill sizes and weights."
   },
   "cp32": {
     "title": "Integrations",
@@ -6252,7 +6255,8 @@
       "mobileTaken": "This mobile is already used by another staff member.",
       "licence": "The licence number wasn't found on Sarathi.",
       "police": "Add the date of the police verification."
-    }
+    },
+    "empty": "No field staff yet"
   },
   "pp30": {
     "title": "Vehicles",
@@ -6310,7 +6314,8 @@
       "vahan": "Not found on Vahan; check the number",
       "duplicate": "This vehicle is already registered",
       "fastag": "Line-haul trucks need a FASTag ID."
-    }
+    },
+    "empty": "No vehicles yet"
   },
   "pp31": {
     "title": "Hubs",
@@ -6399,7 +6404,8 @@
     "renewNote": "Logisco checks the file; the status turns Valid after review.",
     "file": "File",
     "newExpiry": "New expiry date",
-    "rule": "Alerts at 30, 15 and 7 days before expiry. Repeated expiry can lead to a suspension review."
+    "rule": "Alerts at 30, 15 and 7 days before expiry. Repeated expiry can lead to a suspension review.",
+    "empty": "No documents match"
   },
   "pp33": {
     "title": "Company profile",
@@ -7736,5 +7742,12 @@
     "reason": "Reason",
     "note": "Note",
     "moved": "{{id}}: {{status}}"
+  },
+  "app": {
+    "loading": "Loading…",
+    "errorTitle": "Something went wrong",
+    "errorBody": "This screen hit a problem. Reload the page, or reset the demo data to start fresh.",
+    "reload": "Reload",
+    "resetDemo": "Reset demo"
   }
 }

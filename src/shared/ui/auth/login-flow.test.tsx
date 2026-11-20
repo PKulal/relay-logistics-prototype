@@ -26,9 +26,9 @@ describe('Logins: CP-01/02/03, PP-01, PA-01/02/03, ERP-01', () => {
     useSession.setState({ sessions: {}, language: 'en' })
   })
 
-  it('CP-01: logged-out users land on login; a persona chip and any 8-character password log in and are audited', () => {
+  it('CP-01: logged-out users land on login; a persona chip and any 8-character password log in and are audited', async () => {
     app('/customer/billing')
-    tap('Priya · Admin')
+    fireEvent.click(await screen.findByRole('button', { name: 'Priya · Admin' }, { timeout: 10000 }))
     tap('Log in')
     expect(useSession.getState().sessions.customer?.userId).toBe('CU-PRIYA')
     expect(Object.values(st().data.auditLog).some((a) => a.action === 'login' && a.userId === 'CU-PRIYA')).toBe(true)
