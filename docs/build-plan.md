@@ -60,7 +60,7 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 - [x] Scoring: ERP-16 run, PP-23 scorecard, PP-24 tier, ERP-17 / PP-39 suspension (FastTrack Logistics)
 - [x] Network: ERP-18 to ERP-21; PP-18 capacity, PP-19 coverage
 - [x] Pricing: ERP-24 margin monitor, ERP-25 simulator
-- [ ] Leadership ERP-04; Sales ERP-28, ERP-29; light departments ERP-39 to ERP-41; ERP-45 placeholders
+- [x] Leadership ERP-04; Sales ERP-28, ERP-29; light departments ERP-39 to ERP-41; ERP-45 placeholders
 - [ ] Settings and admin: CP-28 to CP-37, PP-29 to PP-38, PA-08 to PA-13, PA-36, ERP-42 to ERP-44
 - [ ] AI assistants (scripted intents) in all four apps; AI decision log entries
 

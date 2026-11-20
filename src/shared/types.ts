@@ -301,6 +301,8 @@ export interface Customer {
    * snapshot that covers unmodelled shipments too; every booking adds its total.
    */
   spendMonthToDate: number
+  /** ERP-28 / ERP-39 account health: latest NPS survey score (seeded) */
+  nps?: number
   kamId?: Id
   rateCardId: Id
   bank?: { name: string; branch: string; ifsc: string; account: string }
@@ -1383,15 +1385,87 @@ export interface PayoutBatch {
   releasedAt?: IsoDateTime
 }
 
+export type TicketCategory = 'pickup' | 'delivery' | 'billing' | 'damage' | 'tracking' | 'other'
+
+/** Customer support ticket (ERP-39; CP-37). */
 export interface Ticket {
   id: Id
   raisedBy: Id
   app: AppKey
-  category: string
+  /** TicketCategory for customer tickets; partner problem kinds (PP-13) otherwise */
+  category: TicketCategory | string
   subject: string
   shipmentId?: Id
+  customerId?: Id
+  createdAt?: IsoDateTime
+  /** Response SLA */
+  dueAt?: IsoDateTime
+  ownerId?: Id
   status: 'open' | 'inProgress' | 'resolved' | 'closed'
   thread: { at: IsoDateTime; by: Id; text: string }[]
+}
+
+/** ERP-28 quarterly business review. */
+export interface Qbr {
+  id: Id
+  customerId: Id
+  date: IsoDate
+  agenda: string
+  by: Id
+  notes?: string
+}
+
+export interface AccountNote {
+  id: Id
+  customerId: Id
+  at: IsoDateTime
+  by: Id
+  text: string
+}
+
+/** ERP-29 RFQ / tender (source §6 Enterprise; §11 Dept 1). */
+export interface Rfq {
+  id: Id
+  /** Existing account, or a prospect name */
+  customerId?: Id
+  prospect?: string
+  title: string
+  dueDate: IsoDate
+  lanes: { origin: string; dest: string; monthlyShipments: number; service: Service }[]
+  status: 'received' | 'pricing' | 'submitted' | 'won' | 'lost'
+  ownerId: Id
+  createdAt: IsoDateTime
+  /** AI first draft generated (from the rate card and lanes) */
+  proposalAt?: IsoDateTime
+  log: { at: IsoDateTime; by: Id; text: string }[]
+}
+
+/** ERP-41 DPDP register: a data principal's request. */
+export interface DpdpRequest {
+  id: Id
+  party: string
+  kind: 'access' | 'correction' | 'erasure'
+  receivedAt: IsoDateTime
+  dueAt: IsoDateTime
+  status: 'open' | 'done'
+  doneBy?: Id
+  doneAt?: IsoDateTime
+}
+
+/**
+ * Company-wide figures for the command dashboard (ERP-04 prototype note:
+ * pre-computed seed values; shipment counts are live). INVENTED.
+ */
+export interface LeadershipSnapshot {
+  periods: Record<'today' | 'mtd' | 'qtd', { revenue: number; marginPct: number; onTimePct: number; claimsPer10k: number; activeCustomers: number; activePartners: number }>
+  heatmap: { origin: string; dest: string; marginPct: number }[]
+  okrs: { id: Id; objective: string; keyResult: string; target: string; actual: string; ownerId: Id; onTrack: boolean }[]
+}
+
+/** ERP-41 statutory calendar and contract register (seeded reference data). */
+export interface ComplianceReference {
+  statutory: { id: Id; title: string; due: IsoDate; kind: 'gst' | 'tds' | 'licence' | 'other' }[]
+  contracts: { id: Id; party: string; partyType: 'customer' | 'partner'; title: string; start: IsoDate; end: IsoDate }[]
 }
 
 // ─── Logisco staff ─────────────────────────────────────────────────────────────
@@ -1517,6 +1591,12 @@ export interface DemoData {
   coverageRequests: Record<Id, CoverageRequest>
   recruitmentNeeds: Record<Id, RecruitmentNeed>
   settingsChanges: Record<Id, SettingsChange>
+  qbrs: Record<Id, Qbr>
+  accountNotes: Record<Id, AccountNote>
+  rfqs: Record<Id, Rfq>
+  dpdpRequests: Record<Id, DpdpRequest>
+  leadership: LeadershipSnapshot
+  compliance: ComplianceReference
   suspensionCases: Record<Id, SuspensionCase>
   payouts: Record<Id, Payout>
   tickets: Record<Id, Ticket>

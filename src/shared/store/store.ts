@@ -10,7 +10,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { buildSeed, DEMO_START } from '@data/seed'
 import { addMinutes } from '@shared/lib/time'
 import { advanceJourneys } from '@shared/sim/journey'
-import type { LegType, SettingsChange, SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
+import type { LegType, Rfq, SettingsChange, SosAlert, SuspensionTrigger, Tier, Consignee, Customer, DemoData, Id, IsoDate, IsoDateTime, KycRecord, LeadStage, PartnerAgreement, PartnerDocKey, PickupLocation, Qualification, ShipmentEvent, VerificationResult } from '@shared/types'
 import { applyEvents } from './actions'
 import { bookShipment, type BookingInput } from './booking'
 import * as erp from './erpActions'
@@ -40,6 +40,8 @@ import * as pay from './payoutActions'
 import * as exc from './exceptionActions'
 import * as sc from './scoringActions'
 import * as net from './networkActions'
+import * as dept from './departmentActions'
+import type { NewRfq } from './departmentActions'
 import type { CapacityEdit, CoverageChange, LaneEdit, NewPincode, PincodeEdit } from './networkActions'
 import type { HubReport, PickupFailed, TicketResolution } from './exceptionActions'
 import type { PartnerCodDeposit, UploadInvoice } from './payoutActions'
@@ -58,7 +60,7 @@ import type { ArrivalHandover, ReportHalt, StartTrip } from './tripActions'
 
 export const STORAGE_KEY = 'logisco-demo-v1'
 /** Bump when the seed or data shape changes: saved data from an older version is replaced by a fresh seed. */
-export const STORE_VERSION = 24
+export const STORE_VERSION = 25
 
 export interface DemoFlags {
   /** Demo toolbar: show "Simulated" tags on AI outputs and fake integrations */
@@ -260,6 +262,15 @@ export interface DemoState {
   requestCoverageChange: (partnerId: Id, x: CoverageChange, by: Id) => Id | undefined
   decideCoverageChange: (id: Id, approve: boolean, note: string, by: Id) => void
   createRecruitmentNeed: (legType: LegType, place: string, by: Id) => void
+  /** Light departments (ERP-28, ERP-29, ERP-39, ERP-40, ERP-41) */
+  scheduleQbr: (customerId: Id, date: IsoDate, agenda: string, by: Id) => void
+  logAccountNote: (customerId: Id, text: string, by: Id) => void
+  createRfq: (x: NewRfq, by: Id) => Id | undefined
+  setRfqStatus: (id: Id, status: Rfq['status'], note: string, by: Id) => void
+  draftProposal: (id: Id, by: Id) => void
+  replyTicket: (id: Id, text: string, resolve: boolean, by: Id) => void
+  confirmSlot: (lr: Id, slot: { date: IsoDate; from: string; to: string }, by: Id) => void
+  closeDpdpRequest: (id: Id, by: Id) => void
   /** Demo toolbar: Deccan's third trial trip (the hero trip) */
   completeTrialTrip: (tripId: Id) => void
   setFlag: <K extends keyof DemoFlags>(flag: K, value: DemoFlags[K]) => void
@@ -537,6 +548,18 @@ export const useDemoStore = create<DemoState>()(
       },
       decideCoverageChange: (id, approve, note, by) => set((s) => ({ data: net.decideCoverageChange(s.data, id, approve, note, by, s.demoNow) })),
       createRecruitmentNeed: (legType, place, by) => set((s) => ({ data: net.createRecruitmentNeed(s.data, legType, place, by, s.demoNow) })),
+      scheduleQbr: (customerId, date, agenda, by) => set((s) => ({ data: dept.scheduleQbr(s.data, customerId, date, agenda, by, s.demoNow) })),
+      logAccountNote: (customerId, text, by) => set((s) => ({ data: dept.logAccountNote(s.data, customerId, text, by, s.demoNow) })),
+      createRfq: (x, by) => {
+        const r = dept.createRfq(get().data, x, by, get().demoNow)
+        set({ data: r.data })
+        return r.id
+      },
+      setRfqStatus: (id, status, note, by) => set((s) => ({ data: dept.setRfqStatus(s.data, id, status, note, by, s.demoNow) })),
+      draftProposal: (id, by) => set((s) => ({ data: dept.draftProposal(s.data, id, by, s.demoNow) })),
+      replyTicket: (id, text, resolve, by) => set((s) => ({ data: dept.replyTicket(s.data, id, text, resolve, by, s.demoNow) })),
+      confirmSlot: (lr, slot, by) => set((s) => ({ data: dept.confirmSlot(s.data, lr, slot, by, s.demoNow) })),
+      closeDpdpRequest: (id, by) => set((s) => ({ data: dept.closeDpdpRequest(s.data, id, by, s.demoNow) })),
       completeTrialTrip: (tripId) => set((s) => ({ data: trip.completeTrialTrip(s.data, tripId, s.demoNow) })),
 
 

@@ -5389,5 +5389,364 @@
     "net": "Margin after buffer",
     "above": "Above the {{target}}% target",
     "below": "Below the {{target}}% target"
+  },
+  "erp04": {
+    "title": "Command dashboard",
+    "subtitle": "The business on one page · {{date}}",
+    "period": "Period",
+    "p": {
+      "today": "Today",
+      "mtd": "Month to date",
+      "qtd": "Quarter to date"
+    },
+    "boardPack": "Board pack (PDF)",
+    "k": {
+      "shipments": "Shipments",
+      "revenue": "Revenue",
+      "onTime": "On-time delivery",
+      "claims": "Claims rate",
+      "active": "Active accounts",
+      "cash": "Receivables due"
+    },
+    "bookedDelivered": "Booked / delivered (live)",
+    "margin": "Gross margin {{pct}}%",
+    "per10k": "per 10,000 pieces",
+    "customersPartners": "Customers / partners",
+    "cashHint": "Payouts due {{payouts}} · COD held {{cod}}",
+    "snapshotNote": "Revenue, margin, on-time, claims and active counts are the company-wide snapshot; shipments and cash are live from the demo.",
+    "briefing": "Daily AI briefing",
+    "b": {
+      "booked": "{{count}} shipments booked on {{date}} (7-day average {{avg}}).",
+      "sos": "{{count}} active SOS from the field: check Partner health.",
+      "probation": "On Probation: {{partners}}. Volume cut 50%; suspension review after 2 weeks.",
+      "nearProbation": "Close to Probation: {{partners}}.",
+      "overdue": "{{customer}}: {{amount}} overdue for {{days}} days. Chase today.",
+      "codLate": "{{partner}} holds COD {{amount}} collected {{hours}} h ago.",
+      "breaches": "{{count}} exception tickets past their action time.",
+      "gaps": "{{count}} serviceable places have no partner: recruit."
+    },
+    "heatmap": "Lane P&L heat map (gross margin)",
+    "fromTo": "From ↓ to →",
+    "network": "Network health",
+    "trial": "{{count}} in trial",
+    "gaps": "{{recruit}} places to recruit for · {{backup}} with a single partner",
+    "dwell": "Longest hub dwell: {{hub}}, {{hours}} h on average",
+    "noDwell": "No shipments waiting in hubs",
+    "scenario": "Scenario",
+    "s": {
+      "volumePct": "Volume",
+      "fuelPct": "Fuel price",
+      "partnerCostPct": "Partner rates",
+      "result": "Revenue {{revenue}} · gross margin {{pct}}% ({{delta}} pt)",
+      "note": "Fuel is taken as about 20% of leg costs (assumed)."
+    },
+    "okrs": "OKRs",
+    "col": {
+      "objective": "Objective",
+      "kr": "Key result",
+      "target": "Target",
+      "actual": "Actual",
+      "owner": "Owner"
+    }
+  },
+  "erp28": {
+    "title": "Accounts",
+    "subtitle_one": "{{count}} live account",
+    "subtitle_other": "{{count}} live accounts",
+    "col": {
+      "account": "Account",
+      "type": "Type",
+      "kam": "KAM",
+      "spend": "Spend this month",
+      "nps": "NPS",
+      "churn": "Churn risk",
+      "lane": "Lane",
+      "damage": "Claims rate"
+    },
+    "risk": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "back": "All accounts",
+    "track": {
+      "selfServe": "Self-serve",
+      "insideSales": "Inside sales",
+      "kam": "Key account",
+      "kamSolutions": "Key account + solutions",
+      "apiOndc": "API / ONDC"
+    },
+    "kamIs": "KAM {{name}}",
+    "noKam": "No KAM",
+    "overview": "Overview",
+    "users_one": "{{count}} user",
+    "users_other": "{{count}} users",
+    "locations_one": "{{count}} pickup location",
+    "locations_other": "{{count}} pickup locations",
+    "commercials": "Commercials",
+    "rateCard": "Rate card:",
+    "credit": "Credit {{used}} of {{limit}}",
+    "wallet": "Prepaid wallet {{amount}}",
+    "outstanding": "Outstanding invoices {{amount}}",
+    "contract": "Contract from {{from}} for {{months}} months",
+    "health": "Health",
+    "churn": "Churn risk",
+    "why": {
+      "volumeDrop": "Volume down",
+      "overdue": "Overdue invoice",
+      "claims": "Repeated claims",
+      "ndr": "Failed deliveries",
+      "lowNps": "Low NPS",
+      "openTickets": "Open tickets"
+    },
+    "npsIs": "NPS {{nps}}",
+    "upsell": "Upsell suggestions",
+    "u": {
+      "lane": "New lane: {{origin}} → {{dest}}",
+      "parcel": "Light PTL loads: offer Parcel",
+      "ptl": "Heavy parcels: offer PTL",
+      "none": "None right now"
+    },
+    "volume": "Volume and SLA",
+    "onTime": "On-time delivery {{pct}}%",
+    "shipments": "Shipments",
+    "qbrs": "QBRs",
+    "noQbrs": "No QBRs yet",
+    "qbrDate": "Date",
+    "agenda": "Agenda",
+    "schedule": "Schedule QBR",
+    "qbrScheduled": "QBR scheduled",
+    "notes": "Notes",
+    "noNotes": "No notes yet",
+    "note": "Note",
+    "logNote": "Log note"
+  },
+  "erp29": {
+    "title": "RFQs and tenders",
+    "subtitle": "Enterprise requests for quotes, from receipt to won or lost, with an AI first-draft proposal.",
+    "new": "New RFQ",
+    "col": {
+      "rfq": "RFQ",
+      "customer": "Customer / prospect",
+      "lanes": "Lanes",
+      "due": "Due",
+      "status": "Status"
+    },
+    "status": {
+      "received": "Received",
+      "pricing": "Pricing",
+      "submitted": "Submitted",
+      "won": "Won",
+      "lost": "Lost"
+    },
+    "customer": "Customer",
+    "prospectOption": "New prospect",
+    "prospect": "Prospect name",
+    "titleField": "Title",
+    "origin": "From",
+    "dest": "To (city or region)",
+    "monthly": "Shipments per month",
+    "service": "Service",
+    "save": "Save RFQ",
+    "created": "{{id}} created",
+    "back": "All RFQs",
+    "dueOn": "due {{date}}",
+    "proposal": "Proposal draft",
+    "draft": "Draft proposal with AI",
+    "cover": "Proposal for {{customer}}, based on {{card}}:",
+    "rate": "{{rate}} / kg, minimum {{min}} kg",
+    "noRate": "No rate on the card: Pricing to quote",
+    "transit": "{{days}} days",
+    "draftNote": "AI first draft, {{at}}. Pricing reviews before it is sent.",
+    "note": "Note (reason required for Lost)",
+    "toPricing": "Send to Pricing",
+    "submit": "Mark submitted",
+    "won": "Mark won",
+    "lost": "Mark lost",
+    "moved": "Moved to {{status}}",
+    "log": "History"
+  },
+  "erp39": {
+    "title": "Customer Success",
+    "subtitle_one": "{{count}} open ticket",
+    "subtitle_other": "{{count}} open tickets",
+    "queue": "Ticket queue",
+    "col": {
+      "ticket": "Ticket",
+      "customer": "Customer",
+      "category": "Category",
+      "priority": "AI priority",
+      "sla": "SLA",
+      "owner": "Owner",
+      "status": "Status",
+      "nps": "NPS",
+      "onTime": "On-time",
+      "open": "Open tickets",
+      "churn": "Churn risk"
+    },
+    "cat": {
+      "pickup": "Pickup",
+      "delivery": "Delivery",
+      "billing": "Billing",
+      "damage": "Damage",
+      "tracking": "Tracking",
+      "other": "Other"
+    },
+    "priority": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "status": {
+      "open": "Open",
+      "inProgress": "In progress",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "left": "{{d}} left",
+    "overdue": "Overdue {{d}}",
+    "reply": "Reply to the customer",
+    "send": "Send",
+    "sendResolve": "Send and resolve",
+    "replied": "Reply sent",
+    "resolved": "Ticket resolved",
+    "ndr_one": "NDR follow-up · {{count}}",
+    "ndr_other": "NDR follow-up · {{count}}",
+    "noNdr": "Every NDR has a customer answer",
+    "dueWas": "answer was due {{at}}",
+    "health": "Account health"
+  },
+  "erp40": {
+    "title": "Hub & PTL operations",
+    "subtitle": "Partner hubs at a glance, manifests and seals, and the appointment desk.",
+    "board": "Hub board",
+    "col": {
+      "hub": "Hub",
+      "inbound": "Inbound",
+      "inScanned": "In-scanned",
+      "dwell": "Avg dwell",
+      "shortExcess": "Short / excess",
+      "manifest": "Manifest",
+      "to": "To",
+      "bags": "Bags",
+      "seals": "Seals",
+      "status": "Status",
+      "lr": "LR",
+      "dc": "Consignee (DC)",
+      "slot": "Slot",
+      "gatePass": "Gate pass",
+      "action": "Action"
+    },
+    "hours": "{{h}} h",
+    "manifests": "Manifests and seals",
+    "noManifests": "No manifests yet",
+    "door": "door {{seal}}",
+    "ms": {
+      "open": "Open",
+      "closed": "Closed",
+      "dispatched": "Dispatched"
+    },
+    "load": "Load planning",
+    "phase3": "Phase 3",
+    "loadBody": "Truck fill and cube optimisation for line-haul loads.",
+    "desk": "Appointment desk",
+    "noAppointments": "No appointment deliveries open",
+    "unconfirmed": "Not booked · ETA {{date}}",
+    "yes": "Uploaded",
+    "date": "Date",
+    "from": "From",
+    "to": "To",
+    "save": "Save slot",
+    "move": "Move slot",
+    "confirm": "Confirm slot",
+    "slotSaved": "Slot saved for {{lr}}; rider and customer updated"
+  },
+  "erp41": {
+    "title": "Compliance & Legal",
+    "subtitle": "E-way bills near expiry, the statutory calendar, contract expiries and the DPDP register.",
+    "ewb": "E-way bill monitor",
+    "noEwb": "No open e-way bills",
+    "col": {
+      "ewb": "E-way bill",
+      "lr": "LR",
+      "validity": "Validity left",
+      "partB": "Part B",
+      "action": "Action",
+      "request": "Request",
+      "party": "Data principal",
+      "kind": "Type",
+      "due": "Due",
+      "status": "Status"
+    },
+    "expired": "Expired",
+    "left": "{{d}} (till {{date}})",
+    "pending": "Pending",
+    "extend": "Extend",
+    "partB": "Update Part B",
+    "extended": "E-way bill for {{lr}} extended",
+    "partBDone": "Part B updated for {{lr}}",
+    "ewbRule": "E-way bill rules are set per state (limits vary).",
+    "calendar": "Statutory calendar",
+    "kind": {
+      "gst": "GST",
+      "tds": "TDS",
+      "licence": "Licence",
+      "other": "Other"
+    },
+    "contracts": "Contracts expiring in 60 days",
+    "noContracts": "None in the next 60 days",
+    "party": {
+      "customer": "Customer",
+      "partner": "Partner"
+    },
+    "dpdp": "DPDP register",
+    "consents": "Consents on record: {{customers}} customer sign-ups · {{partners}} partner applications",
+    "req": {
+      "access": "Access",
+      "correction": "Correction",
+      "erasure": "Erasure"
+    },
+    "markDone": "Mark done",
+    "done": "Done · {{name}}",
+    "closed": "{{id}} closed",
+    "breach": "Breach log: no incidents recorded."
+  },
+  "erp45": {
+    "status": "Planned for a later phase",
+    "modules": "Planned modules",
+    "ai": "Planned AI features",
+    "note": "This department is part of the full Logisco ERP and is not built in the prototype.",
+    "d": {
+      "marketing": {
+        "name": "Marketing & Growth",
+        "group": "Revenue",
+        "modules": "Campaigns · Website · ONDC listing · Referrals",
+        "ai": "Hindi / English content · Campaign ROI"
+      },
+      "quality": {
+        "name": "Quality & Audit",
+        "group": "Control and support",
+        "modules": "Hub audits · SOPs · Corrective actions",
+        "ai": "Risk-based sampling · Photo checks"
+      },
+      "hr": {
+        "name": "HR & Admin",
+        "group": "Enablers",
+        "modules": "Hiring · Attendance · Payroll interface · Training",
+        "ai": "Resume screening · Hindi training content"
+      },
+      "procurement": {
+        "name": "Procurement",
+        "group": "Enablers",
+        "modules": "POs and bills for software, packaging, labels and devices",
+        "ai": "Spend analysis"
+      },
+      "sustainability": {
+        "name": "Sustainability (ESG)",
+        "group": "Enablers",
+        "modules": "CO2 per shipment · Green partner tagging · ESG reports",
+        "ai": "Emission estimates · Greener routes"
+      }
+    }
   }
 }

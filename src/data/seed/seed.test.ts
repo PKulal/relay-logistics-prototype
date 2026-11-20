@@ -107,7 +107,7 @@ describe('seed matches seed-data.md', () => {
 describe('seed integrity', () => {
   it('uses each record id as its key', () => {
     for (const [name, collection] of Object.entries(seed)) {
-      if (name === 'settings' || name === 'lrSerials') continue
+      if (['settings', 'lrSerials', 'leadership', 'compliance'].includes(name)) continue
       for (const [key, record] of Object.entries(collection as Record<string, { id: string }>)) {
         expect(record.id, `${name}.${key}`).toBe(key)
       }

@@ -6,6 +6,9 @@ import { raiseAutoTickets } from '@shared/store/controlTowerActions'
 import { addInvestigatingClaim } from './claims'
 import { addMoneySeed } from './money'
 import { addBengaluruBackup, buildWeeklyScores } from './scores'
+import { addDepartmentSeed } from './departments'
+
+const EMPTY_PERIOD = { revenue: 0, marginPct: 0, onTimePct: 0, claimsPer10k: 0, activeCustomers: 0, activePartners: 0 }
 import { codFromDeliveries } from '@shared/store/moneyActions'
 import type { DemoData, IsoDateTime } from '@shared/types'
 import { consignees, customers, customerUsers, pickupLocations, skus } from './customers'
@@ -81,6 +84,12 @@ export function buildBaseSeed(): DemoData {
     },
     recruitmentNeeds: {},
     settingsChanges: {},
+    qbrs: {},
+    accountNotes: {},
+    rfqs: {},
+    dpdpRequests: {},
+    leadership: { periods: { today: EMPTY_PERIOD, mtd: EMPTY_PERIOD, qtd: EMPTY_PERIOD }, heatmap: [], okrs: [] },
+    compliance: { statutory: [], contracts: [] },
     partnerInvoices: byId(partnerInvoices),
     payouts: byId(payouts),
     tickets: {},
@@ -102,5 +111,5 @@ export function buildBaseSeed(): DemoData {
 export function buildSeed(): DemoData {
   const data = generateShipments(addKeyShipments(buildBaseSeed(), DEMO_START), DEMO_START)
   // Exceptions already present at 10:00 are auto-ticketed (source §10 Steps 1–2)
-  return raiseAutoTickets(addBengaluruBackup(codFromDeliveries(addMoneySeed(addInvestigatingClaim(joinTrips(data, Object.keys(data.legs)))))), DEMO_START)
+  return raiseAutoTickets(addDepartmentSeed(addBengaluruBackup(codFromDeliveries(addMoneySeed(addInvestigatingClaim(joinTrips(data, Object.keys(data.legs))))))), DEMO_START)
 }
