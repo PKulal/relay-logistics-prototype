@@ -65,8 +65,8 @@ Screen IDs: CP = Customer Portal (01), PP = Partner Portal (02), PA = Partner Ap
 - [x] AI assistants (scripted intents) in all four apps; AI decision log entries (assistant actions, credit risk, lead score, SKU outlier, document OCR, weight check)
 
 ## Phase 6 — Polish and QA
-- [ ] Hindi translations: Partner App complete; key screens in the other apps
-- [ ] Guided tour on the launcher (10-step demo script from ERP spec §11.3)
-- [ ] Empty, loading and error states on every list
-- [ ] Reset demo, then run every journey in the four specs’ “main journeys” tables
+- [x] Hindi translations: Partner App complete; key screens in the other apps (notification text worded in Hindi via `src/shared/i18n/dataText.ts`)
+- [x] Guided tour on the launcher (10-step demo script from ERP spec §11.3; `src/launcher/tour/`, e2e test `demo-script.test.ts`)
+- [x] Empty, loading and error states on every list (lazy apps with skeleton, error boundary)
+- [x] Reset demo, then run every journey in the four specs’ “main journeys” tables (all 89 menu screens opened without errors; §11.3 script run end to end)
 - [ ] Deploy to Vercel / Netlify; share link

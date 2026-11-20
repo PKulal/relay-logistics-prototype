@@ -7861,7 +7861,10 @@
       "claimIdSettled": "Claim {{id}} settled",
       "docExpires": "{{doc}} expires {{date}}",
       "payoutScheduled": "Payout scheduled for {{date}}",
-      "message": "{{lr}}: {{tpl}}"
+      "msgDelay": "{{lr}}: delay",
+      "msgPickup": "{{lr}}: pickupReschedule",
+      "msgAppointment": "{{lr}}: appointment",
+      "msgGeneral": "{{lr}}: general"
     },
     "body": {
       "b1": "Hub weight is higher than booked. Accept or dispute within 48 h.",
@@ -7885,6 +7888,77 @@
     },
     "bp": {
       "creditNote": "Credit note {{cn}} for {{amount}} on {{lr}}"
+    }
+  },
+  "tour": {
+    "start": "Start guided tour",
+    "startFresh": "Reset demo and start",
+    "cardTitle": "Guided demo",
+    "cardBody": "Ten steps through all four apps: one shipment from booking to payout, plus a claim, a reassignment and weekly scoring. Pause at any time; the tour remembers where you are.",
+    "resume": "Resume tour · step {{n}} of {{total}}",
+    "step": "Step {{n}} of {{total}}",
+    "open": "Open this screen",
+    "doIt": "Do it for me",
+    "done": "Done",
+    "next": "Next",
+    "back": "Back",
+    "pause": "Pause",
+    "exit": "Exit tour",
+    "finish": "Finish",
+    "finished": "Tour complete. The demo keeps everything you did; use Reset demo to start over.",
+    "ran": "Step {{n}} done for you",
+    "look": "Look for",
+    "appIn": "In: {{app}} as {{name}}",
+    "region": "Guided tour",
+    "s1": {
+      "title": "Priya books LGS-DEL-000781",
+      "body": "In the Customer Portal, book 6 pieces of LT switchgear from Okhla to Hubballi, Express PTL, with appointment and insurance.",
+      "look": "The quote ₹3,628.26 and the LR number LGS-DEL-000781."
+    },
+    "s2": {
+      "title": "The shipment appears with 5 legs",
+      "body": "In the ERP, open Shipment 360 for LGS-DEL-000781.",
+      "look": "Five legs with their partners and costs, and the 18.3% margin."
+    },
+    "s3": {
+      "title": "SwiftCity assigns Ravi; Ravi picks up",
+      "body": "SwiftCity accepts the pickup job and assigns Ravi. In the Partner App, Ravi picks up the 6 pieces and hands them over at NCR CrossDock.",
+      "look": "The job moves from New to Assigned to Done; the shipment shows Picked up, then At origin hub."
+    },
+    "s4": {
+      "title": "Line-haul halt: shipment at risk",
+      "body": "Move the demo clock on. The line-haul truck reports a halt, the shipment joins the at-risk list, and the operator informs the customer.",
+      "look": "The at-risk reason and the delay message in Priya's notifications."
+    },
+    "s5": {
+      "title": "Pickup missed: reassign to QuickLink",
+      "body": "A pickup is missed on another shipment. From ERP-08, reassign the leg to QuickLink.",
+      "look": "The job leaves the old partner and arrives in QuickLink's inbox."
+    },
+    "s6": {
+      "title": "Manju delivers with OTP",
+      "body": "In the Partner App, Manju delivers to the consignee and verifies the OTP. The Customer Portal shows Delivered and the e-POD.",
+      "look": "Status Delivered, received-by name and the e-POD."
+    },
+    "s7": {
+      "title": "Shortage claim: approve settlement",
+      "body": "In ERP Claims, open the seeded shortage claim.",
+      "look": "The liability engine points to Leg 2; approve the settlement and the credit note."
+    },
+    "s8": {
+      "title": "Deccan's ₹72 mismatch and the payout batch",
+      "body": "In ERP Finance, resolve Deccan Roadlines' ₹72 mismatch, then approve the payout batch.",
+      "look": "The UTRs on the Partner Portal payouts page."
+    },
+    "s9": {
+      "title": "Weekly scoring: FastTrack to Probation",
+      "body": "In ERP Partner Management, run weekly scoring and open FastTrack Logistics' suspension case.",
+      "look": "FastTrack drops from Bronze to Probation."
+    },
+    "s10": {
+      "title": "Leadership dashboard",
+      "body": "Open the leadership dashboard.",
+      "look": "The day's numbers and the AI briefing."
     }
   }
 }

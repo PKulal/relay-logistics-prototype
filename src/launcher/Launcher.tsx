@@ -1,11 +1,15 @@
-import { Building2, CircleUserRound, Network, Smartphone, Truck, type LucideIcon } from 'lucide-react'
+import { Building2, CircleUserRound, Compass, Network, Smartphone, Truck, type LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { APPS, type AppId } from '@shared/apps'
 import { useData } from '@shared/hooks/useDemo'
 import { personasFor } from '@shared/personas'
 import { useSession } from '@shared/store/session'
+import { useDemoStore } from '@shared/store'
+import { Button } from '@shared/ui/button'
 import { LanguageToggle } from '@shared/ui/LanguageToggle'
+import { TOUR_STEPS } from './tour/steps'
+import { useTour } from './tour/tourStore'
 
 const ICONS: Record<AppId, LucideIcon> = {
   customer: Building2,
@@ -19,6 +23,13 @@ export default function Launcher() {
   const { t } = useTranslation()
   const sessions = useSession((s) => s.sessions)
   const data = useData((d) => d)
+  const navigate = useNavigate()
+  const tour = useTour()
+  const startTour = (fresh: boolean) => {
+    if (fresh) useDemoStore.getState().resetDemo()
+    tour.start()
+    navigate('/')
+  }
 
   return (
     <div data-app="launcher" className="min-h-dvh bg-gray-50">
@@ -33,6 +44,29 @@ export default function Launcher() {
       <main className="mx-auto max-w-6xl px-6 py-12">
         <h1 className="text-page-title">{t('launcher.title')}</h1>
         <p className="mt-2 max-w-2xl text-muted-foreground">{t('launcher.subtitle')}</p>
+
+        {/* Guided tour: the ERP spec §11.3 demo script */}
+        <section aria-labelledby="tour-h" className="mt-8 flex flex-col gap-4 rounded-xl border bg-card p-5 shadow-card sm:flex-row sm:items-center">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary">
+            <Compass className="size-6" aria-hidden />
+          </span>
+          <div className="flex-1">
+            <h2 id="tour-h" className="text-card-title">
+              {t('tour.cardTitle')}
+            </h2>
+            <p className="mt-1 text-caption text-muted-foreground">{t('tour.cardBody')}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {tour.active ? (
+              <Button onClick={() => tour.pause(false)}>{t('tour.resume', { n: tour.step + 1, total: TOUR_STEPS.length })}</Button>
+            ) : (
+              <Button onClick={() => startTour(false)}>{t('tour.start')}</Button>
+            )}
+            <Button variant="outline" onClick={() => startTour(true)}>
+              {t('tour.startFresh')}
+            </Button>
+          </div>
+        </section>
 
         <div className="mt-8 grid gap-6 sm:grid-cols-2">
           {APPS.map((app) => {

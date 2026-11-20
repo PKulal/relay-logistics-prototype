@@ -6,6 +6,7 @@ import { DemoToolbar } from "@shared/ui/DemoToolbar";
 import { Toaster } from "@shared/ui/sonner";
 import { TooltipProvider } from "@shared/ui/tooltip";
 import { AutoApprover } from "@shared/sim/AutoApprover";
+import { TourPanel } from "./launcher/tour/TourPanel";
 import DemoSwitch from "./launcher/DemoSwitch";
 import Launcher from "./launcher/Launcher";
 import PersonaPicker from "./launcher/PersonaPicker";
@@ -62,6 +63,7 @@ export default function App() {
         </Suspense>
       </ErrorBoundary>
       <DemoToolbar />
+      <TourPanel />
       <AutoApprover />
       <Toaster />
     </TooltipProvider>

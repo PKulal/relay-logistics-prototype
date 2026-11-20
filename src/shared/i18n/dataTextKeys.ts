@@ -110,7 +110,10 @@ export const TITLE_PATTERNS: [RegExp, string][] = [
   [/^Claim (?<id>\S+) settled$/, "claimIdSettled"],
   [/^(?<doc>.+) expires (?<date>\d{2}-\w{3}-\d{4})$/, "docExpires"],
   [/^Payout scheduled for (?<date>.+)$/, "payoutScheduled"],
-  [/^(?<lr>LGS-\S+): (?<tpl>[\w-]+)$/, "message"],
+  [/^(?<lr>LGS-\S+): delay$/, "msgDelay"],
+  [/^(?<lr>LGS-\S+): pickupReschedule$/, "msgPickup"],
+  [/^(?<lr>LGS-\S+): appointment$/, "msgAppointment"],
+  [/^(?<lr>LGS-\S+): general$/, "msgGeneral"],
 ]
 
 /** Longest first, so "Final payout" is replaced before "payout"-like fragments. */

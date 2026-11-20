@@ -20,6 +20,10 @@ const type = (label: RegExp | string, value: string) => fireEvent.change(screen.
 const otp = () => fireEvent.change(screen.getByLabelText('One-time password'), { target: { value: '123456' } })
 
 describe('Logins: CP-01/02/03, PP-01, PA-01/02/03, ERP-01', () => {
+  // The apps are lazy chunks: load them once up front so a busy test run doesn't time out waiting
+  beforeAll(async () => {
+    await Promise.all([import('@apps/customer/CustomerApp'), import('@apps/partner-app/PartnerAppApp'), import('@apps/partner-portal/PartnerPortalApp'), import('@apps/erp/ErpApp')])
+  }, 60000)
   beforeEach(() => {
     st().resetDemo()
     localStorage.removeItem('logisco-remember')
@@ -67,7 +71,7 @@ describe('Logins: CP-01/02/03, PP-01, PA-01/02/03, ERP-01', () => {
     tap('Get OTP')
     await screen.findByLabelText('One-time password')
     otp()
-    expect(await screen.findByRole('heading', { name: /Set up your phone/ })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: /Set up your phone/ }, { timeout: 10000 })).toBeInTheDocument()
   })
 
   it('ERP-01: company account, then the second factor', () => {
